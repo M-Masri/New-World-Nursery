@@ -8,7 +8,7 @@ function HeroSection() {
       <img
         src={heroRainbow}
         alt=""
-        className="pointer-events-none absolute right-0 bottom-0 z-30 h-auto w-52 object-contain object-bottom-right sm:w-64 lg:w-80"
+        className="pointer-events-none absolute -right-3 bottom-5 z-30 block w-52 sm:-right-4 sm:bottom-6 sm:w-64 lg:w-80"
       />
 
       <HeroDecorations />
