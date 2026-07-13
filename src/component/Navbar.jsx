@@ -14,9 +14,9 @@ const navLinks = [
 function Navbar() {
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm">
-      <div className="mx-auto flex max-w-page items-center justify-between gap-4 px-4 py-3 sm:px-6">
+      <div className="mx-auto flex max-w-page items-center justify-between gap-4 px-4 py-2 sm:px-6">
         <Link to="/">
-          <Logo />
+          <Logo className="!h-16 sm:!h-18" />
         </Link>
 
         <nav className="hidden items-center gap-5 xl:flex">
@@ -41,7 +41,7 @@ function Navbar() {
           )}
         </nav>
 
-        <Button className="hidden sm:inline-flex">Enquire Now</Button>
+        <Button className="hidden px-6 py-2 text-sm sm:inline-flex">Enquire Now</Button>
       </div>
     </header>
   )

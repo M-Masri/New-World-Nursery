@@ -21,3 +21,25 @@
 body {
   font-family: var(--font-nunito);
 }
+
+.custom-cursor {
+  position: fixed;
+  z-index: 9999;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background-color: color-mix(in srgb, #f07a7a 42%, transparent);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.hero-cloud-mask {
+  -webkit-mask-image: url("./assets/cloudmask.png");
+  mask-image: url("./assets/cloudmask.png");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}

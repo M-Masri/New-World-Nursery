@@ -1,6 +1,20 @@
 import heroCloud from '../../assets/hero-cloud.png'
+import heroHeart from '../../assets/hero-heart.png'
 import heroRainbow from '../../assets/hero-rainbow.png'
-import heroWave from '../../assets/hero-wave.svg'
+import heroSun from '../../assets/hero-sun.png'
+
+const heroPhoto =
+  'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=700&h=750&fit=crop'
+
+function HeroCloudPhoto({ className = '', src, alt }) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={`hero-cloud-mask block object-cover ${className}`}
+    />
+  )
+}
 
 function HeroSection() {
   return (
@@ -8,7 +22,7 @@ function HeroSection() {
       <img
         src={heroRainbow}
         alt=""
-        className="pointer-events-none absolute -right-3 bottom-5 z-30 block w-52 sm:-right-4 sm:bottom-6 sm:w-64 lg:w-80"
+        className="pointer-events-none absolute -right-3 bottom-0 z-30 block w-48 sm:-right-4 sm:bottom-0 sm:w-60 lg:w-72"
       />
 
       <HeroDecorations />
@@ -19,16 +33,38 @@ function HeroSection() {
             Nurturing Young Minds
           </p>
 
-          <h1 className="mb-6 text-[2.4rem] leading-[1.15] font-extrabold sm:text-5xl lg:text-[3.4rem]">
-            <span className="text-[#8cb83a]">A </span>
-            <span className="text-[#f07a7a]">Happy </span>
-            <span className="text-[#f5b942]">Place</span>
-            <br />
-            <span className="text-[#a682b8]">to </span>
-            <span className="text-[#5bb5a2]">Learn </span>
-            <span className="text-[#5a5a5a]">& </span>
-            <span className="text-[#f07a7a]">Grow</span>
-          </h1>
+          <div className="mb-6 text-center lg:text-left">
+            <div className="relative inline-block">
+              <TitleLeafAccent
+                variant="start"
+                className="pointer-events-none absolute -left-12 -top-6 h-12 w-14 sm:-left-14 sm:-top-5 sm:h-14 sm:w-16 lg:-left-16 lg:-top-4"
+              />
+              <h1 className="text-[2.4rem] leading-[1.15] font-extrabold sm:text-5xl lg:text-[3.4rem]">
+                <span className="text-[#8cb83a]">A </span>
+                <span className="text-[#f07a7a]">Happy </span>
+                <span className="relative inline-block">
+                  <img
+                    src={heroHeart}
+                    alt=""
+                    className="pointer-events-none absolute -top-7 left-1/2 h-8 w-8 -translate-x-1/2 object-contain sm:-top-8 sm:h-9 sm:w-9 lg:-top-9 lg:h-10 lg:w-10"
+                    aria-hidden="true"
+                  />
+                  <span className="text-[#f5b942]">Place</span>
+                </span>
+                <br />
+                <span className="text-[#a682b8]">to </span>
+                <span className="text-[#5bb5a2]">Learn </span>
+                <span className="text-[#5a5a5a]">& </span>
+                <span className="relative inline-block">
+                  <span className="text-[#f07a7a]">Grow</span>
+                  <TitleLeafAccent
+                    variant="end"
+                    className="pointer-events-none absolute -right-11 -bottom-5 h-12 w-14 sm:-right-13 sm:-bottom-4 sm:h-14 sm:w-16 lg:-right-14 lg:-bottom-3"
+                  />
+                </span>
+              </h1>
+            </div>
+          </div>
 
           <p className="mx-auto mb-9 max-w-md text-[15px] leading-relaxed text-[#5a5a5a] lg:mx-0">
             At New World Nursery, we provide a safe, caring and stimulating
@@ -52,47 +88,26 @@ function HeroSection() {
         </div>
 
         <div className="relative flex w-full max-w-[700px] justify-center px-6 py-2 lg:justify-self-end lg:px-4">
-          <svg className="pointer-events-none absolute h-0 w-0" aria-hidden="true">
-            <defs>
-              <clipPath id="heroImageCloud" clipPathUnits="objectBoundingBox">
-                <circle cx="0.5" cy="0.34" r="0.24" />
-                <circle cx="0.22" cy="0.42" r="0.2" />
-                <circle cx="0.78" cy="0.42" r="0.2" />
-                <circle cx="0.15" cy="0.54" r="0.15" />
-                <circle cx="0.85" cy="0.54" r="0.15" />
-                <circle cx="0.5" cy="0.7" r="0.22" />
-                <circle cx="0.24" cy="0.66" r="0.17" />
-                <circle cx="0.76" cy="0.66" r="0.17" />
-              </clipPath>
-            </defs>
+          <img
+            src={heroSun}
+            alt=""
+            className="pointer-events-none absolute -top-5 left-4 z-10 h-16 w-16 object-contain sm:-top-6 sm:left-6 sm:h-[4.5rem] sm:w-[4.5rem] lg:-top-7 lg:left-8 lg:h-20 lg:w-20"
+            aria-hidden="true"
+          />
+
+          <svg
+            className="pointer-events-none absolute top-11 left-10 z-10 h-4 w-4 rotate-45 text-[#d45a5a] sm:top-12 sm:left-12 sm:h-5 sm:w-5 lg:top-14 lg:left-14"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path fill="currentColor" d={heartPath} />
           </svg>
 
-          <div className="absolute -top-2 right-8 z-10 sm:right-12">
-            <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true">
-              <circle cx="18" cy="18" r="9" fill="#f5c842" opacity="0.9" />
-              <g stroke="#f5a623" strokeWidth="2" strokeLinecap="round">
-                <line x1="18" y1="2" x2="18" y2="7" />
-                <line x1="18" y1="29" x2="18" y2="34" />
-                <line x1="2" y1="18" x2="7" y2="18" />
-                <line x1="29" y1="18" x2="34" y2="18" />
-                <line x1="6" y1="6" x2="9.5" y2="9.5" />
-                <line x1="26.5" y1="26.5" x2="30" y2="30" />
-                <line x1="6" y1="30" x2="9.5" y2="26.5" />
-                <line x1="26.5" y1="9.5" x2="30" y2="6" />
-              </g>
-            </svg>
-          </div>
-
-          <div
-            className="relative h-[280px] w-full max-w-[520px] sm:h-[310px] sm:max-w-[560px] lg:h-[340px] lg:max-w-[600px]"
-            style={{ clipPath: 'url(#heroImageCloud)' }}
-          >
-            <img
-              src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=700&h=750&fit=crop"
-              alt="Children playing with colorful blocks"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          </div>
+          <HeroCloudPhoto
+            className="h-[280px] w-full max-w-[520px] sm:h-[310px] sm:max-w-[560px] lg:h-[340px] lg:max-w-[600px]"
+            src={heroPhoto}
+            alt="Children playing with colorful blocks"
+          />
         </div>
       </div>
 
@@ -103,14 +118,6 @@ function HeroSection() {
         <span className="h-3 w-3 rounded-full bg-[#f07a7a]" />
         <span className="h-3 w-3 rounded-full bg-[#b8d86a]" />
         <span className="h-3 w-3 rounded-full bg-[#5bb5a2]" />
-      </div>
-
-      <div className="pointer-events-none absolute -bottom-1 left-0 right-0 z-10 h-5 w-full" aria-hidden="true">
-        <img
-          src={heroWave}
-          alt=""
-          className="h-full w-full -scale-y-100"
-        />
       </div>
     </section>
   )
@@ -155,16 +162,6 @@ function HeroDecorations() {
         <ellipse cx="46" cy="26" rx="12" ry="10" fill="currentColor" />
       </svg>
 
-      <svg
-        className="absolute top-[38%] left-[4%] h-8 w-8 text-[#8cb83a] opacity-50"
-        viewBox="0 0 32 32"
-      >
-        <path
-          fill="currentColor"
-          d="M16 4 C10 12 6 14 4 20 C12 18 14 22 16 28 C18 22 20 18 28 20 C26 14 22 12 16 4Z"
-        />
-      </svg>
-
       {heroHearts.map((heart) => (
         <svg key={heart.className} className={heart.className} viewBox="0 0 24 24">
           <path fill="currentColor" d={heartPath} />
@@ -184,6 +181,24 @@ function HeroDecorations() {
         <ellipse cx="52" cy="32" rx="14" ry="11" fill="currentColor" />
       </svg>
     </div>
+  )
+}
+
+function TitleLeafAccent({ className = '', variant = 'start' }) {
+  if (variant === 'end') {
+    return (
+      <svg className={`text-[#9aab72] ${className}`} viewBox="0 0 22 22" fill="currentColor" aria-hidden="true">
+        <ellipse cx="7.5" cy="10" rx="2" ry="7" transform="rotate(38 11 10)" opacity="0.9" />
+        <ellipse cx="13.5" cy="12" rx="2" ry="7" transform="rotate(85 13 12.5)" opacity="0.9" />
+      </svg>
+    )
+  }
+
+  return (
+    <svg className={`text-[#b8d86a] ${className}`} viewBox="0 0 22 22" fill="currentColor" aria-hidden="true">
+      <ellipse cx="7.5" cy="12" rx="2" ry="7" transform="rotate(-68 10.5 15)" opacity="0.9" />
+      <ellipse cx="13.5" cy="10" rx="2" ry="7" transform="rotate(-20 20.5 12)" opacity="0.9" />
+    </svg>
   )
 }
 
