@@ -1,4 +1,8 @@
+import { useRef } from 'react'
 import { ArrowRight, Mail, Phone } from 'lucide-react'
+import contactNeedsLottie from '../../assets/lottie/contact-needs.json'
+import BrushHighlightText from '../BrushHighlightText'
+import LottieScroll from '../LottieScroll'
 
 const programs = [
   'Select...',
@@ -10,8 +14,10 @@ const programs = [
 ]
 
 function ContactSection() {
+  const sectionRef = useRef(null)
+
   return (
-    <section id="contact" className="bg-white py-16 sm:py-20">
+    <section id="contact" ref={sectionRef} className="bg-white py-16 sm:py-20">
       <div className="mx-auto grid max-w-page items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16">
         <div>
           <p className="mb-4 text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase">
@@ -19,7 +25,18 @@ function ContactSection() {
           </p>
           <h2 className="mb-5 text-3xl leading-tight font-extrabold text-[#2d3a4a] sm:text-4xl lg:text-[2.75rem]">
             <span className="block">Discuss</span>
-            <span className="font-normal">Your Nursery Needs</span>
+            <span className="relative inline-block">
+              <BrushHighlightText triggerRef={sectionRef} className="font-normal">
+                Your Nursery Needs
+              </BrushHighlightText>
+              <LottieScroll
+                animationData={contactNeedsLottie}
+                triggerRef={sectionRef}
+                mode="playWhileInView"
+                speed={0.85}
+                className="pointer-events-none absolute top-1/2 left-full -ml-3 h-28 w-32 -translate-y-1/2 shrink-0 sm:-ml-4 sm:h-32 sm:w-36 lg:-ml-13 lg:h-46 lg:w-45"
+              />
+            </span>
           </h2>
           <p className="mb-10 max-w-md text-sm leading-relaxed text-gray-500">
             Are you looking for a safe, nurturing environment for your child?
@@ -28,7 +45,7 @@ function ContactSection() {
 
           <div className="space-y-6">
             <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#5bb5a2]">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#f07a7a]">
                 <Mail className="h-5 w-5 text-white" />
               </div>
               <div>
@@ -43,7 +60,7 @@ function ContactSection() {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#5bb5a2]">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#f07a7a]">
                 <Phone className="h-5 w-5 text-white" />
               </div>
               <div>
@@ -131,10 +148,10 @@ function ContactSection() {
 
             <button
               type="submit"
-              className="inline-flex items-center gap-3 rounded-full bg-[#5bb5a2] py-3 pr-6 pl-2 text-sm font-bold text-white transition hover:bg-[#4aab9f]"
+              className="inline-flex items-center gap-3 rounded-full bg-[#f07a7a] py-3 pr-6 pl-2 text-sm font-bold text-white transition hover:bg-[#e86a6a]"
             >
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white">
-                <ArrowRight className="h-4 w-4 text-[#5bb5a2]" />
+                <ArrowRight className="h-4 w-4 text-[#f07a7a]" />
               </span>
               Send Message
             </button>

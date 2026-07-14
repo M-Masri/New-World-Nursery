@@ -1,4 +1,7 @@
+import { useRef } from 'react'
 import { Baby, Flower2, GraduationCap, Lightbulb } from 'lucide-react'
+import BrushHighlightText from '../BrushHighlightText'
+import AnimatedCard from '../AnimatedCard'
 
 const programs = [
   {
@@ -46,8 +49,10 @@ const programs = [
 ]
 
 function ProgramsSection() {
+  const sectionRef = useRef(null)
+
   return (
-    <section id="programs" className="relative overflow-hidden bg-white py-16">
+    <section id="programs" ref={sectionRef} className="relative overflow-hidden bg-white py-16">
       <ProgramsDecorations />
 
       <div className="relative mx-auto max-w-page px-4 sm:px-6">
@@ -56,20 +61,21 @@ function ProgramsSection() {
             Our Programs
           </p>
           <h2 className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl">
-            Programs We Offer
+            Programs{' '}
+            <BrushHighlightText triggerRef={sectionRef}>We Offer</BrushHighlightText>
           </h2>
         </div>
 
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {programs.map((program) => (
-            <ProgramCard key={program.title} program={program} />
+          {programs.map((program, index) => (
+            <ProgramCard key={program.title} program={program} index={index} />
           ))}
         </div>
 
         <div className="mt-12 text-center">
           <button
             type="button"
-            className="rounded-lg border-2 border-[#5bb5a2] bg-white px-8 py-2.5 text-sm font-extrabold tracking-wide text-[#5bb5a2] uppercase transition hover:bg-[#eef8f5]"
+            className="rounded-lg border-2 border-[#f07a7a] bg-white px-8 py-2.5 text-sm font-extrabold tracking-wide text-[#f07a7a] uppercase transition hover:bg-[#fde8e8]"
           >
             View All Programs
           </button>
@@ -79,11 +85,12 @@ function ProgramsSection() {
   )
 }
 
-function ProgramCard({ program }) {
+function ProgramCard({ program, index }) {
   const Icon = program.icon
 
   return (
-    <div
+    <AnimatedCard
+      index={index}
       className="overflow-hidden rounded-2xl bg-white shadow-md"
       style={{ borderBottom: `5px solid ${program.color}` }}
     >
@@ -123,7 +130,7 @@ function ProgramCard({ program }) {
           {program.description}
         </p>
       </div>
-    </div>
+    </AnimatedCard>
   )
 }
 

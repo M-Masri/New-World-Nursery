@@ -1,4 +1,7 @@
+import { useRef } from 'react'
 import { ArrowUpRight, Clock, Mail, MapPin, Phone } from 'lucide-react'
+import BrushHighlightText from '../BrushHighlightText'
+import AnimatedCard from '../AnimatedCard'
 
 const branches = [
   {
@@ -52,15 +55,18 @@ const branches = [
 ]
 
 function OurLocationSection() {
+  const sectionRef = useRef(null)
+
   return (
-    <section id="locations" className="bg-white py-16 sm:py-20">
+    <section id="locations" ref={sectionRef} className="bg-white py-16 sm:py-20">
       <div className="mx-auto max-w-page px-4 sm:px-6">
         <div className="mb-12 text-center">
           <p className="mb-2 text-xs font-extrabold tracking-[0.25em] text-[#5bb5a2] uppercase">
             Our Location
           </p>
           <h2 className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl">
-            Branches Across the Region
+            Branches Across{' '}
+            <BrushHighlightText triggerRef={sectionRef}>the Region</BrushHighlightText>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[#5a6578]">
             Visit one of our nurseries and discover a welcoming space where
@@ -69,8 +75,8 @@ function OurLocationSection() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {branches.map((branch) => (
-            <LocationCard key={branch.id} branch={branch} />
+          {branches.map((branch, index) => (
+            <LocationCard key={branch.id} branch={branch} index={index} />
           ))}
         </div>
       </div>
@@ -78,9 +84,13 @@ function OurLocationSection() {
   )
 }
 
-function LocationCard({ branch }) {
+function LocationCard({ branch, index }) {
   return (
-    <article className="group overflow-hidden rounded-3xl bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <AnimatedCard
+      as="article"
+      index={index}
+      className="group overflow-hidden rounded-3xl bg-white shadow-md transition-shadow duration-300 hover:shadow-xl"
+    >
       <div className="relative h-44 overflow-hidden sm:h-48">
         <img
           src={branch.image}
@@ -117,7 +127,7 @@ function LocationCard({ branch }) {
           <ArrowUpRight className="h-4 w-4" />
         </button>
       </div>
-    </article>
+    </AnimatedCard>
   )
 }
 

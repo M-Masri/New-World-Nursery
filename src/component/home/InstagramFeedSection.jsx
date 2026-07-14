@@ -1,4 +1,7 @@
+import { useRef } from 'react'
 import { InstagramIcon } from '../SocialIcons'
+import BrushHighlightText from '../BrushHighlightText'
+import AnimatedCard from '../AnimatedCard'
 
 const instagramPosts = [
   {
@@ -76,23 +79,28 @@ const instagramPosts = [
 ]
 
 function InstagramFeedSection() {
+  const sectionRef = useRef(null)
+
   return (
-    <section id="instagram" className="bg-[#fffbf5] py-16">
+    <section id="instagram" ref={sectionRef} className="bg-[#fffbf5] py-16">
       <div className="mx-auto max-w-page px-4 sm:px-6">
         <div className="mb-10 text-center">
           <p className="mb-2 text-xs font-extrabold tracking-[0.25em] text-[#5bb5a2] uppercase">
             Instagram
           </p>
           <h2 className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl">
-            Follow Our Journey
+            Follow{' '}
+            <BrushHighlightText triggerRef={sectionRef}>Our Journey</BrushHighlightText>
           </h2>
         </div>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-          {instagramPosts.map((post) => (
-            <a
+          {instagramPosts.map((post, index) => (
+            <AnimatedCard
               key={post.id}
+              as="a"
               href="#instagram"
+              index={index}
               className="group relative aspect-square overflow-hidden rounded-xl bg-white shadow-sm"
             >
               <img
@@ -103,7 +111,7 @@ function InstagramFeedSection() {
               <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/30">
                 <InstagramIcon className="h-8 w-8 scale-0 text-white opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100" />
               </div>
-            </a>
+            </AnimatedCard>
           ))}
         </div>
 

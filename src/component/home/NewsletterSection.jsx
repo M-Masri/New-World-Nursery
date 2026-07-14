@@ -1,9 +1,27 @@
-import newsletterBear from '../../assets/newsletter-bear.png'
-import newsletterBalloon from '../../assets/newsletter-balloon.png'
+import { useRef } from 'react'
+import balloonLottie from '../../assets/lottie/balloon.json'
+import newsletterBearLottie from '../../assets/lottie/newsletter-bear.json'
+import LottieScroll from '../LottieScroll'
 
 function NewsletterSection() {
+  const sectionRef = useRef(null)
+
   return (
-    <section className="relative overflow-hidden">
+    <section ref={sectionRef} className="relative overflow-hidden">
+      <div
+        className="pointer-events-none absolute top-0 -bottom-48 right-4 z-[5] w-56 overflow-hidden sm:right-6 sm:-bottom-56 sm:w-64 lg:w-72"
+        aria-hidden="true"
+      >
+        <LottieScroll
+          animationData={balloonLottie}
+          triggerRef={sectionRef}
+          mode="playWhileInView"
+          speed={0.25}
+          rendererSettings={{ preserveAspectRatio: 'none' }}
+          className="newsletter-balloon-lottie pointer-events-none absolute inset-0 h-full w-full"
+        />
+      </div>
+
       <svg
         className="absolute top-0 left-0 w-full text-[#eef8f5]"
         viewBox="0 0 1440 60"
@@ -17,13 +35,13 @@ function NewsletterSection() {
       </svg>
 
       <div className="relative bg-[#eef8f5] px-4 pt-14 pb-12 sm:px-6">
-        <div className="mx-auto flex max-w-page flex-col items-center gap-8 lg:flex-row lg:items-center lg:justify-between">
+        <div className="relative z-10 mx-auto flex max-w-page flex-col items-center gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center gap-4 sm:gap-5">
-            <img
-              src={newsletterBear}
-              alt=""
-              aria-hidden="true"
-              className="h-24 w-auto shrink-0 object-contain sm:h-28"
+            <LottieScroll
+              animationData={newsletterBearLottie}
+              triggerRef={sectionRef}
+              mode="playWhileInView"
+              className="h-24 w-24 shrink-0 sm:h-28 sm:w-28"
             />
             <div>
               <h2 className="text-lg font-extrabold text-[#2d3a4a] sm:text-xl lg:text-2xl">
@@ -35,7 +53,7 @@ function NewsletterSection() {
             </div>
           </div>
 
-          <div className="flex w-full flex-col items-center gap-5 sm:flex-row sm:justify-end lg:w-auto">
+          <div className="flex w-full flex-col items-center gap-5 sm:flex-row sm:justify-end sm:pr-60 lg:pr-72">
             <form
               className="flex w-full max-w-md overflow-hidden rounded-full border border-gray-200 bg-white shadow-sm sm:max-w-lg"
               onSubmit={(e) => e.preventDefault()}
@@ -52,13 +70,6 @@ function NewsletterSection() {
                 Subscribe
               </button>
             </form>
-
-            <img
-              src={newsletterBalloon}
-              alt=""
-              aria-hidden="true"
-              className="hidden h-24 w-auto shrink-0 object-contain sm:block lg:h-28"
-            />
           </div>
         </div>
       </div>

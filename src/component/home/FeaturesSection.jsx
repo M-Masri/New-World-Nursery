@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import {
   Flower2,
   HeartHandshake,
@@ -5,6 +6,10 @@ import {
   Sprout,
   Users,
 } from 'lucide-react'
+import { ScrollTrigger } from '../../lib/gsap'
+
+const WIGGLE_INTERVAL_MS = 20_000
+const WIGGLE_DURATION_MS = 900
 
 const features = [
   {
@@ -41,8 +46,71 @@ const features = [
 ]
 
 function FeaturesSection() {
+  const sectionRef = useRef(null)
+  const intervalRef = useRef(null)
+  const wiggleTimeoutRef = useRef(null)
+  const [isWiggling, setIsWiggling] = useState(false)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return undefined
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReducedMotion) return undefined
+
+    const clearWiggleTimers = () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      }
+
+      if (wiggleTimeoutRef.current) {
+        clearTimeout(wiggleTimeoutRef.current)
+        wiggleTimeoutRef.current = null
+      }
+
+      setIsWiggling(false)
+    }
+
+    const triggerWiggle = () => {
+      setIsWiggling(false)
+
+      requestAnimationFrame(() => {
+        setIsWiggling(true)
+        wiggleTimeoutRef.current = setTimeout(() => {
+          setIsWiggling(false)
+        }, WIGGLE_DURATION_MS)
+      })
+    }
+
+    const startWiggleLoop = () => {
+      clearWiggleTimers()
+      triggerWiggle()
+      intervalRef.current = setInterval(triggerWiggle, WIGGLE_INTERVAL_MS)
+    }
+
+    const scrollTrigger = ScrollTrigger.create({
+      trigger: section,
+      start: 'top bottom',
+      end: 'bottom top',
+      onToggle: ({ isActive }) => {
+        if (isActive) startWiggleLoop()
+        else clearWiggleTimers()
+      },
+    })
+
+    if (scrollTrigger.isActive) {
+      startWiggleLoop()
+    }
+
+    return () => {
+      scrollTrigger.kill()
+      clearWiggleTimers()
+    }
+  }, [])
+
   return (
-    <section id="why-us" className="bg-[#f3ebe0] py-12">
+    <section id="why-us" ref={sectionRef} className="bg-[#f3ebe0] py-12">
       <div className="mx-auto grid max-w-page grid-cols-1 gap-10 px-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-0">
         {features.map((feature, index) => (
           <div
@@ -54,7 +122,10 @@ function FeaturesSection() {
             }`}
           >
             <div
-              className={`mb-5 flex h-[72px] w-[72px] items-center justify-center rounded-full ${feature.iconBg}`}
+              className={`feature-icon-shell mb-5 flex h-[72px] w-[72px] items-center justify-center rounded-full ${feature.iconBg} ${
+                isWiggling ? 'feature-icon-wiggle' : ''
+              }`}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
               <feature.icon
                 className="h-8 w-8 text-[#2d3a4a]"

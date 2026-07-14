@@ -1,9 +1,15 @@
+import { useRef } from 'react'
 import aboutLeaf from '../../assets/about-leaf.webp'
+import planeHeartLottie from '../../assets/lottie/plane-heart.json'
+import BrushHighlightText from '../BrushHighlightText'
+import LottieScroll from '../LottieScroll'
 
 function AboutSection() {
+  const sectionRef = useRef(null)
+
   return (
-    <section className="relative overflow-hidden bg-white py-16 sm:py-20">
-      <AboutLeafDecoration />
+    <section ref={sectionRef} className="relative overflow-hidden bg-white py-16 sm:py-20">
+      <AboutLeafDecoration sectionRef={sectionRef} />
 
       <div className="relative mx-auto grid max-w-page items-center gap-12 px-6 sm:px-8 lg:grid-cols-2 lg:gap-16">
         <AboutImageFrame />
@@ -16,7 +22,9 @@ function AboutSection() {
           <h2 className="mb-6 text-3xl leading-tight font-extrabold text-[#2d3a4a] sm:text-4xl">
             Welcome to
             <br />
-            New World Nursery
+            <BrushHighlightText triggerRef={sectionRef}>
+              New World Nursery
+            </BrushHighlightText>
           </h2>
 
           <p className="mb-8 max-w-md text-[15px] leading-relaxed text-[#5a6578]">
@@ -27,7 +35,7 @@ function AboutSection() {
 
           <button
             type="button"
-            className="rounded-lg border-2 border-[#5bb5a2] bg-white px-8 py-2.5 text-sm font-extrabold tracking-wide text-[#5bb5a2] uppercase transition hover:bg-[#eef8f5]"
+            className="rounded-lg border-2 border-[#f07a7a] bg-white px-8 py-2.5 text-sm font-extrabold tracking-wide text-[#f07a7a] uppercase transition hover:bg-[#fde8e8]"
           >
             Read More
           </button>
@@ -85,7 +93,7 @@ function AboutImageFrame() {
   )
 }
 
-function AboutLeafDecoration() {
+function AboutLeafDecoration({ sectionRef }) {
   return (
     <>
       <img
@@ -99,6 +107,12 @@ function AboutLeafDecoration() {
         alt=""
         aria-hidden="true"
         className="pointer-events-none absolute right-0 bottom-0 z-0 w-40 opacity-90 sm:w-44 lg:w-48"
+      />
+      <LottieScroll
+        animationData={planeHeartLottie}
+        triggerRef={sectionRef}
+        mode="playWhileInView"
+        className="pointer-events-none absolute right-10 bottom-0 z-20 h-36 w-72 opacity-100 brightness-75 contrast-125 saturate-125 sm:right-12 sm:h-40 sm:w-80 lg:right-16 lg:h-48 lg:w-96"
       />
     </>
   )
