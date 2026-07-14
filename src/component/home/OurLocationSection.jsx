@@ -38,7 +38,7 @@ const branches = [
     hours: 'Sun – Thu: 7:00 AM – 6:00 PM',
     flag: '🇶🇦',
     image:
-      'https://images.unsplash.com/photo-1566495547217-26146054cdeb?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=600&h=400&fit=crop',
   },
   {
     id: 4,

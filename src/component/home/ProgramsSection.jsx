@@ -10,7 +10,7 @@ const programs = [
     description:
       'A gentle introduction to learning through play and sensory activities.',
     image:
-      'https://images.unsplash.com/photo-1566495547217-26146054cdeb?w=400&h=260&fit=crop',
+      'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400&h=260&fit=crop',
     icon: Baby,
     color: '#8cb83a',
     lightBg: '#eef6e0',

@@ -1,44 +1,43 @@
 import { useEffect, useRef, useState } from 'react'
-import {
-  Flower2,
-  HeartHandshake,
-  ShieldCheck,
-  Sprout,
-  Users,
-} from 'lucide-react'
+import handshakeLottie from '../../assets/lottie/handshake.json'
+import shieldLottie from '../../assets/lottie/shield.json'
+import slideLottie from '../../assets/lottie/slide.json'
+import successLottie from '../../assets/lottie/success.json'
+import teacherLottie from '../../assets/lottie/teacher.json'
 import { ScrollTrigger } from '../../lib/gsap'
+import LottieScroll from '../LottieScroll'
 
 const WIGGLE_INTERVAL_MS = 20_000
 const WIGGLE_DURATION_MS = 900
 
 const features = [
   {
-    icon: ShieldCheck,
+    lottie: shieldLottie,
     title: 'Safe & Secure',
     description: "Your child's safety and well-being is our top priority.",
     iconBg: 'bg-[#c8e8d8]',
   },
   {
-    icon: Users,
+    lottie: teacherLottie,
     title: 'Qualified Educators',
     description: 'Experienced and passionate teachers who care.',
     iconBg: 'bg-[#f5d5c0]',
   },
   {
-    icon: Flower2,
+    lottie: slideLottie,
     title: 'Play-based Learning',
     description: 'Learning through play, exploration and discovery.',
     iconBg: 'bg-[#f3e4a8]',
   },
   {
-    icon: Sprout,
+    lottie: successLottie,
     title: 'Holistic Development',
     description:
       'Focusing on social, emotional, cognitive and physical growth.',
     iconBg: 'bg-[#ddd0ee]',
   },
   {
-    icon: HeartHandshake,
+    lottie: handshakeLottie,
     title: 'Strong Parent Partnership',
     description: "Working together for your child's bright future.",
     iconBg: 'bg-[#c8e3ee]',
@@ -127,10 +126,20 @@ function FeaturesSection() {
               }`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <feature.icon
-                className="h-8 w-8 text-[#2d3a4a]"
-                strokeWidth={1.6}
-              />
+              {feature.lottie ? (
+                <LottieScroll
+                  animationData={feature.lottie}
+                  triggerRef={sectionRef}
+                  mode="playWhileInView"
+                  speed={0.85}
+                  className="h-12 w-12"
+                />
+              ) : (
+                <feature.icon
+                  className="h-8 w-8 text-[#2d3a4a]"
+                  strokeWidth={1.6}
+                />
+              )}
             </div>
             <h3 className="mb-2 text-[15px] font-bold text-[#2d3a4a]">
               {feature.title}

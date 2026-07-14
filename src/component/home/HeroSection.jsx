@@ -1,39 +1,10 @@
-import { useRef } from 'react'
 import heroCloud from '../../assets/hero-cloud.png'
 import heroHeart from '../../assets/hero-heart.png'
 import heroRainbow from '../../assets/hero-rainbow.png'
 import heroSun from '../../assets/hero-sun.png'
-import useMouseParallax from '../../hooks/useMouseParallax'
 
 const heroPhoto =
   'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=700&h=750&fit=crop'
-
-const PARALLAX_STRENGTH = 24
-
-function parallaxTransform(offset, depth = 1, baseTransform = '') {
-  const x = offset.x * depth * PARALLAX_STRENGTH
-  const y = offset.y * depth * PARALLAX_STRENGTH
-  const parallax = `translate(${x}px, ${y}px)`
-  return {
-    transform: baseTransform ? `${baseTransform} ${parallax}` : parallax,
-    transition: 'transform 0.15s ease-out',
-  }
-}
-
-function ParallaxWrap({
-  offset,
-  depth = 1,
-  className = '',
-  children,
-  as: Tag = 'div',
-  baseTransform = '',
-}) {
-  return (
-    <Tag className={className} style={parallaxTransform(offset, depth, baseTransform)}>
-      {children}
-    </Tag>
-  )
-}
 
 function HeroCloudPhoto({ className = '', src, alt }) {
   return (
@@ -46,18 +17,15 @@ function HeroCloudPhoto({ className = '', src, alt }) {
 }
 
 function HeroSection() {
-  const sectionRef = useRef(null)
-  const offset = useMouseParallax(sectionRef)
-
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-white">
+    <section className="relative overflow-hidden bg-white">
       <img
         src={heroRainbow}
         alt=""
         className="pointer-events-none absolute -right-3 bottom-0 z-30 block w-48 sm:-right-4 sm:bottom-0 sm:w-60 lg:w-72"
       />
 
-      <HeroDecorations offset={offset} />
+      <HeroDecorations />
       <HeroFlyingDecorations />
 
       <div className="relative z-10 mx-auto grid max-w-page items-center gap-12 px-6 py-14 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:py-20">
@@ -76,19 +44,12 @@ function HeroSection() {
                 <span className="text-[#8cb83a]">A </span>
                 <span className="text-[#f07a7a]">Happy </span>
                 <span className="relative inline-block">
-                  <ParallaxWrap
-                    offset={offset}
-                    depth={1.2}
-                    baseTransform="translateX(-50%)"
-                    className="pointer-events-none absolute -top-7 left-1/2"
-                  >
-                    <img
-                      src={heroHeart}
-                      alt=""
-                      className="h-8 w-8 object-contain sm:h-9 sm:w-9 lg:h-10 lg:w-10"
-                      aria-hidden="true"
-                    />
-                  </ParallaxWrap>
+                  <img
+                    src={heroHeart}
+                    alt=""
+                    className="pointer-events-none absolute -top-7 left-1/2 h-8 w-8 -translate-x-1/2 object-contain sm:h-9 sm:w-9 lg:h-10 lg:w-10"
+                    aria-hidden="true"
+                  />
                   <span className="text-[#f5b942]">Place</span>
                 </span>
                 <br />
@@ -128,32 +89,20 @@ function HeroSection() {
         </div>
 
         <div className="relative flex w-full max-w-[700px] justify-center px-6 py-2 lg:justify-self-end lg:px-4">
-          <ParallaxWrap
-            offset={offset}
-            depth={1.8}
-            className="pointer-events-none absolute -top-5 left-4 z-10 sm:-top-6 sm:left-6 lg:-top-7 lg:left-8"
-          >
-            <img
-              src={heroSun}
-              alt=""
-              className="h-16 w-16 object-contain sm:h-[4.5rem] sm:w-[4.5rem] lg:h-20 lg:w-20"
-              aria-hidden="true"
-            />
-          </ParallaxWrap>
+          <img
+            src={heroSun}
+            alt=""
+            className="pointer-events-none absolute -top-5 left-4 z-10 h-16 w-16 object-contain sm:-top-6 sm:left-6 sm:h-[4.5rem] sm:w-[4.5rem] lg:-top-7 lg:left-8 lg:h-20 lg:w-20"
+            aria-hidden="true"
+          />
 
-          <ParallaxWrap
-            offset={offset}
-            depth={1.4}
-            className="pointer-events-none absolute top-11 left-10 z-10 sm:top-12 sm:left-12 lg:top-14 lg:left-14"
+          <svg
+            className="pointer-events-none absolute top-11 left-10 z-10 h-4 w-4 rotate-45 text-[#d45a5a] sm:top-12 sm:left-12 sm:h-5 sm:w-5 lg:top-14 lg:left-14"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
           >
-            <svg
-              className="h-4 w-4 rotate-45 text-[#d45a5a] sm:h-5 sm:w-5"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path fill="currentColor" d={heartPath} />
-            </svg>
-          </ParallaxWrap>
+            <path fill="currentColor" d={heartPath} />
+          </svg>
 
           <HeroCloudPhoto
             className="h-[280px] w-full max-w-[520px] sm:h-[310px] sm:max-w-[560px] lg:h-[340px] lg:max-w-[600px]"
@@ -162,18 +111,6 @@ function HeroSection() {
           />
         </div>
       </div>
-
-      <ParallaxWrap
-        offset={offset}
-        depth={1}
-        baseTransform="translateX(-50%)"
-        className="pointer-events-none absolute bottom-8 left-1/2 z-20 flex gap-2.5"
-        aria-hidden="true"
-      >
-        <span className="h-3 w-3 rounded-full bg-[#f07a7a]" />
-        <span className="h-3 w-3 rounded-full bg-[#b8d86a]" />
-        <span className="h-3 w-3 rounded-full bg-[#5bb5a2]" />
-      </ParallaxWrap>
     </section>
   )
 }
@@ -182,21 +119,21 @@ const heartPath =
   'M12 21 C12 21 3 14 3 8.5 C3 5.5 5.5 3 8.5 3 C10.5 3 12 4.5 12 4.5 C12 4.5 13.5 3 15.5 3 C18.5 3 21 5.5 21 8.5 C21 14 12 21 12 21Z'
 
 const heroHearts = [
-  { className: 'absolute top-[28%] left-[42%] h-4 w-4 text-[#f4a0b0] opacity-60', depth: 1.3 },
-  { className: 'absolute top-[18%] right-[32%] h-3.5 w-3.5 text-[#f07a7a] opacity-50', depth: 0.9 },
-  { className: 'absolute top-[10%] left-[58%] h-3 w-3 text-[#5bb5a2] opacity-45', depth: 1.1 },
-  { className: 'absolute bottom-[24%] left-[10%] h-3.5 w-3.5 text-[#f4a0b0] opacity-55', depth: 0.8 },
-  { className: 'absolute top-[65%] right-[20%] h-3 w-3 text-[#f07a7a] opacity-50', depth: 1.2 },
+  'absolute top-[28%] left-[42%] h-4 w-4 text-[#f4a0b0] opacity-60',
+  'absolute top-[18%] right-[32%] h-3.5 w-3.5 text-[#f07a7a] opacity-50',
+  'absolute top-[10%] left-[58%] h-3 w-3 text-[#5bb5a2] opacity-45',
+  'absolute bottom-[24%] left-[10%] h-3.5 w-3.5 text-[#f4a0b0] opacity-55',
+  'absolute top-[65%] right-[20%] h-3 w-3 text-[#f07a7a] opacity-50',
 ]
 
 const heroDots = [
-  { className: 'absolute top-[12%] left-[18%] h-3 w-3 rounded-full bg-[#f5c842] opacity-45', depth: 0.7 },
-  { className: 'absolute top-[55%] right-[12%] h-2.5 w-2.5 rounded-full bg-[#a682b8] opacity-40', depth: 1 },
-  { className: 'absolute top-[22%] left-[30%] h-2.5 w-2.5 rounded-full bg-[#5bb5a2] opacity-45', depth: 0.85 },
-  { className: 'absolute top-[48%] left-[54%] h-2 w-2 rounded-full bg-[#f07a7a] opacity-40', depth: 1.15 },
-  { className: 'absolute bottom-[20%] right-[36%] h-2.5 w-2.5 rounded-full bg-[#f5c842] opacity-50', depth: 0.75 },
-  { className: 'absolute top-[72%] left-[36%] h-2 w-2 rounded-full bg-[#8cb83a] opacity-45', depth: 0.9 },
-  { className: 'absolute top-[16%] right-[14%] h-2.5 w-2.5 rounded-full bg-[#a682b8] opacity-40', depth: 1.05 },
+  'absolute top-[12%] left-[18%] h-3 w-3 rounded-full bg-[#f5c842] opacity-45',
+  'absolute top-[55%] right-[12%] h-2.5 w-2.5 rounded-full bg-[#a682b8] opacity-40',
+  'absolute top-[22%] left-[30%] h-2.5 w-2.5 rounded-full bg-[#5bb5a2] opacity-45',
+  'absolute top-[48%] left-[54%] h-2 w-2 rounded-full bg-[#f07a7a] opacity-40',
+  'absolute bottom-[20%] right-[36%] h-2.5 w-2.5 rounded-full bg-[#f5c842] opacity-50',
+  'absolute top-[72%] left-[36%] h-2 w-2 rounded-full bg-[#8cb83a] opacity-45',
+  'absolute top-[16%] right-[14%] h-2.5 w-2.5 rounded-full bg-[#a682b8] opacity-40',
 ]
 
 const flyingItems = [
@@ -258,7 +195,7 @@ function HeroFlyingDecorations() {
   )
 }
 
-function HeroDecorations({ offset }) {
+function HeroDecorations() {
   return (
     <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
       <img
@@ -276,26 +213,16 @@ function HeroDecorations({ offset }) {
         <ellipse cx="46" cy="26" rx="12" ry="10" fill="currentColor" />
       </svg>
 
-      {heroHearts.map((heart) => (
-        <ParallaxWrap
-          key={heart.className}
-          offset={offset}
-          depth={heart.depth}
-          className={heart.className}
-        >
+      {heroHearts.map((className) => (
+        <div key={className} className={className}>
           <svg className="h-full w-full" viewBox="0 0 24 24">
             <path fill="currentColor" d={heartPath} />
           </svg>
-        </ParallaxWrap>
+        </div>
       ))}
 
-      {heroDots.map((dot) => (
-        <ParallaxWrap
-          key={dot.className}
-          offset={offset}
-          depth={dot.depth}
-          className={dot.className}
-        />
+      {heroDots.map((className) => (
+        <div key={className} className={className} />
       ))}
 
       <svg

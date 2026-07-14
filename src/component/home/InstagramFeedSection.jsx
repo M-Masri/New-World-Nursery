@@ -19,7 +19,7 @@ const instagramPosts = [
   {
     id: 3,
     image:
-      'https://images.unsplash.com/photo-1566495547217-26146054cdeb?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=400&h=400&fit=crop',
     alt: 'Happy child at nursery',
   },
   {
@@ -49,7 +49,7 @@ const instagramPosts = [
   {
     id: 8,
     image:
-      'https://images.unsplash.com/photo-1566495547217-26146054cdeb?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=400&h=400&fit=crop',
     alt: 'Story time',
   },
   {
