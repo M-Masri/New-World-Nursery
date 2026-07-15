@@ -1,3 +1,4 @@
+import CloudScroll3D from '../component/CloudScroll3D'
 import {
   HeroSection,
   FeaturesSection,
@@ -13,6 +14,7 @@ import {
 function Home() {
   return (
     <>
+      <CloudScroll3D />
       <HeroSection />
       <FeaturesSection />
       <AboutSection />
