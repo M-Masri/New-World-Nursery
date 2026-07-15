@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import Logo from './Logo'
-import Button from './Button'
+import Logo from '../ui/Logo'
+import Button from '../ui/Button'
 
 const navLinks = [
   { label: 'Home', to: '/', isRoute: true },

@@ -1,6 +1,6 @@
 import { Clock, Mail, MapPin, Phone } from 'lucide-react'
-import { FacebookIcon, InstagramIcon, YoutubeIcon } from './SocialIcons'
-import Logo from './Logo'
+import { FacebookIcon, InstagramIcon, YoutubeIcon } from '../ui/SocialIcons'
+import Logo from '../ui/Logo'
 
 const quickLinks = [
   'Home',

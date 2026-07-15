@@ -5,7 +5,7 @@ import slideLottie from '../../assets/lottie/slide.json'
 import successLottie from '../../assets/lottie/success.json'
 import teacherLottie from '../../assets/lottie/teacher.json'
 import { ScrollTrigger } from '../../lib/gsap'
-import LottieScroll from '../LottieScroll'
+import LottieScroll from '../ui/LottieScroll'
 
 const WIGGLE_INTERVAL_MS = 20_000
 const WIGGLE_DURATION_MS = 900

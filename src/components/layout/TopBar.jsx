@@ -1,5 +1,5 @@
 import { Mail, MapPin, Phone, User } from 'lucide-react'
-import { FacebookIcon, InstagramIcon, YoutubeIcon } from './SocialIcons'
+import { FacebookIcon, InstagramIcon, YoutubeIcon } from '../ui/SocialIcons'
 
 function TopBar() {
   return (

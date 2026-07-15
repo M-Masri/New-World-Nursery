@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import balloonLottie from '../../assets/lottie/balloon.json'
 import newsletterBearLottie from '../../assets/lottie/newsletter-bear.json'
-import LottieScroll from '../LottieScroll'
+import LottieScroll from '../ui/LottieScroll'
 
 function NewsletterSection() {
   const sectionRef = useRef(null)

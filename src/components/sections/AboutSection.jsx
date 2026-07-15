@@ -1,8 +1,8 @@
 import { useRef } from 'react'
 import aboutLeaf from '../../assets/about-leaf.webp'
 import planeHeartLottie from '../../assets/lottie/plane-heart.json'
-import BrushHighlightText from '../BrushHighlightText'
-import LottieScroll from '../LottieScroll'
+import BrushHighlightText from '../ui/BrushHighlightText'
+import LottieScroll from '../ui/LottieScroll'
 
 function AboutSection() {
   const sectionRef = useRef(null)

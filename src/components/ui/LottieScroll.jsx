@@ -1,4 +1,4 @@
-import useLottieScroll from '../hooks/useLottieScroll'
+import useLottieScroll from '../../hooks/useLottieScroll'
 
 function LottieScroll({
   animationData,

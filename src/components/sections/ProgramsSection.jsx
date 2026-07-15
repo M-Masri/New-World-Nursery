@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { Baby, Flower2, GraduationCap, Lightbulb } from 'lucide-react'
-import BrushHighlightText from '../BrushHighlightText'
-import AnimatedCard from '../AnimatedCard'
+import BrushHighlightText from '../ui/BrushHighlightText'
+import AnimatedCard from '../ui/AnimatedCard'
 
 const programs = [
   {

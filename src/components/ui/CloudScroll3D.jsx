@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { useCloudScroll3D } from '../hooks/useCloudScroll3D'
+import { useCloudScroll3D } from '../../hooks/useCloudScroll3D'
 
 /**
  * غيمة 3D ثابتة فوق الصفحة — تتحرك zigzag مع السكرول.

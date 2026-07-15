@@ -1,7 +1,7 @@
 import { useRef } from 'react'
-import { InstagramIcon } from '../SocialIcons'
-import BrushHighlightText from '../BrushHighlightText'
-import AnimatedCard from '../AnimatedCard'
+import { InstagramIcon } from '../ui/SocialIcons'
+import BrushHighlightText from '../ui/BrushHighlightText'
+import AnimatedCard from '../ui/AnimatedCard'
 
 const instagramPosts = [
   {

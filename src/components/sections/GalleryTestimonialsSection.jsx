@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { ScrollTrigger } from '../../lib/gsap'
-import Button from '../Button'
-import BrushHighlightText from '../BrushHighlightText'
-import LottieScroll from '../LottieScroll'
+import Button from '../ui/Button'
+import BrushHighlightText from '../ui/BrushHighlightText'
+import LottieScroll from '../ui/LottieScroll'
 
 const galleryImages = [
   'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400&h=280&fit=crop',

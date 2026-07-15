@@ -1,8 +1,8 @@
 import { useRef } from 'react'
 import { ArrowRight, Mail, Phone } from 'lucide-react'
 import contactNeedsLottie from '../../assets/lottie/contact-needs.json'
-import BrushHighlightText from '../BrushHighlightText'
-import LottieScroll from '../LottieScroll'
+import BrushHighlightText from '../ui/BrushHighlightText'
+import LottieScroll from '../ui/LottieScroll'
 
 const programs = [
   'Select...',

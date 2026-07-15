@@ -1,4 +1,4 @@
-import CloudScroll3D from '../component/CloudScroll3D'
+import { CloudScroll3D } from '../components/ui'
 import {
   HeroSection,
   FeaturesSection,
@@ -9,7 +9,7 @@ import {
   GalleryTestimonialsSection,
   ContactSection,
   NewsletterSection,
-} from '../component/home'
+} from '../components/sections'
 
 function Home() {
   return (
