@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import instagramIcon from '../../assets/New_World_Icon00010-removebg-preview.webp'
 import { InstagramIcon } from '../ui/SocialIcons'
 import BrushHighlightText from '../ui/BrushHighlightText'
 import AnimatedCard from '../ui/AnimatedCard'
@@ -82,8 +83,19 @@ function InstagramFeedSection() {
   const sectionRef = useRef(null)
 
   return (
-    <section id="instagram" ref={sectionRef} className="bg-[#fffbf5] py-16">
-      <div className="mx-auto max-w-page px-4 sm:px-6">
+    <section
+      id="instagram"
+      ref={sectionRef}
+      className="relative overflow-hidden bg-[#fffbf5] py-16"
+    >
+      <img
+        src={instagramIcon}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-0 left-0 z-20 w-28 opacity-95 sm:w-32 lg:w-40"
+      />
+
+      <div className="relative z-10 mx-auto max-w-page px-4 sm:px-6">
         <div className="mb-10 text-center">
           <p className="mb-2 text-xs font-extrabold tracking-[0.25em] text-[#5bb5a2] uppercase">
             Instagram

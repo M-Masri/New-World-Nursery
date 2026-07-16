@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import aboutLeaf from '../../assets/about-leaf.webp'
+import aboutGradIcon from '../../assets/New_World_Icon00050-removebg-preview.webp'
 import planeHeartLottie from '../../assets/lottie/plane-heart.json'
 import BrushHighlightText from '../ui/BrushHighlightText'
 import LottieScroll from '../ui/LottieScroll'
@@ -96,6 +97,12 @@ function AboutImageFrame() {
 function AboutLeafDecoration({ sectionRef }) {
   return (
     <>
+      <img
+        src={aboutGradIcon}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-0 left-0 z-0 w-28 opacity-95 sm:w-32 lg:w-40"
+      />
       <img
         src={aboutLeaf}
         alt=""

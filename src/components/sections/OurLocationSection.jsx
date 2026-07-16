@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { ArrowUpRight, Clock, Mail, MapPin, Phone } from 'lucide-react'
+import locationIcon from '../../assets/New_World_Icon00032-removebg-preview.webp'
 import BrushHighlightText from '../ui/BrushHighlightText'
 import AnimatedCard from '../ui/AnimatedCard'
 
@@ -58,8 +59,19 @@ function OurLocationSection() {
   const sectionRef = useRef(null)
 
   return (
-    <section id="locations" ref={sectionRef} className="bg-white py-16 sm:py-20">
-      <div className="mx-auto max-w-page px-4 sm:px-6">
+    <section
+      id="locations"
+      ref={sectionRef}
+      className="relative overflow-hidden bg-white py-16 sm:py-20"
+    >
+      <img
+        src={locationIcon}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 bottom-0 z-20 w-28 opacity-95 sm:w-32 lg:w-40"
+      />
+
+      <div className="relative z-10 mx-auto max-w-page px-4 sm:px-6">
         <div className="mb-12 text-center">
           <p className="mb-2 text-xs font-extrabold tracking-[0.25em] text-[#5bb5a2] uppercase">
             Our Location

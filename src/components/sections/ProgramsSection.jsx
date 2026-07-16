@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { Baby, Flower2, GraduationCap, Lightbulb } from 'lucide-react'
+import programsIcon from '../../assets/New_World_Icon00018-removebg-preview.webp'
 import BrushHighlightText from '../ui/BrushHighlightText'
 import AnimatedCard from '../ui/AnimatedCard'
 
@@ -72,13 +73,19 @@ function ProgramsSection() {
           ))}
         </div>
 
-        <div className="mt-12 text-center">
+        <div className="mt-12 flex flex-col items-center gap-6 text-center">
           <button
             type="button"
             className="rounded-lg border-2 border-[#f07a7a] bg-white px-8 py-2.5 text-sm font-extrabold tracking-wide text-[#f07a7a] uppercase transition hover:bg-[#fde8e8]"
           >
             View All Programs
           </button>
+          <img
+            src={programsIcon}
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none w-28 sm:w-32 lg:w-36"
+          />
         </div>
       </div>
     </section>
