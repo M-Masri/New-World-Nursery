@@ -53,7 +53,7 @@ function ProgramsSection() {
   const sectionRef = useRef(null)
 
   return (
-    <section id="programs" ref={sectionRef} className="relative overflow-hidden bg-white py-16">
+    <section id="programs" ref={sectionRef} className="relative scroll-mt-24 overflow-hidden bg-white py-16">
       <ProgramsDecorations />
 
       <div className="relative mx-auto max-w-page px-4 sm:px-6">

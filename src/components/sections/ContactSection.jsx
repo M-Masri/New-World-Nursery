@@ -1,25 +1,31 @@
 import { useRef } from 'react'
-import { ArrowRight, Mail, Phone } from 'lucide-react'
+import { Mail, Phone } from 'lucide-react'
 import contactNeedsLottie from '../../assets/lottie/contact-needs.json'
 import BrushHighlightText from '../ui/BrushHighlightText'
+import CloudScroll3D from '../ui/CloudScroll3D'
+import ContactForm from '../ui/ContactForm'
 import LottieScroll from '../ui/LottieScroll'
-
-const programs = [
-  'Select...',
-  'Toddlers',
-  'Nursery',
-  'Pre-Nursery',
-  'KG',
-  'General Enquiry',
-]
 
 function ContactSection() {
   const sectionRef = useRef(null)
 
   return (
-    <section id="contact" ref={sectionRef} className="bg-white py-16 sm:py-20">
-      <div className="mx-auto grid max-w-page items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16">
+    <section
+      id="contact"
+      ref={sectionRef}
+      className="relative overflow-hidden bg-white py-16 sm:py-20"
+    >
+      <div className="relative z-10 mx-auto grid max-w-page items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16">
         <div>
+          <div className="relative -ml-10 mb-3 h-28 w-52 sm:mb-4 sm:h-32 sm:w-60">
+            <CloudScroll3D
+              horizontalPosition={0}
+              verticalPosition={0.7}
+              cloudScale={1.25}
+              driftAmplitude={0}
+            />
+          </div>
+
           <p className="mb-4 text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase">
             We&apos;re Here to Help You
           </p>
@@ -77,85 +83,7 @@ function ContactSection() {
         </div>
 
         <div className="rounded-2xl bg-white p-6 shadow-lg sm:p-8">
-          <form
-            className="space-y-5"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <div>
-              <label
-                htmlFor="contact-name"
-                className="mb-2 block text-sm text-gray-500"
-              >
-                Name
-              </label>
-              <input
-                id="contact-name"
-                type="text"
-                placeholder="Jane Smith"
-                className="w-full rounded-xl bg-[#f5f5f7] px-4 py-3 text-sm text-[#2d3a4a] outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-[#5bb5a2]/30"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="contact-email"
-                className="mb-2 block text-sm text-gray-500"
-              >
-                Email
-              </label>
-              <input
-                id="contact-email"
-                type="email"
-                placeholder="jane@example.com"
-                className="w-full rounded-xl bg-[#f5f5f7] px-4 py-3 text-sm text-[#2d3a4a] outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-[#5bb5a2]/30"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="contact-program"
-                className="mb-2 block text-sm text-gray-500"
-              >
-                Program
-              </label>
-              <select
-                id="contact-program"
-                defaultValue=""
-                className="w-full appearance-none rounded-xl bg-[#f5f5f7] px-4 py-3 text-sm text-[#2d3a4a] outline-none focus:ring-2 focus:ring-[#5bb5a2]/30"
-              >
-                {programs.map((program) => (
-                  <option key={program} value={program === 'Select...' ? '' : program}>
-                    {program}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label
-                htmlFor="contact-message"
-                className="mb-2 block text-sm text-gray-500"
-              >
-                Message
-              </label>
-              <textarea
-                id="contact-message"
-                rows={4}
-                placeholder="Type your message..."
-                className="w-full resize-none rounded-xl bg-[#f5f5f7] px-4 py-3 text-sm text-[#2d3a4a] outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-[#5bb5a2]/30"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="inline-flex items-center gap-3 rounded-full bg-[#f07a7a] py-3 pr-6 pl-2 text-sm font-bold text-white transition hover:bg-[#e86a6a]"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white">
-                <ArrowRight className="h-4 w-4 text-[#f07a7a]" />
-              </span>
-              Send Message
-            </button>
-          </form>
+          <ContactForm idPrefix="contact" />
         </div>
       </div>
     </section>

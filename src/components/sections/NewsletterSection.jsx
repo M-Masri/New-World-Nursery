@@ -67,7 +67,7 @@ function NewsletterSection() {
                 type="submit"
                 className="shrink-0 bg-[#f4846b] px-6 py-3 text-sm font-extrabold tracking-wide text-white uppercase transition hover:bg-[#e86f55]"
               >
-                Subscribe
+                Enquire
               </button>
             </form>
           </div>

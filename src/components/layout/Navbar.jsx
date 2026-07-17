@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useContactFormPopup } from '../../context/ContactFormContext'
 import Logo from '../ui/Logo'
 import Button from '../ui/Button'
 
@@ -12,6 +13,8 @@ const navLinks = [
 ]
 
 function Navbar() {
+  const { openContactForm } = useContactFormPopup()
+
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm">
       <div className="mx-auto flex max-w-page items-center justify-between gap-4 px-4 py-2 sm:px-6">
@@ -41,7 +44,12 @@ function Navbar() {
           )}
         </nav>
 
-        <Button className="hidden px-6 py-2 text-sm sm:inline-flex">Enquire Now</Button>
+        <Button
+          className="hidden px-6 py-2 text-sm sm:inline-flex"
+          onClick={openContactForm}
+        >
+          Enquire Now
+        </Button>
       </div>
     </header>
   )

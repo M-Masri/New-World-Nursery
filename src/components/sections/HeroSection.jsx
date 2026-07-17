@@ -1,3 +1,5 @@
+import { CloudScroll3D } from '../ui'
+import { useContactFormPopup } from '../../context/ContactFormContext'
 import heroCloud from '../../assets/hero-cloud.png'
 import heroHeart from '../../assets/hero-heart.png'
 import heroRainbow from '../../assets/hero-rainbow.png'
@@ -17,8 +19,12 @@ function HeroCloudPhoto({ className = '', src, alt }) {
 }
 
 function HeroSection() {
+  const { openContactForm } = useContactFormPopup()
+
   return (
     <section className="relative overflow-hidden bg-white">
+      <CloudScroll3D driftAmplitude={0} />
+
       <img
         src={heroRainbow}
         alt=""
@@ -75,12 +81,18 @@ function HeroSection() {
           <div className="flex flex-wrap justify-center gap-4 lg:justify-start">
             <button
               type="button"
+              onClick={openContactForm}
               className="rounded-xl bg-[#f07a7a] px-8 py-3 text-sm font-extrabold tracking-wide text-white uppercase shadow-md shadow-[#f07a7a]/25 transition hover:bg-[#e86a6a]"
             >
               Enquire Now!
             </button>
             <button
               type="button"
+              onClick={() => {
+                document
+                  .getElementById('programs')
+                  ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+              }}
               className="rounded-xl border-2 border-[#5bb5a2] bg-white px-8 py-3 text-sm font-extrabold tracking-wide text-[#5bb5a2] uppercase transition hover:bg-[#eef8f5]"
             >
               Our Programs

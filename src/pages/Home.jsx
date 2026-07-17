@@ -1,4 +1,3 @@
-import { CloudScroll3D } from '../components/ui'
 import {
   HeroSection,
   FeaturesSection,
@@ -14,7 +13,6 @@ import {
 function Home() {
   return (
     <>
-      <CloudScroll3D />
       <HeroSection />
       <FeaturesSection />
       <AboutSection />

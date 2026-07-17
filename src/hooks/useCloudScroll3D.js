@@ -1,32 +1,16 @@
 import { useEffect } from 'react'
 import * as THREE from 'three'
-import { gsap, ScrollTrigger } from '../lib/gsap'
 import { createCloudTexture } from '../lib/createCloudTexture'
 
 const DEFAULT_CONFIG = {
-  sectionSelector: 'main > section',
-  verticalPosition: 0.22,
+  horizontalPosition: 0.88,
+  verticalPosition: 0.08,
   bobAmplitude: 14,
   bobSpeed: 1,
-  scrubSmoothness: 3.2,
+  driftAmplitude: 10,
+  driftSpeed: 0.7,
   cloudScale: 1.3,
   zIndex: 0,
-}
-
-function getSections(selector) {
-  return Array.from(document.querySelectorAll(selector))
-}
-
-function getTrackWidth() {
-  return (
-    document.body.clientWidth ||
-    document.documentElement.clientWidth ||
-    window.innerWidth
-  )
-}
-
-function getViewportHeight() {
-  return window.innerHeight
 }
 
 function updateOrthoCamera(camera, width, height) {
@@ -38,7 +22,7 @@ function updateOrthoCamera(camera, width, height) {
 }
 
 /**
- * غيمة Three.js — zigzag أفقي مربوط بسكرول كل سكشن وعرض body.
+ * غيمة Three.js مثبتة بإحداثيات الهيرو (absolute) — floating فقط بدون أي ربط بالسكرول.
  */
 export function useCloudScroll3D(canvasRef, userConfig = {}) {
   const config = { ...DEFAULT_CONFIG, ...userConfig }
@@ -56,58 +40,51 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
     let camera
     let cloudSprite
     let animationFrameId
-    let scrollTriggers = []
     let resizeObserver
     let bootFrameId
     let isDisposed = false
+    let baseX = 0
+    let baseY = 0
+    let layoutWidth = 0
+    let layoutHeight = 0
     const clockStart = performance.now()
 
-    const cloudPos = { x: 0, y: 0 }
-
-    const getCloudSize = () => {
-      const trackWidth = getTrackWidth()
+    const getCloudSize = (trackWidth) => {
       const mobile = trackWidth < 640
       const baseWidth = (mobile ? 120 : 180) * config.cloudScale
       const baseHeight = baseWidth * (110 / 180)
       return { width: baseWidth, height: baseHeight }
     }
 
-    const getHorizontalBounds = () => {
-      const trackWidth = getTrackWidth()
-      const { width: cloudWidth } = getCloudSize()
+    const computeBasePosition = () => {
+      const { width: cloudWidth } = getCloudSize(layoutWidth)
       const half = cloudWidth * 0.5
-
-      return {
-        left: half,
-        right: trackWidth - half,
-      }
+      const inset = half * 0.05
+      const target = layoutWidth * config.horizontalPosition
+      baseX = Math.min(
+        layoutWidth - inset - half,
+        Math.max(inset + half, target),
+      )
+      baseY = layoutHeight * config.verticalPosition
     }
 
-    const getBaseY = () => getViewportHeight() * config.verticalPosition
+    const syncLayout = () => {
+      layoutWidth = canvas.clientWidth || 1
+      layoutHeight = canvas.clientHeight || 1
 
-    const applyCloudX = (sectionIndex, progress) => {
-      const { left, right } = getHorizontalBounds()
-      const even = sectionIndex % 2 === 0
-      const fromX = even ? right : left
-      const toX = even ? left : right
-      cloudPos.x = gsap.utils.interpolate(fromX, toX, progress)
-      cloudPos.y = getBaseY()
-    }
-
-    const syncRendererSize = () => {
-      if (!renderer || !camera || !canvas) return
-
-      const width = canvas.clientWidth || getTrackWidth()
-      const height = canvas.clientHeight || getViewportHeight()
+      if (!renderer || !camera) return
 
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-      renderer.setSize(width, height, false)
-      updateOrthoCamera(camera, width, height)
+      renderer.setSize(layoutWidth, layoutHeight, false)
+      updateOrthoCamera(camera, layoutWidth, layoutHeight)
 
       if (cloudSprite) {
-        const { width: cloudWidth, height: cloudHeight } = getCloudSize()
+        const { width: cloudWidth, height: cloudHeight } =
+          getCloudSize(layoutWidth)
         cloudSprite.scale.set(cloudWidth, cloudHeight, 1)
       }
+
+      computeBasePosition()
     }
 
     const initThree = () => {
@@ -129,56 +106,14 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
         map: texture,
         transparent: true,
         depthWrite: false,
+        opacity: 1,
       })
 
       cloudSprite = new THREE.Sprite(material)
       cloudSprite.position.z = config.zIndex
       scene.add(cloudSprite)
 
-      syncRendererSize()
-    }
-
-    const initSectionScrollTriggers = (sections) => {
-      const drivers = sections.map(() => ({ progress: 0, active: false }))
-
-      const syncFromDrivers = () => {
-        let chosen = null
-
-        sections.forEach((_, index) => {
-          const driver = drivers[index]
-          if (!driver?.active) return
-          if (!chosen || index >= chosen.index) {
-            chosen = { index, progress: driver.progress }
-          }
-        })
-
-        if (chosen) {
-          applyCloudX(chosen.index, chosen.progress)
-        }
-      }
-
-      sections.forEach((section, index) => {
-        const trigger = ScrollTrigger.create({
-          trigger: section,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: config.scrubSmoothness,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            drivers[index].progress = self.progress
-            drivers[index].active = self.isActive
-            syncFromDrivers()
-          },
-          onToggle: (self) => {
-            drivers[index].active = self.isActive
-            syncFromDrivers()
-          },
-        })
-
-        scrollTriggers.push(trigger)
-      })
-
-      applyCloudX(0, 0)
+      syncLayout()
     }
 
     const animate = () => {
@@ -189,12 +124,13 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
       const elapsed = (performance.now() - clockStart) / 1000
       const bobOffset =
         Math.sin(elapsed * config.bobSpeed) * config.bobAmplitude
-      const y = cloudPos.y + bobOffset
+      const driftOffset =
+        Math.sin(elapsed * config.driftSpeed) * config.driftAmplitude
 
       if (cloudSprite) {
         cloudSprite.position.set(
-          cloudPos.x,
-          getViewportHeight() - y,
+          baseX + driftOffset,
+          layoutHeight - (baseY + bobOffset),
           config.zIndex,
         )
       }
@@ -202,34 +138,19 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
       renderer.render(scene, camera)
     }
 
-    const onResize = () => {
-      syncRendererSize()
-      ScrollTrigger.refresh()
-    }
-
     const boot = () => {
       if (isDisposed) return
 
-      const sections = getSections(config.sectionSelector)
-      if (!sections.length || getTrackWidth() <= 0) {
+      if (canvas.clientWidth <= 1 || canvas.clientHeight <= 1) {
         bootFrameId = requestAnimationFrame(boot)
         return
       }
 
       initThree()
-      initSectionScrollTriggers(sections)
       animate()
 
-      window.addEventListener('resize', onResize)
-      window.visualViewport?.addEventListener('resize', onResize)
-
-      resizeObserver = new ResizeObserver(onResize)
-      resizeObserver.observe(document.body)
-      resizeObserver.observe(document.documentElement)
-      sections.forEach((section) => resizeObserver.observe(section))
-
-      ScrollTrigger.refresh()
-      applyCloudX(0, 0)
+      resizeObserver = new ResizeObserver(syncLayout)
+      resizeObserver.observe(canvas)
     }
 
     bootFrameId = requestAnimationFrame(boot)
@@ -238,11 +159,6 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
       isDisposed = true
       cancelAnimationFrame(bootFrameId)
       cancelAnimationFrame(animationFrameId)
-      window.removeEventListener('resize', onResize)
-      window.visualViewport?.removeEventListener('resize', onResize)
-
-      scrollTriggers.forEach((trigger) => trigger.kill())
-      scrollTriggers = []
       resizeObserver?.disconnect()
 
       if (cloudSprite) {
@@ -255,11 +171,12 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
     }
   }, [
     canvasRef,
-    config.sectionSelector,
+    config.horizontalPosition,
     config.verticalPosition,
     config.bobAmplitude,
     config.bobSpeed,
-    config.scrubSmoothness,
+    config.driftAmplitude,
+    config.driftSpeed,
     config.cloudScale,
     config.zIndex,
   ])

@@ -1,55 +1,36 @@
-import { useEffect, useRef } from 'react'
-import { createPortal } from 'react-dom'
+import { useRef } from 'react'
 import { useCloudScroll3D } from '../../hooks/useCloudScroll3D'
 
 /**
- * غيمة 3D ثابتة فوق الصفحة — تتحرك zigzag مع السكرول.
- * الـ canvas يُعرض عبر portal على body لتجنب مشاكل stacking context.
+ * غيمة 3D مثبتة داخل الهيرو — floating فقط، بتنزل مع الصفحة مع الهيرو.
  */
 function CloudScroll3D({
-  sectionSelector = 'main > section',
-  verticalPosition = 0.22,
+  horizontalPosition = 0.88,
+  verticalPosition = 0.08,
   bobAmplitude = 14,
   bobSpeed = 1,
-  scrubSmoothness = 3.2,
+  driftAmplitude = 10,
+  driftSpeed = 0.7,
   cloudScale = 1.3,
 }) {
   const canvasRef = useRef(null)
-  const portalRef = useRef(null)
-
-  if (!portalRef.current && typeof document !== 'undefined') {
-    portalRef.current = document.createElement('div')
-    portalRef.current.setAttribute('data-cloud-scroll-root', '')
-  }
-
-  useEffect(() => {
-    const root = portalRef.current
-    if (!root) return undefined
-
-    document.body.appendChild(root)
-    return () => {
-      root.remove()
-    }
-  }, [])
 
   useCloudScroll3D(canvasRef, {
-    sectionSelector,
+    horizontalPosition,
     verticalPosition,
     bobAmplitude,
     bobSpeed,
-    scrubSmoothness,
+    driftAmplitude,
+    driftSpeed,
     cloudScale,
   })
 
-  if (!portalRef.current) return null
-
-  return createPortal(
+  return (
     <canvas
       ref={canvasRef}
-      className="pointer-events-none fixed top-0 left-0 z-[100] block h-[100dvh] w-screen max-w-none"
+      className="pointer-events-none absolute inset-0 z-[1] block h-full w-full"
       aria-hidden="true"
-    />,
-    portalRef.current,
+    />
   )
 }
 

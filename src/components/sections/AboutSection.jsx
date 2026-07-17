@@ -2,11 +2,13 @@ import { useRef } from 'react'
 import aboutLeaf from '../../assets/about-leaf.webp'
 import aboutGradIcon from '../../assets/New_World_Icon00050-removebg-preview.webp'
 import planeHeartLottie from '../../assets/lottie/plane-heart.json'
+import { useContactFormPopup } from '../../context/ContactFormContext'
 import BrushHighlightText from '../ui/BrushHighlightText'
 import LottieScroll from '../ui/LottieScroll'
 
 function AboutSection() {
   const sectionRef = useRef(null)
+  const { openContactForm } = useContactFormPopup()
 
   return (
     <section ref={sectionRef} className="relative overflow-hidden bg-white py-16 sm:py-20">
@@ -36,9 +38,10 @@ function AboutSection() {
 
           <button
             type="button"
+            onClick={openContactForm}
             className="rounded-lg border-2 border-[#f07a7a] bg-white px-8 py-2.5 text-sm font-extrabold tracking-wide text-[#f07a7a] uppercase transition hover:bg-[#fde8e8]"
           >
-            Read More
+            Get in Touch
           </button>
         </div>
       </div>
