@@ -1,1 +1,1 @@
-// Static site data (programs, branches, gallery, etc.)
+// Static site data (programs, branches, etc.)

@@ -7,10 +7,10 @@ import { useCloudScroll3D } from '../../hooks/useCloudScroll3D'
 function CloudScroll3D({
   horizontalPosition = 0.88,
   verticalPosition = 0.08,
-  bobAmplitude = 14,
-  bobSpeed = 1,
+  bobAmplitude = 8,
+  bobSpeed = 0.45,
   driftAmplitude = 10,
-  driftSpeed = 0.7,
+  driftSpeed = 0.35,
   cloudScale = 1.3,
 }) {
   const canvasRef = useRef(null)

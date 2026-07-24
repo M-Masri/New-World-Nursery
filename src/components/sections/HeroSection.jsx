@@ -1,12 +1,13 @@
+import { useEffect, useState } from 'react'
 import { CloudScroll3D } from '../ui'
 import { useContactFormPopup } from '../../context/ContactFormContext'
 import heroCloud from '../../assets/hero-cloud.png'
 import heroHeart from '../../assets/hero-heart.png'
+import heroKids from '../../assets/hero-kids.png'
 import heroRainbow from '../../assets/hero-rainbow.png'
 import heroSun from '../../assets/hero-sun.png'
 
-const heroPhoto =
-  'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=700&h=750&fit=crop'
+const heroPhoto = heroKids
 
 function HeroCloudPhoto({ className = '', src, alt }) {
   return (
@@ -23,7 +24,7 @@ function HeroSection() {
 
   return (
     <section className="relative overflow-hidden bg-white">
-      <CloudScroll3D driftAmplitude={0} />
+      <CloudScroll3D driftAmplitude={0} bobAmplitude={10} bobSpeed={0.65} />
 
       <img
         src={heroRainbow}
@@ -36,8 +37,8 @@ function HeroSection() {
 
       <div className="relative z-10 mx-auto grid max-w-page items-center gap-12 px-6 py-14 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:py-20">
         <div className="text-center lg:text-left">
-          <p className="mb-4 text-xs font-extrabold tracking-[0.25em] text-[#8cb83a] uppercase">
-            Nurturing Young Minds
+          <p className="mb-4 text-xs font-extrabold tracking-[0.25em] text-[#5bb5a2] uppercase">
+            New World Nursery · Dubai
           </p>
 
           <div className="mb-6 text-center lg:text-left">
@@ -48,7 +49,7 @@ function HeroSection() {
               />
               <h1 className="text-[2.4rem] leading-[1.15] font-extrabold sm:text-5xl lg:text-[3.4rem]">
                 <span className="text-[#8cb83a]">A </span>
-                <span className="text-[#f07a7a]">Happy </span>
+                <span className="text-[#f4a0b0]">Happy </span>
                 <span className="relative inline-block">
                   <img
                     src={heroHeart}
@@ -63,7 +64,7 @@ function HeroSection() {
                 <span className="text-[#5bb5a2]">Learn </span>
                 <span className="text-[#5a5a5a]">& </span>
                 <span className="relative inline-block">
-                  <span className="text-[#f07a7a]">Grow</span>
+                  <span className="text-[#f4a0b0]">Grow</span>
                   <TitleLeafAccent
                     variant="end"
                     className="pointer-events-none absolute -right-11 -bottom-5 h-12 w-14 sm:-right-13 sm:-bottom-4 sm:h-14 sm:w-16 lg:-right-14 lg:-bottom-3"
@@ -74,17 +75,18 @@ function HeroSection() {
           </div>
 
           <p className="mx-auto mb-9 max-w-md text-[15px] leading-relaxed text-[#5a5a5a] lg:mx-0">
-            At New World Nursery, we provide a safe, caring and stimulating
-            environment where children learn, explore and grow with confidence.
+            A warm Dubai nursery where play-based learning, caring educators,
+            and close parent partnership help little ones explore and grow with
+            confidence.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 lg:justify-start">
             <button
               type="button"
               onClick={openContactForm}
-              className="rounded-xl bg-[#f07a7a] px-8 py-3 text-sm font-extrabold tracking-wide text-white uppercase shadow-md shadow-[#f07a7a]/25 transition hover:bg-[#e86a6a]"
+              className="rounded-xl bg-[#5bb5a2] px-8 py-3 text-sm font-extrabold tracking-wide text-white uppercase shadow-md shadow-[#5bb5a2]/25 transition hover:bg-[#4a9e8d]"
             >
-              Enquire Now!
+              Enquire Now
             </button>
             <button
               type="button"
@@ -109,7 +111,7 @@ function HeroSection() {
           />
 
           <svg
-            className="pointer-events-none absolute top-11 left-10 z-10 h-4 w-4 rotate-45 text-[#d45a5a] sm:top-12 sm:left-12 sm:h-5 sm:w-5 lg:top-14 lg:left-14"
+            className="pointer-events-none absolute top-11 left-10 z-10 h-4 w-4 rotate-45 text-[#f4a0b0] sm:top-12 sm:left-12 sm:h-5 sm:w-5 lg:top-14 lg:left-14"
             viewBox="0 0 24 24"
             aria-hidden="true"
           >
@@ -119,7 +121,7 @@ function HeroSection() {
           <HeroCloudPhoto
             className="h-[280px] w-full max-w-[520px] sm:h-[310px] sm:max-w-[560px] lg:h-[340px] lg:max-w-[600px]"
             src={heroPhoto}
-            alt="Children playing with colorful blocks"
+            alt="Children building with colorful wooden blocks"
           />
         </div>
       </div>
@@ -132,58 +134,59 @@ const heartPath =
 
 const heroHearts = [
   'absolute top-[28%] left-[42%] h-4 w-4 text-[#f4a0b0] opacity-60',
-  'absolute top-[18%] right-[32%] h-3.5 w-3.5 text-[#f07a7a] opacity-50',
+  'absolute top-[18%] right-[32%] h-3.5 w-3.5 text-[#f4a0b0] opacity-50',
   'absolute top-[10%] left-[58%] h-3 w-3 text-[#5bb5a2] opacity-45',
   'absolute bottom-[24%] left-[10%] h-3.5 w-3.5 text-[#f4a0b0] opacity-55',
-  'absolute top-[65%] right-[20%] h-3 w-3 text-[#f07a7a] opacity-50',
+  'absolute top-[65%] right-[20%] h-3 w-3 text-[#f4a0b0] opacity-50',
 ]
 
 const heroDots = [
   'absolute top-[12%] left-[18%] h-3 w-3 rounded-full bg-[#f5c842] opacity-45',
   'absolute top-[55%] right-[12%] h-2.5 w-2.5 rounded-full bg-[#a682b8] opacity-40',
   'absolute top-[22%] left-[30%] h-2.5 w-2.5 rounded-full bg-[#5bb5a2] opacity-45',
-  'absolute top-[48%] left-[54%] h-2 w-2 rounded-full bg-[#f07a7a] opacity-40',
+  'absolute top-[48%] left-[54%] h-2 w-2 rounded-full bg-[#f4a0b0] opacity-40',
   'absolute bottom-[20%] right-[36%] h-2.5 w-2.5 rounded-full bg-[#f5c842] opacity-50',
   'absolute top-[72%] left-[36%] h-2 w-2 rounded-full bg-[#8cb83a] opacity-45',
   'absolute top-[16%] right-[14%] h-2.5 w-2.5 rounded-full bg-[#a682b8] opacity-40',
 ]
 
 const flyingItems = [
-  { id: 1, type: 'heart', top: '8%', duration: 20, delay: 0, size: 'h-4 w-4', color: 'text-[#f4a0b0]', opacity: 0.55 },
-  { id: 2, type: 'dot', top: '14%', duration: 26, delay: 3, size: 'h-2.5 w-2.5', color: 'bg-[#f5c842]', opacity: 0.5 },
-  { id: 3, type: 'heart', top: '20%', duration: 18, delay: 6, size: 'h-3 w-3', color: 'text-[#f07a7a]', opacity: 0.45 },
-  { id: 4, type: 'dot', top: '26%', duration: 24, delay: 1, size: 'h-3 w-3', color: 'bg-[#5bb5a2]', opacity: 0.45 },
-  { id: 5, type: 'heart', top: '32%', duration: 22, delay: 9, size: 'h-3.5 w-3.5', color: 'text-[#a682b8]', opacity: 0.4 },
-  { id: 6, type: 'dot', top: '38%', duration: 19, delay: 4, size: 'h-2 w-2', color: 'bg-[#f07a7a]', opacity: 0.5 },
-  { id: 7, type: 'heart', top: '44%', duration: 28, delay: 12, size: 'h-3 w-3', color: 'text-[#5bb5a2]', opacity: 0.4 },
-  { id: 8, type: 'dot', top: '50%', duration: 21, delay: 7, size: 'h-2.5 w-2.5', color: 'bg-[#8cb83a]', opacity: 0.45 },
-  { id: 9, type: 'heart', top: '56%', duration: 23, delay: 15, size: 'h-4 w-4', color: 'text-[#f4a0b0]', opacity: 0.5 },
-  { id: 10, type: 'dot', top: '62%', duration: 17, delay: 2, size: 'h-3 w-3', color: 'bg-[#a682b8]', opacity: 0.4 },
-  { id: 11, type: 'heart', top: '68%', duration: 25, delay: 10, size: 'h-3 w-3', color: 'text-[#f07a7a]', opacity: 0.45 },
-  { id: 12, type: 'dot', top: '74%', duration: 20, delay: 5, size: 'h-2 w-2', color: 'bg-[#f5c842]', opacity: 0.5 },
-  { id: 13, type: 'heart', top: '80%', duration: 27, delay: 18, size: 'h-3.5 w-3.5', color: 'text-[#8cb83a]', opacity: 0.4 },
-  { id: 14, type: 'dot', top: '86%', duration: 22, delay: 8, size: 'h-2.5 w-2.5', color: 'bg-[#5bb5a2]', opacity: 0.45 },
-  { id: 15, type: 'heart', top: '18%', duration: 16, delay: 14, size: 'h-2.5 w-2.5', color: 'text-[#f5b942]', opacity: 0.45 },
-  { id: 16, type: 'dot', top: '36%', duration: 29, delay: 11, size: 'h-2 w-2', color: 'bg-[#f4a0b0]', opacity: 0.4 },
-  { id: 17, type: 'heart', top: '52%', duration: 19, delay: 16, size: 'h-3 w-3', color: 'text-[#d45a5a]', opacity: 0.45 },
-  { id: 18, type: 'dot', top: '70%', duration: 24, delay: 13, size: 'h-3 w-3', color: 'bg-[#7eb8d4]', opacity: 0.4 },
-  { id: 19, type: 'heart', top: '28%', duration: 21, delay: 20, size: 'h-3 w-3', color: 'text-[#a682b8]', opacity: 0.4 },
-  { id: 20, type: 'dot', top: '46%', duration: 18, delay: 17, size: 'h-2.5 w-2.5', color: 'bg-[#f07a7a]', opacity: 0.45 },
-  { id: 21, type: 'heart', top: '64%', duration: 26, delay: 22, size: 'h-4 w-4', color: 'text-[#5bb5a2]', opacity: 0.4 },
-  { id: 22, type: 'dot', top: '82%', duration: 20, delay: 19, size: 'h-2 w-2', color: 'bg-[#8cb83a]', opacity: 0.5 },
-  { id: 23, type: 'heart', top: '10%', duration: 23, delay: 24, size: 'h-3 w-3', color: 'text-[#f07a7a]', opacity: 0.45 },
-  { id: 24, type: 'dot', top: '58%', duration: 17, delay: 21, size: 'h-2.5 w-2.5', color: 'bg-[#f5c842]', opacity: 0.45 },
+  { id: 1, type: 'heart', top: '8%', duration: 36, delay: 0, size: 'h-4 w-4', color: 'text-[#f4a0b0]', opacity: 0.32 },
+  { id: 2, type: 'dot', top: '18%', duration: 42, delay: 4, size: 'h-2.5 w-2.5', color: 'bg-[#f5c842]', opacity: 0.28 },
+  { id: 3, type: 'heart', top: '28%', duration: 38, delay: 8, size: 'h-3 w-3', color: 'text-[#f4a0b0]', opacity: 0.3 },
+  { id: 4, type: 'dot', top: '38%', duration: 44, delay: 2, size: 'h-3 w-3', color: 'bg-[#5bb5a2]', opacity: 0.26 },
+  { id: 5, type: 'heart', top: '48%', duration: 40, delay: 12, size: 'h-3.5 w-3.5', color: 'text-[#a682b8]', opacity: 0.28 },
+  { id: 6, type: 'dot', top: '58%', duration: 46, delay: 6, size: 'h-2 w-2', color: 'bg-[#f4a0b0]', opacity: 0.25 },
+  { id: 7, type: 'heart', top: '68%', duration: 42, delay: 16, size: 'h-3 w-3', color: 'text-[#5bb5a2]', opacity: 0.28 },
+  { id: 8, type: 'dot', top: '78%', duration: 48, delay: 10, size: 'h-2.5 w-2.5', color: 'bg-[#8cb83a]', opacity: 0.26 },
+  { id: 9, type: 'heart', top: '22%', duration: 44, delay: 20, size: 'h-3 w-3', color: 'text-[#f4a0b0]', opacity: 0.26 },
+  { id: 10, type: 'dot', top: '52%', duration: 50, delay: 14, size: 'h-2.5 w-2.5', color: 'bg-[#7eb8d4]', opacity: 0.24 },
+  { id: 11, type: 'heart', top: '72%', duration: 46, delay: 24, size: 'h-3.5 w-3.5', color: 'text-[#8cb83a]', opacity: 0.26 },
+  { id: 12, type: 'dot', top: '42%', duration: 52, delay: 18, size: 'h-2 w-2', color: 'bg-[#f5c842]', opacity: 0.24 },
 ]
 
-const FLY_SPEED = 0.55
+// Higher = slower, calmer drift across the hero
+const FLY_SPEED = 1.05
 
 function HeroFlyingDecorations() {
+  const [isNarrow, setIsNarrow] = useState(false)
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 640px)')
+    const update = () => setIsNarrow(media.matches)
+    update()
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
+
+  const items = isNarrow ? flyingItems.slice(0, 6) : flyingItems
+
   return (
     <div
       className="pointer-events-none absolute inset-0 z-[5] overflow-hidden"
       aria-hidden="true"
     >
-      {flyingItems.map((item) => (
+      {items.map((item) => (
         <div
           key={item.id}
           className="hero-fly-item"

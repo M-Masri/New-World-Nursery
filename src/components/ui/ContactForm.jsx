@@ -10,7 +10,7 @@ export const CONTACT_PROGRAMS = [
 ]
 
 const fieldClassName =
-  'w-full rounded-xl bg-[#f5f5f7] px-4 py-3 text-sm text-[#2d3a4a] outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-[#5bb5a2]/30'
+  'w-full rounded-xl bg-brand-soft px-4 py-3 text-sm text-brand-ink outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-[#5bb5a2]/30'
 
 /**
  * نموذج التواصل المشترك (سكشن + popup).
@@ -26,7 +26,7 @@ function ContactForm({ idPrefix = 'contact', onSubmitSuccess }) {
       <div>
         <label
           htmlFor={`${idPrefix}-name`}
-          className="mb-2 block text-sm text-gray-500"
+          className="mb-2 block text-xs font-bold text-brand-muted"
         >
           Name
         </label>
@@ -42,7 +42,7 @@ function ContactForm({ idPrefix = 'contact', onSubmitSuccess }) {
       <div>
         <label
           htmlFor={`${idPrefix}-email`}
-          className="mb-2 block text-sm text-gray-500"
+          className="mb-2 block text-xs font-bold text-brand-muted"
         >
           Email
         </label>
@@ -59,7 +59,7 @@ function ContactForm({ idPrefix = 'contact', onSubmitSuccess }) {
         <div>
           <label
             htmlFor={`${idPrefix}-program`}
-            className="mb-2 block text-sm text-gray-500"
+            className="mb-2 block text-xs font-bold text-brand-muted"
           >
             Program
           </label>
@@ -83,7 +83,7 @@ function ContactForm({ idPrefix = 'contact', onSubmitSuccess }) {
         <div>
           <label
             htmlFor={`${idPrefix}-child-age`}
-            className="mb-2 block text-sm text-gray-500"
+            className="mb-2 block text-xs font-bold text-brand-muted"
           >
             Child&apos;s Age
           </label>
@@ -101,7 +101,7 @@ function ContactForm({ idPrefix = 'contact', onSubmitSuccess }) {
       <div>
         <label
           htmlFor={`${idPrefix}-message`}
-          className="mb-2 block text-sm text-gray-500"
+          className="mb-2 block text-xs font-bold text-brand-muted"
         >
           Message
         </label>
@@ -116,10 +116,10 @@ function ContactForm({ idPrefix = 'contact', onSubmitSuccess }) {
 
       <button
         type="submit"
-        className="inline-flex items-center gap-3 rounded-full bg-[#f07a7a] py-3 pr-6 pl-2 text-sm font-bold text-white transition hover:bg-[#e86a6a]"
+        className="inline-flex items-center gap-3 rounded-full bg-[#5bb5a2] py-3 pr-6 pl-2 text-sm font-bold text-white transition hover:bg-[#4a9e8d]"
       >
         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white">
-          <ArrowRight className="h-4 w-4 text-[#f07a7a]" />
+          <ArrowRight className="h-4 w-4 text-[#5bb5a2]" />
         </span>
         Send Message
       </button>

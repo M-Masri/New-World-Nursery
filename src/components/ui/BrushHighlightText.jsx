@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { gsap, ScrollTrigger } from '../../lib/gsap'
 
-export const ENQUIRE_CORAL = '#f07a7a'
+export const BRAND_HIGHLIGHT = '#5bb5a2'
 
 const BRUSH_HIGHLIGHT_PATH =
   'M 2 49 C 24 52, 46 44, 70 49 C 94 54, 116 45, 140 50 C 164 55, 186 46, 210 51 C 234 56, 256 47, 280 52 C 296 54, 305 50, 310 48 L 308 5 C 286 2, 264 9, 240 4 C 216 -1, 194 8, 170 3 C 146 -2, 124 7, 100 2 C 76 -3, 54 6, 30 2 C 16 0, 6 3, 2 5 Z'
@@ -36,13 +36,13 @@ function BrushHighlightText({ children, triggerRef, className = '', textColor = 
         .fromTo(
           brushFill,
           { clipPath: 'inset(90% 0 0 0)' },
-          { clipPath: 'inset(0% 0 0 0)', duration: 1.4 },
+          { clipPath: 'inset(0% 0 0 0)', duration: 1.8 },
         )
         .fromTo(
           titleText,
           { color: textColor },
-          { color: '#ffffff', duration: 0.6, ease: 'power2.out' },
-          0.55,
+          { color: '#ffffff', duration: 0.8, ease: 'power2.out' },
+          0.7,
         )
     }
 
@@ -70,7 +70,7 @@ function BrushHighlightText({ children, triggerRef, className = '', textColor = 
     <span className="about-title-highlight">
       <span ref={brushFillRef} className="about-title-brush-fill" aria-hidden="true">
         <svg className="about-title-brush" viewBox="0 0 312 52" preserveAspectRatio="none">
-          <path d={BRUSH_HIGHLIGHT_PATH} fill={ENQUIRE_CORAL} />
+          <path d={BRUSH_HIGHLIGHT_PATH} fill={BRAND_HIGHLIGHT} />
         </svg>
       </span>
       <span ref={titleTextRef} className={`about-title-highlight__text ${className}`.trim()}>

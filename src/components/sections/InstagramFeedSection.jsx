@@ -8,74 +8,50 @@ const instagramPosts = [
   {
     id: 1,
     image:
-      'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop',
-    alt: 'Children playing together',
+      'https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=400&h=400&fit=crop',
+    alt: 'Happy child smiling at New World Nursery',
   },
   {
     id: 2,
     image:
-      'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400&h=400&fit=crop',
-    alt: 'Nursery classroom activities',
+      'https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=400&h=400&fit=crop',
+    alt: 'Story time circle with young learners',
   },
   {
     id: 3,
     image:
-      'https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=400&h=400&fit=crop',
-    alt: 'Happy child at nursery',
+      'https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=400&h=400&fit=crop',
+    alt: 'Creative arts and crafts in class',
   },
   {
     id: 4,
     image:
       'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=400&fit=crop',
-    alt: 'Learning through play',
+    alt: 'Hands-on learning through play',
   },
   {
     id: 5,
     image:
-      'https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=400&h=400&fit=crop',
-    alt: 'Creative arts session',
+      'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400&h=400&fit=crop',
+    alt: 'Sensory play table for toddlers',
   },
   {
     id: 6,
     image:
       'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop',
-    alt: 'Outdoor play time',
+    alt: 'Children enjoying outdoor play time',
   },
   {
     id: 7,
     image:
-      'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400&h=400&fit=crop',
-    alt: 'Playroom fun',
+      'https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=400&h=400&fit=crop&sat=-20',
+    alt: 'Friends collaborating on a group activity',
   },
   {
     id: 8,
     image:
-      'https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=400&h=400&fit=crop',
-    alt: 'Story time',
-  },
-  {
-    id: 9,
-    image:
-      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=400&fit=crop',
-    alt: 'Group activities',
-  },
-  {
-    id: 10,
-    image:
-      'https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=400&h=400&fit=crop',
-    alt: 'Music and movement',
-  },
-  {
-    id: 11,
-    image:
-      'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400&h=400&fit=crop',
-    alt: 'Sensory play',
-  },
-  {
-    id: 12,
-    image:
-      'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop',
-    alt: 'Smiles at nursery',
+      'https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=400&h=400&fit=crop&sat=-30',
+    alt: 'Music and movement session',
   },
 ]
 
@@ -86,7 +62,7 @@ function InstagramFeedSection() {
     <section
       id="instagram"
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#fffbf5] py-16"
+      className="relative overflow-hidden bg-white py-16 sm:py-20"
     >
       <img
         src={instagramIcon}
@@ -95,15 +71,17 @@ function InstagramFeedSection() {
         className="pointer-events-none absolute bottom-0 left-0 z-20 w-28 opacity-95 sm:w-32 lg:w-40"
       />
 
-      <div className="relative z-10 mx-auto max-w-page px-4 sm:px-6">
+      <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="mb-10 text-center">
-          <p className="mb-2 text-xs font-extrabold tracking-[0.25em] text-[#5bb5a2] uppercase">
-            Instagram
-          </p>
-          <h2 className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl">
+          <p className="section-eyebrow">Instagram</p>
+          <h2 className="section-title">
             Follow{' '}
             <BrushHighlightText triggerRef={sectionRef}>Our Journey</BrushHighlightText>
           </h2>
+          <p className="section-lead">
+            Peek into classroom moments, outdoor play, and the everyday joy of
+            New World Nursery life.
+          </p>
         </div>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
@@ -113,15 +91,15 @@ function InstagramFeedSection() {
               as="a"
               href="#instagram"
               index={index}
-              className="group relative aspect-square overflow-hidden rounded-xl bg-white shadow-sm"
+              className="group card-surface relative aspect-square"
             >
               <img
                 src={post.image}
                 alt={post.alt}
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-300 group-hover:bg-black/30">
-                <InstagramIcon className="h-8 w-8 scale-0 text-white opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-500 group-hover:bg-[#5bb5a2]/35">
+                <InstagramIcon className="h-8 w-8 scale-0 text-white opacity-0 transition-all duration-500 group-hover:scale-100 group-hover:opacity-100" />
               </div>
             </AnimatedCard>
           ))}
@@ -132,7 +110,7 @@ function InstagramFeedSection() {
             href="https://instagram.com"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#f58529] via-[#dd2a7b] to-[#8134af] px-8 py-3 text-sm font-extrabold tracking-wide text-white uppercase shadow-md transition hover:opacity-90"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#f58529] via-[#dd2a7b] to-[#8134af] px-8 py-3 text-sm font-extrabold tracking-wide text-white uppercase shadow-md transition hover:opacity-90"
           >
             <InstagramIcon className="h-5 w-5" />
             Follow Us on Instagram

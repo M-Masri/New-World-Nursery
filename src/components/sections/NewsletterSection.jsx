@@ -1,6 +1,4 @@
 import { useRef } from 'react'
-import balloonLottie from '../../assets/lottie/balloon.json'
-import newsletterBearLottie from '../../assets/lottie/newsletter-bear.json'
 import LottieScroll from '../ui/LottieScroll'
 
 function NewsletterSection() {
@@ -13,10 +11,10 @@ function NewsletterSection() {
         aria-hidden="true"
       >
         <LottieScroll
-          animationData={balloonLottie}
+          animationImport={() => import('../../assets/lottie/balloon.json')}
           triggerRef={sectionRef}
           mode="playWhileInView"
-          speed={0.25}
+          speed={0.18}
           rendererSettings={{ preserveAspectRatio: 'none' }}
           className="newsletter-balloon-lottie pointer-events-none absolute inset-0 h-full w-full"
         />
@@ -34,21 +32,23 @@ function NewsletterSection() {
         />
       </svg>
 
-      <div className="relative bg-[#eef8f5] px-4 pt-14 pb-12 sm:px-6">
+      <div className="relative bg-[#eef8f5] page-gutter pt-14 pb-12">
         <div className="relative z-10 mx-auto flex max-w-page flex-col items-center gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center gap-4 sm:gap-5">
             <LottieScroll
-              animationData={newsletterBearLottie}
+              animationImport={() =>
+                import('../../assets/lottie/newsletter-bear.json')
+              }
               triggerRef={sectionRef}
               mode="playWhileInView"
               className="h-24 w-24 shrink-0 sm:h-28 sm:w-28"
             />
             <div>
-              <h2 className="text-lg font-extrabold text-[#2d3a4a] sm:text-xl lg:text-2xl">
-                Ready to Give Your Child the Best Start?
+              <h2 className="text-lg font-extrabold text-brand-ink sm:text-xl lg:text-2xl">
+                Come see New World in action
               </h2>
-              <p className="mt-1 text-sm text-[#5a6578]">
-                Schedule a visit today and see our nursery in action.
+              <p className="mt-1 text-sm text-brand-muted">
+                Leave your email and we&apos;ll help you schedule a visit.
               </p>
             </div>
           </div>
@@ -65,7 +65,7 @@ function NewsletterSection() {
               />
               <button
                 type="submit"
-                className="shrink-0 bg-[#f4846b] px-6 py-3 text-sm font-extrabold tracking-wide text-white uppercase transition hover:bg-[#e86f55]"
+                className="shrink-0 bg-[#5bb5a2] px-6 py-3 text-sm font-extrabold tracking-wide text-white uppercase transition hover:bg-[#4a9e8d]"
               >
                 Enquire
               </button>

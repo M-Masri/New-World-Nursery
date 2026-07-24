@@ -5,7 +5,7 @@ function Logo({ className = '' }) {
     <img
       src={logo}
       alt="New World Nursery"
-      className={`h-20 w-auto object-contain sm:h-24 ${className}`}
+      className={`w-auto object-contain drop-shadow-[0_2px_8px_rgba(45,58,74,0.2)] brightness-[1.03] contrast-[1.08] ${className}`}
     />
   )
 }

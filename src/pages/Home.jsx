@@ -5,7 +5,6 @@ import {
   OurLocationSection,
   ProgramsSection,
   InstagramFeedSection,
-  GalleryTestimonialsSection,
   ContactSection,
   NewsletterSection,
 } from '../components/sections'
@@ -19,7 +18,6 @@ function Home() {
       <OurLocationSection />
       <ProgramsSection />
       <InstagramFeedSection />
-      <GalleryTestimonialsSection />
       <ContactSection />
       <NewsletterSection />
     </>

@@ -5,10 +5,10 @@ import { createCloudTexture } from '../lib/createCloudTexture'
 const DEFAULT_CONFIG = {
   horizontalPosition: 0.88,
   verticalPosition: 0.08,
-  bobAmplitude: 14,
-  bobSpeed: 1,
+  bobAmplitude: 8,
+  bobSpeed: 0.45,
   driftAmplitude: 10,
-  driftSpeed: 0.7,
+  driftSpeed: 0.35,
   cloudScale: 1.3,
   zIndex: 0,
 }
@@ -21,8 +21,13 @@ function updateOrthoCamera(camera, width, height) {
   camera.updateProjectionMatrix()
 }
 
+function getPixelRatio() {
+  const isNarrow = window.matchMedia('(max-width: 640px)').matches
+  return Math.min(window.devicePixelRatio || 1, isNarrow ? 1.25 : 1.75)
+}
+
 /**
- * غيمة Three.js مثبتة بإحداثيات الهيرو (absolute) — floating فقط بدون أي ربط بالسكرول.
+ * غيمة Three.js — floating فقط، وتتوقف عن الرسم خارج الـ viewport.
  */
 export function useCloudScroll3D(canvasRef, userConfig = {}) {
   const config = { ...DEFAULT_CONFIG, ...userConfig }
@@ -41,8 +46,11 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
     let cloudSprite
     let animationFrameId
     let resizeObserver
+    let visibilityObserver
     let bootFrameId
     let isDisposed = false
+    let isVisible = true
+    let isRunning = false
     let baseX = 0
     let baseY = 0
     let layoutWidth = 0
@@ -74,7 +82,7 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
 
       if (!renderer || !camera) return
 
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+      renderer.setPixelRatio(getPixelRatio())
       renderer.setSize(layoutWidth, layoutHeight, false)
       updateOrthoCamera(camera, layoutWidth, layoutHeight)
 
@@ -88,10 +96,13 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
     }
 
     const initThree = () => {
+      const isNarrow = window.matchMedia('(max-width: 640px)').matches
+
       renderer = new THREE.WebGLRenderer({
         canvas,
         alpha: true,
-        antialias: true,
+        antialias: !isNarrow,
+        powerPreference: 'low-power',
       })
       renderer.setClearColor(0x000000, 0)
 
@@ -117,8 +128,12 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
     }
 
     const animate = () => {
-      if (isDisposed || !renderer || !scene || !camera) return
+      if (isDisposed || !renderer || !scene || !camera || !isVisible) {
+        isRunning = false
+        return
+      }
 
+      isRunning = true
       animationFrameId = requestAnimationFrame(animate)
 
       const elapsed = (performance.now() - clockStart) / 1000
@@ -138,6 +153,28 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
       renderer.render(scene, camera)
     }
 
+    const startLoop = () => {
+      if (isDisposed || isRunning || !isVisible) return
+      animate()
+    }
+
+    const stopLoop = () => {
+      isRunning = false
+      cancelAnimationFrame(animationFrameId)
+    }
+
+    const initVisibilityObserver = () => {
+      visibilityObserver = new IntersectionObserver(
+        ([entry]) => {
+          isVisible = entry.isIntersecting
+          if (isVisible) startLoop()
+          else stopLoop()
+        },
+        { rootMargin: '80px', threshold: 0.01 },
+      )
+      visibilityObserver.observe(canvas)
+    }
+
     const boot = () => {
       if (isDisposed) return
 
@@ -147,7 +184,8 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
       }
 
       initThree()
-      animate()
+      initVisibilityObserver()
+      startLoop()
 
       resizeObserver = new ResizeObserver(syncLayout)
       resizeObserver.observe(canvas)
@@ -157,9 +195,10 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
 
     return () => {
       isDisposed = true
+      stopLoop()
       cancelAnimationFrame(bootFrameId)
-      cancelAnimationFrame(animationFrameId)
       resizeObserver?.disconnect()
+      visibilityObserver?.disconnect()
 
       if (cloudSprite) {
         cloudSprite.material.map?.dispose()

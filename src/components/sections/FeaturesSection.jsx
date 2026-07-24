@@ -7,39 +7,38 @@ import teacherLottie from '../../assets/lottie/teacher.json'
 import { ScrollTrigger } from '../../lib/gsap'
 import LottieScroll from '../ui/LottieScroll'
 
-const WIGGLE_INTERVAL_MS = 20_000
-const WIGGLE_DURATION_MS = 900
+const WIGGLE_INTERVAL_MS = 28_000
+const WIGGLE_DURATION_MS = 1200
 
 const features = [
   {
     lottie: shieldLottie,
     title: 'Safe & Secure',
-    description: "Your child's safety and well-being is our top priority.",
+    description: 'Supervised spaces and clear routines so families feel at ease every day.',
     iconBg: 'bg-[#c8e8d8]',
   },
   {
     lottie: teacherLottie,
-    title: 'Qualified Educators',
-    description: 'Experienced and passionate teachers who care.',
+    title: 'Caring Educators',
+    description: 'Warm, experienced teachers who know each child by name and pace.',
     iconBg: 'bg-[#f5d5c0]',
   },
   {
     lottie: slideLottie,
     title: 'Play-based Learning',
-    description: 'Learning through play, exploration and discovery.',
+    description: 'Hands-on play that builds language, curiosity, and early skills.',
     iconBg: 'bg-[#f3e4a8]',
   },
   {
     lottie: successLottie,
-    title: 'Holistic Development',
-    description:
-      'Focusing on social, emotional, cognitive and physical growth.',
+    title: 'Whole-Child Growth',
+    description: 'Social, emotional, cognitive, and physical development in balance.',
     iconBg: 'bg-[#ddd0ee]',
   },
   {
     lottie: handshakeLottie,
-    title: 'Strong Parent Partnership',
-    description: "Working together for your child's bright future.",
+    title: 'Parent Partnership',
+    description: 'Open updates and shared goals so home and nursery stay aligned.',
     iconBg: 'bg-[#c8e3ee]',
   },
 ]
@@ -109,8 +108,8 @@ function FeaturesSection() {
   }, [])
 
   return (
-    <section id="why-us" ref={sectionRef} className="bg-[#f3ebe0] py-12">
-      <div className="mx-auto grid max-w-page grid-cols-1 gap-10 px-6 sm:grid-cols-2 lg:grid-cols-5 lg:gap-0">
+    <section id="why-us" ref={sectionRef} className="bg-[#f3ebe0] py-10 sm:py-12">
+      <div className="mx-auto grid max-w-page grid-cols-1 gap-7 page-gutter sm:grid-cols-2 lg:grid-cols-5 lg:gap-0">
         {features.map((feature, index) => (
           <div
             key={feature.title}
@@ -121,7 +120,7 @@ function FeaturesSection() {
             }`}
           >
             <div
-              className={`feature-icon-shell mb-5 flex h-[72px] w-[72px] items-center justify-center rounded-full ${feature.iconBg} ${
+              className={`feature-icon-shell mb-3 flex h-16 w-16 items-center justify-center rounded-full ${feature.iconBg} ${
                 isWiggling ? 'feature-icon-wiggle' : ''
               }`}
               style={{ animationDelay: `${index * 0.1}s` }}
@@ -131,20 +130,20 @@ function FeaturesSection() {
                   animationData={feature.lottie}
                   triggerRef={sectionRef}
                   mode="playWhileInView"
-                  speed={0.85}
-                  className="h-12 w-12"
+                  speed={0.55}
+                  className="h-10 w-10"
                 />
               ) : (
                 <feature.icon
-                  className="h-8 w-8 text-[#2d3a4a]"
+                  className="h-7 w-7 text-[#2d3a4a]"
                   strokeWidth={1.6}
                 />
               )}
             </div>
-            <h3 className="mb-2 text-[15px] font-bold text-[#2d3a4a]">
+            <h3 className="mb-1.5 text-[15px] font-bold text-brand-ink">
               {feature.title}
             </h3>
-            <p className="max-w-[200px] text-[13px] leading-relaxed text-[#4a5568]">
+            <p className="max-w-[200px] text-[13px] leading-snug text-brand-muted">
               {feature.description}
             </p>
           </div>

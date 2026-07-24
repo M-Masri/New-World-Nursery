@@ -41,15 +41,13 @@ function ContactFormPopup() {
         onClick={closeContactForm}
       />
 
-      <div className="relative z-10 max-h-[min(90dvh,720px)] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl sm:p-8">
+      <div className="relative z-10 max-h-[min(90dvh,720px)] w-full max-w-lg overflow-y-auto card-surface p-6 sm:p-8">
         <div className="mb-6 flex items-start justify-between gap-4">
           <div>
-            <p className="mb-1 text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase">
-              Get in Touch
-            </p>
+            <p className="section-eyebrow mb-1">Get in Touch</p>
             <h2
               id="contact-popup-title"
-              className="text-2xl font-extrabold text-[#2d3a4a]"
+              className="text-2xl font-extrabold text-brand-ink"
             >
               Enquire Now
             </h2>
@@ -58,7 +56,7 @@ function ContactFormPopup() {
           <button
             type="button"
             onClick={closeContactForm}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#f5f5f7] text-[#2d3a4a] transition hover:bg-[#ebebef]"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand-ink transition hover:bg-[#ebebef]"
             aria-label="Close"
           >
             <X className="h-5 w-5" />
