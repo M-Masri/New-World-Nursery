@@ -1,6 +1,4 @@
 import { useEffect, useRef } from 'react'
-import lottie from 'lottie-web'
-import { ScrollTrigger } from '../lib/gsap'
 
 export default function useLottieScroll({
   animationData,
@@ -22,102 +20,126 @@ export default function useLottieScroll({
 
     if (!container || !animationData || !triggerEl) return undefined
 
+    let cancelled = false
     let scrollTrigger = null
+    let anim = null
     let playCount = 0
 
-    const anim = lottie.loadAnimation({
-      container,
-      renderer: 'svg',
-      loop: false,
-      autoplay: false,
-      animationData,
-      ...(rendererSettings ? { rendererSettings } : {}),
-    })
+    const setup = async () => {
+      const [{ default: lottie }, { ScrollTrigger }] = await Promise.all([
+        import('lottie-web'),
+        import('../lib/gsap'),
+      ])
 
-    anim.setSpeed(speed)
+      if (cancelled || !containerRef.current) return
 
-    const playFromStart = () => {
-      playCount = 0
-      anim.stop()
-      anim.goToAndStop(0, true)
-      anim.play()
-    }
+      anim = lottie.loadAnimation({
+        container,
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        animationData,
+        ...(rendererSettings ? { rendererSettings } : {}),
+      })
 
-    const startLooping = () => {
-      anim.loop = true
-      playFromStart()
-    }
+      anim.setSpeed(speed)
 
-    const stopLooping = () => {
-      anim.loop = false
-      anim.pause()
-    }
-
-    const handleComplete = () => {
-      playCount += 1
-      if (playCount < repeatCount) {
+      const playFromStart = () => {
+        playCount = 0
+        anim.stop()
         anim.goToAndStop(0, true)
         anim.play()
       }
-    }
 
-    const bindScroll = () => {
-      if (mode === 'playWhileInView') {
-        scrollTrigger = ScrollTrigger.create({
-          trigger: triggerEl,
-          start: start ?? 'top bottom',
-          end: end ?? 'bottom top',
-          onToggle: (self) => {
-            if (self.isActive) startLooping()
-            else stopLooping()
-          },
-        })
-      } else if (mode === 'playOnEnter') {
-        anim.addEventListener('complete', handleComplete)
-
-        scrollTrigger = ScrollTrigger.create({
-          trigger: triggerEl,
-          start,
-          onEnter: () => {
-            if (hasPlayedRef.current) return
-            hasPlayedRef.current = true
-            playFromStart()
-          },
-        })
-      } else {
-        const totalFrames = Math.max(anim.totalFrames - 1, 0)
-
-        scrollTrigger = ScrollTrigger.create({
-          trigger: triggerEl,
-          start,
-          end,
-          scrub,
-          onUpdate: (self) => {
-            const frame = Math.round(self.progress * totalFrames)
-            anim.goToAndStop(frame, true)
-          },
-        })
+      const startLooping = () => {
+        anim.loop = true
+        playFromStart()
       }
 
-      ScrollTrigger.refresh()
+      const stopLooping = () => {
+        anim.loop = false
+        anim.pause()
+      }
+
+      const handleComplete = () => {
+        playCount += 1
+        if (playCount < repeatCount) {
+          anim.goToAndStop(0, true)
+          anim.play()
+        }
+      }
+
+      const bindScroll = () => {
+        if (cancelled) return
+
+        if (mode === 'playWhileInView') {
+          scrollTrigger = ScrollTrigger.create({
+            trigger: triggerEl,
+            start: start ?? 'top bottom',
+            end: end ?? 'bottom top',
+            onToggle: (self) => {
+              if (self.isActive) startLooping()
+              else stopLooping()
+            },
+          })
+        } else if (mode === 'playOnEnter') {
+          anim.addEventListener('complete', handleComplete)
+
+          scrollTrigger = ScrollTrigger.create({
+            trigger: triggerEl,
+            start,
+            onEnter: () => {
+              if (hasPlayedRef.current) return
+              hasPlayedRef.current = true
+              playFromStart()
+            },
+          })
+        } else {
+          const totalFrames = Math.max(anim.totalFrames - 1, 0)
+
+          scrollTrigger = ScrollTrigger.create({
+            trigger: triggerEl,
+            start,
+            end,
+            scrub,
+            onUpdate: (self) => {
+              const frame = Math.round(self.progress * totalFrames)
+              anim.goToAndStop(frame, true)
+            },
+          })
+        }
+
+        ScrollTrigger.refresh()
+      }
+
+      const handleReady = () => bindScroll()
+
+      anim.addEventListener('DOMLoaded', handleReady)
+
+      if (anim.totalFrames > 0) {
+        handleReady()
+      }
     }
 
-    const handleReady = () => bindScroll()
-
-    anim.addEventListener('DOMLoaded', handleReady)
-
-    if (anim.totalFrames > 0) {
-      handleReady()
-    }
+    void setup()
 
     return () => {
-      anim.removeEventListener('DOMLoaded', handleReady)
-      anim.removeEventListener('complete', handleComplete)
+      cancelled = true
       scrollTrigger?.kill()
-      anim.destroy()
+      anim?.destroy()
       hasPlayedRef.current = false
     }
-  }, [animationData, triggerRef, start, end, scrub, mode, speed, repeatCount, rendererSettings])
+  }, [
+    animationData,
+    triggerRef,
+    start,
+    end,
+    scrub,
+    mode,
+    speed,
+    repeatCount,
+    rendererSettings,
+  ])
 
   return containerRef
 }

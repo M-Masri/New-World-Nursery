@@ -58,10 +58,16 @@ function NewsletterSection() {
               className="flex w-full max-w-md overflow-hidden rounded-full border border-gray-200 bg-white shadow-sm sm:max-w-lg"
               onSubmit={(e) => e.preventDefault()}
             >
+              <label htmlFor="newsletter-email" className="sr-only">
+                Email address
+              </label>
               <input
+                id="newsletter-email"
+                name="email"
                 type="email"
+                autoComplete="email"
                 placeholder="Enter your email"
-                className="min-w-0 flex-1 bg-white px-5 py-3 text-sm text-gray-700 outline-none placeholder:text-gray-400"
+                className="min-w-0 flex-1 bg-white px-5 py-3 text-sm text-gray-700 outline-none placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-[#5bb5a2]/40"
               />
               <button
                 type="submit"

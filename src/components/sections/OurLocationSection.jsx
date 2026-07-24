@@ -16,7 +16,7 @@ const branches = [
     hours: 'Sun – Thu: 7:00 AM – 6:00 PM',
     accent: '#5bb5a2',
     image:
-      'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=600&h=400&fit=crop&fm=webp&q=70',
   },
   {
     id: 2,
@@ -28,7 +28,7 @@ const branches = [
     hours: 'Sun – Thu: 7:00 AM – 6:00 PM',
     accent: '#f4a0b0',
     image:
-      'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&h=400&fit=crop&fm=webp&q=70',
   },
   {
     id: 3,
@@ -40,7 +40,7 @@ const branches = [
     hours: 'Sun – Thu: 7:00 AM – 6:00 PM',
     accent: '#f5b942',
     image:
-      'https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=600&h=400&fit=crop&fm=webp&q=70',
   },
   {
     id: 4,
@@ -52,7 +52,7 @@ const branches = [
     hours: 'Sun – Thu: 7:00 AM – 6:00 PM',
     accent: '#a682b8',
     image:
-      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=400&fit=crop&fm=webp&q=70',
   },
 ]
 
@@ -108,6 +108,10 @@ function LocationCard({ branch, index }) {
         <img
           src={branch.image}
           alt={`${branch.city}, ${branch.country}`}
+          width={600}
+          height={400}
+          loading="lazy"
+          decoding="async"
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#2d3a4a]/80 via-[#2d3a4a]/20 to-transparent" />

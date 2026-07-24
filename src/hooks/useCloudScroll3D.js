@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import * as THREE from 'three'
 import { createCloudTexture } from '../lib/createCloudTexture'
 
 const DEFAULT_CONFIG = {
@@ -28,6 +27,7 @@ function getPixelRatio() {
 
 /**
  * غيمة Three.js — floating فقط، وتتوقف عن الرسم خارج الـ viewport.
+ * three.js يُحمَّل ديناميكياً حتى لا يثقل الـ first paint.
  */
 export function useCloudScroll3D(canvasRef, userConfig = {}) {
   const config = { ...DEFAULT_CONFIG, ...userConfig }
@@ -95,7 +95,10 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
       computeBasePosition()
     }
 
-    const initThree = () => {
+    const initThree = async () => {
+      const THREE = await import('three')
+      if (isDisposed) return
+
       const isNarrow = window.matchMedia('(max-width: 640px)').matches
 
       renderer = new THREE.WebGLRenderer({
@@ -110,7 +113,7 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
       camera = new THREE.OrthographicCamera(0, 1, 1, 0, -100, 100)
       camera.position.z = 10
 
-      const texture = createCloudTexture()
+      const texture = createCloudTexture(THREE)
       texture.needsUpdate = true
 
       const material = new THREE.SpriteMaterial({
@@ -154,7 +157,7 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
     }
 
     const startLoop = () => {
-      if (isDisposed || isRunning || !isVisible) return
+      if (isDisposed || isRunning || !isVisible || !renderer) return
       animate()
     }
 
@@ -175,15 +178,19 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
       visibilityObserver.observe(canvas)
     }
 
-    const boot = () => {
+    const boot = async () => {
       if (isDisposed) return
 
       if (canvas.clientWidth <= 1 || canvas.clientHeight <= 1) {
-        bootFrameId = requestAnimationFrame(boot)
+        bootFrameId = requestAnimationFrame(() => {
+          void boot()
+        })
         return
       }
 
-      initThree()
+      await initThree()
+      if (isDisposed) return
+
       initVisibilityObserver()
       startLoop()
 
@@ -191,7 +198,9 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
       resizeObserver.observe(canvas)
     }
 
-    bootFrameId = requestAnimationFrame(boot)
+    bootFrameId = requestAnimationFrame(() => {
+      void boot()
+    })
 
     return () => {
       isDisposed = true

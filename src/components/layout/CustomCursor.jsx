@@ -1,38 +1,61 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 function CustomCursor() {
-  const [position, setPosition] = useState({ x: -100, y: -100 })
-  const [active, setActive] = useState(false)
+  const cursorRef = useRef(null)
+  const activeRef = useRef(false)
+  const rafRef = useRef(0)
 
   useEffect(() => {
     const hasFinePointer = window.matchMedia('(pointer: fine)').matches
     if (!hasFinePointer) return undefined
 
+    const cursor = cursorRef.current
+    if (!cursor) return undefined
+
     const handleMove = (event) => {
-      setPosition({ x: event.clientX, y: event.clientY })
-      setActive(true)
+      cancelAnimationFrame(rafRef.current)
+      rafRef.current = requestAnimationFrame(() => {
+        if (!activeRef.current) {
+          activeRef.current = true
+          cursor.style.opacity = '1'
+        }
+        cursor.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0) translate(-50%, -50%)`
+      })
     }
 
-    const handleLeave = () => setActive(false)
-    const handleEnter = () => setActive(true)
+    const handleLeave = () => {
+      activeRef.current = false
+      cursor.style.opacity = '0'
+    }
 
-    window.addEventListener('mousemove', handleMove)
+    const handleEnter = () => {
+      activeRef.current = true
+      cursor.style.opacity = '1'
+    }
+
+    window.addEventListener('mousemove', handleMove, { passive: true })
     document.documentElement.addEventListener('mouseleave', handleLeave)
     document.documentElement.addEventListener('mouseenter', handleEnter)
 
     return () => {
+      cancelAnimationFrame(rafRef.current)
       window.removeEventListener('mousemove', handleMove)
       document.documentElement.removeEventListener('mouseleave', handleLeave)
       document.documentElement.removeEventListener('mouseenter', handleEnter)
     }
   }, [])
 
-  if (!active) return null
-
   return (
     <div
+      ref={cursorRef}
       className="custom-cursor"
-      style={{ left: position.x, top: position.y }}
+      style={{
+        left: 0,
+        top: 0,
+        opacity: 0,
+        transform: 'translate3d(-100px, -100px, 0) translate(-50%, -50%)',
+        willChange: 'transform',
+      }}
       aria-hidden="true"
     />
   )

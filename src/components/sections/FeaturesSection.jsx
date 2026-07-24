@@ -1,10 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import handshakeLottie from '../../assets/lottie/handshake.json'
-import shieldLottie from '../../assets/lottie/shield.json'
-import slideLottie from '../../assets/lottie/slide.json'
-import successLottie from '../../assets/lottie/success.json'
-import teacherLottie from '../../assets/lottie/teacher.json'
-import { ScrollTrigger } from '../../lib/gsap'
 import LottieScroll from '../ui/LottieScroll'
 
 const WIGGLE_INTERVAL_MS = 28_000
@@ -12,33 +6,38 @@ const WIGGLE_DURATION_MS = 1200
 
 const features = [
   {
-    lottie: shieldLottie,
+    animationImport: () => import('../../assets/lottie/shield.json'),
     title: 'Safe & Secure',
-    description: 'Supervised spaces and clear routines so families feel at ease every day.',
+    description:
+      'Supervised spaces and clear routines so families feel at ease every day.',
     iconBg: 'bg-[#c8e8d8]',
   },
   {
-    lottie: teacherLottie,
+    animationImport: () => import('../../assets/lottie/teacher.json'),
     title: 'Caring Educators',
-    description: 'Warm, experienced teachers who know each child by name and pace.',
+    description:
+      'Warm, experienced teachers who know each child by name and pace.',
     iconBg: 'bg-[#f5d5c0]',
   },
   {
-    lottie: slideLottie,
+    animationImport: () => import('../../assets/lottie/slide.json'),
     title: 'Play-based Learning',
-    description: 'Hands-on play that builds language, curiosity, and early skills.',
+    description:
+      'Hands-on play that builds language, curiosity, and early skills.',
     iconBg: 'bg-[#f3e4a8]',
   },
   {
-    lottie: successLottie,
+    animationImport: () => import('../../assets/lottie/success.json'),
     title: 'Whole-Child Growth',
-    description: 'Social, emotional, cognitive, and physical development in balance.',
+    description:
+      'Social, emotional, cognitive, and physical development in balance.',
     iconBg: 'bg-[#ddd0ee]',
   },
   {
-    lottie: handshakeLottie,
+    animationImport: () => import('../../assets/lottie/handshake.json'),
     title: 'Parent Partnership',
-    description: 'Open updates and shared goals so home and nursery stay aligned.',
+    description:
+      'Open updates and shared goals so home and nursery stay aligned.',
     iconBg: 'bg-[#c8e3ee]',
   },
 ]
@@ -53,7 +52,9 @@ function FeaturesSection() {
     const section = sectionRef.current
     if (!section) return undefined
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches
     if (prefersReducedMotion) return undefined
 
     const clearWiggleTimers = () => {
@@ -87,22 +88,18 @@ function FeaturesSection() {
       intervalRef.current = setInterval(triggerWiggle, WIGGLE_INTERVAL_MS)
     }
 
-    const scrollTrigger = ScrollTrigger.create({
-      trigger: section,
-      start: 'top bottom',
-      end: 'bottom top',
-      onToggle: ({ isActive }) => {
-        if (isActive) startWiggleLoop()
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) startWiggleLoop()
         else clearWiggleTimers()
       },
-    })
+      { rootMargin: '40px', threshold: 0.05 },
+    )
 
-    if (scrollTrigger.isActive) {
-      startWiggleLoop()
-    }
+    observer.observe(section)
 
     return () => {
-      scrollTrigger.kill()
+      observer.disconnect()
       clearWiggleTimers()
     }
   }, [])
@@ -125,20 +122,13 @@ function FeaturesSection() {
               }`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              {feature.lottie ? (
-                <LottieScroll
-                  animationData={feature.lottie}
-                  triggerRef={sectionRef}
-                  mode="playWhileInView"
-                  speed={0.55}
-                  className="h-10 w-10"
-                />
-              ) : (
-                <feature.icon
-                  className="h-7 w-7 text-[#2d3a4a]"
-                  strokeWidth={1.6}
-                />
-              )}
+              <LottieScroll
+                animationImport={feature.animationImport}
+                triggerRef={sectionRef}
+                mode="playWhileInView"
+                speed={0.55}
+                className="h-10 w-10"
+              />
             </div>
             <h3 className="mb-1.5 text-[15px] font-bold text-brand-ink">
               {feature.title}

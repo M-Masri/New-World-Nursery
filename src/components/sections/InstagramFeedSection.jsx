@@ -8,49 +8,49 @@ const instagramPosts = [
   {
     id: 1,
     image:
-      'https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=400&h=400&fit=crop&fm=webp&q=70',
     alt: 'Happy child smiling at New World Nursery',
   },
   {
     id: 2,
     image:
-      'https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=400&h=400&fit=crop&fm=webp&q=70',
     alt: 'Story time circle with young learners',
   },
   {
     id: 3,
     image:
-      'https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=400&h=400&fit=crop&fm=webp&q=70',
     alt: 'Creative arts and crafts in class',
   },
   {
     id: 4,
     image:
-      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=400&fit=crop&fm=webp&q=70',
     alt: 'Hands-on learning through play',
   },
   {
     id: 5,
     image:
-      'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400&h=400&fit=crop&fm=webp&q=70',
     alt: 'Sensory play table for toddlers',
   },
   {
     id: 6,
     image:
-      'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=400&fit=crop&fm=webp&q=70',
     alt: 'Children enjoying outdoor play time',
   },
   {
     id: 7,
     image:
-      'https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=400&h=400&fit=crop&sat=-20',
+      'https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=400&h=400&fit=crop&fm=webp&q=70&sat=-20',
     alt: 'Friends collaborating on a group activity',
   },
   {
     id: 8,
     image:
-      'https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=400&h=400&fit=crop&sat=-30',
+      'https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=400&h=400&fit=crop&fm=webp&q=70&sat=-30',
     alt: 'Music and movement session',
   },
 ]
@@ -96,6 +96,10 @@ function InstagramFeedSection() {
               <img
                 src={post.image}
                 alt={post.alt}
+                width={400}
+                height={400}
+                loading="lazy"
+                decoding="async"
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               />
               <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-500 group-hover:bg-[#5bb5a2]/35">

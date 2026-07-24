@@ -144,12 +144,12 @@ body {
   border-radius: 9999px;
   background-color: color-mix(in srgb, #5bb5a2 42%, transparent);
   pointer-events: none;
-  transform: translate(-50%, -50%);
+  will-change: transform;
 }
 
 .hero-cloud-mask {
-  -webkit-mask-image: url("./assets/cloudmask.png");
-  mask-image: url("./assets/cloudmask.png");
+  -webkit-mask-image: url("./assets/cloudmask.webp");
+  mask-image: url("./assets/cloudmask.webp");
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;

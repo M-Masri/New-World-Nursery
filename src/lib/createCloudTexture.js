@@ -1,14 +1,14 @@
-import * as THREE from 'three'
-
 /**
  * ينشئ texture غيمة شفافة بألوان brand هادئة.
+ * يستقبل THREE بعد dynamic import حتى لا يدخل three.js في الـ critical bundle.
  */
-export function createCloudTexture() {
-  const size = 512
+export function createCloudTexture(THREE) {
+  const size = 256
   const canvas = document.createElement('canvas')
   canvas.width = size
   canvas.height = size
   const ctx = canvas.getContext('2d')
+  const s = size / 512
 
   ctx.clearRect(0, 0, size, size)
 
@@ -24,16 +24,16 @@ export function createCloudTexture() {
   blobs.forEach(({ x, y, rx, ry, color }) => {
     ctx.fillStyle = color
     ctx.beginPath()
-    ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2)
+    ctx.ellipse(x * s, y * s, rx * s, ry * s, 0, 0, Math.PI * 2)
     ctx.fill()
   })
 
   ctx.strokeStyle = 'rgba(91, 181, 162, 0.45)'
-  ctx.lineWidth = 6
+  ctx.lineWidth = Math.max(2, 6 * s)
   ctx.lineCap = 'round'
   ctx.beginPath()
-  ctx.moveTo(120, 290)
-  ctx.quadraticCurveTo(180, 320, 240, 300)
+  ctx.moveTo(120 * s, 290 * s)
+  ctx.quadraticCurveTo(180 * s, 320 * s, 240 * s, 300 * s)
   ctx.stroke()
 
   const texture = new THREE.CanvasTexture(canvas)

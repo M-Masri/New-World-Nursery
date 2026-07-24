@@ -87,6 +87,10 @@ function AboutImageFrame() {
           <img
             src={aboutRoom}
             alt="Bright nursery playroom with a teepee and soft floor cushions"
+            width={600}
+            height={400}
+            loading="lazy"
+            decoding="async"
             className="h-[320px] w-full object-cover sm:h-[380px] lg:h-[400px]"
           />
         </div>

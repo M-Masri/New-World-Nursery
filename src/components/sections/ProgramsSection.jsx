@@ -13,7 +13,7 @@ const programs = [
     description:
       'Soft routines, sensory play, and first friendships that ease the start of nursery life.',
     image:
-      'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400&h=260&fit=crop',
+      'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400&h=260&fit=crop&fm=webp&q=70',
     icon: Baby,
     color: '#8cb83a',
     lightBg: '#eef6e0',
@@ -24,10 +24,10 @@ const programs = [
     description:
       'Growing independence through language, sharing, and confident everyday skills.',
     image:
-      'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=260&fit=crop',
+      'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=260&fit=crop&fm=webp&q=70',
     icon: Flower2,
     color: '#f4a0b0',
-    lightBg: '#fdf0f3',
+    lightBg: '#fce8ee',
   },
   {
     title: 'Pre-Nursery',
@@ -35,10 +35,10 @@ const programs = [
     description:
       'Curiosity-led projects that stretch thinking, creativity, and social confidence.',
     image:
-      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=260&fit=crop',
+      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=260&fit=crop&fm=webp&q=70',
     icon: Lightbulb,
     color: '#f5b942',
-    lightBg: '#fdf3d8',
+    lightBg: '#fdf0c8',
   },
   {
     title: 'KG',
@@ -46,10 +46,10 @@ const programs = [
     description:
       'School-ready focus on literacy, numeracy, and the social skills for a smooth move up.',
     image:
-      'https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=400&h=260&fit=crop',
+      'https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=400&h=260&fit=crop&fm=webp&q=70',
     icon: GraduationCap,
     color: '#5bb5a2',
-    lightBg: '#e0f3ef',
+    lightBg: '#d8f0ea',
   },
 ]
 
@@ -104,15 +104,15 @@ function ProgramCard({ program, index }) {
   const Icon = program.icon
 
   return (
-    <AnimatedCard
-      index={index}
-      className="card-surface"
-      style={{ borderBottom: `5px solid ${program.color}` }}
-    >
-      <div className="relative">
+    <AnimatedCard index={index} className="card-surface flex h-full flex-col">
+      <div className="relative shrink-0">
         <img
           src={program.image}
           alt={program.title}
+          width={400}
+          height={260}
+          loading="lazy"
+          decoding="async"
           className="h-44 w-full object-cover"
         />
 
@@ -124,26 +124,34 @@ function ProgramCard({ program, index }) {
         >
           <path
             d="M0,18 C60,4 140,26 200,14 C260,2 340,24 400,12 L400,28 L0,28 Z"
-            fill="white"
+            fill={program.lightBg}
           />
         </svg>
 
         <div
-          className="absolute -bottom-5 left-5 flex h-11 w-11 items-center justify-center rounded-full shadow-md"
+          className="absolute -bottom-5 left-5 z-10 flex h-11 w-11 items-center justify-center rounded-full shadow-md"
           style={{ backgroundColor: program.color }}
         >
           <Icon className="h-5 w-5 text-white" strokeWidth={2} />
         </div>
       </div>
 
-      <div className="px-5 pt-7 pb-6" style={{ backgroundColor: program.lightBg }}>
-        <h3 className="mb-1 text-base font-extrabold text-brand-ink">
-          {program.title}
-        </h3>
-        <p className="mb-3 text-xs font-bold text-brand-ink">{program.age}</p>
-        <p className="text-xs leading-relaxed text-brand-muted">
-          {program.description}
-        </p>
+      <div
+        className="flex min-h-0 flex-1 flex-col"
+        style={{
+          backgroundColor: program.lightBg,
+          borderBottom: `5px solid ${program.color}`,
+        }}
+      >
+        <div className="flex-1 px-5 pt-7 pb-6">
+          <h3 className="mb-1 text-base font-extrabold text-brand-ink">
+            {program.title}
+          </h3>
+          <p className="mb-3 text-xs font-bold text-brand-ink">{program.age}</p>
+          <p className="text-xs leading-relaxed text-brand-muted">
+            {program.description}
+          </p>
+        </div>
       </div>
     </AnimatedCard>
   )

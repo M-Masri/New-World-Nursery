@@ -24,6 +24,10 @@ export default defineConfig({
               test: /node_modules[\\/]gsap/,
             },
             {
+              name: 'vendor-three',
+              test: /node_modules[\\/]three/,
+            },
+            {
               name: 'vendor-lottie',
               test: /node_modules[\\/]lottie-web/,
             },

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CloudScroll3D } from '../ui'
+import CloudScroll3D from '../ui/CloudScroll3D'
 import { useContactFormPopup } from '../../context/ContactFormContext'
 import heroCloud from '../../assets/hero-cloud.png'
 import heroHeart from '../../assets/hero-heart.png'
@@ -14,6 +14,10 @@ function HeroCloudPhoto({ className = '', src, alt }) {
     <img
       src={src}
       alt={alt}
+      width={600}
+      height={340}
+      fetchPriority="high"
+      decoding="async"
       className={`hero-cloud-mask block object-cover ${className}`}
     />
   )
@@ -29,6 +33,10 @@ function HeroSection() {
       <img
         src={heroRainbow}
         alt=""
+        width={288}
+        height={160}
+        loading="lazy"
+        decoding="async"
         className="pointer-events-none absolute -right-3 bottom-0 z-30 block w-48 sm:-right-4 sm:bottom-0 sm:w-60 lg:w-72"
       />
 
@@ -54,6 +62,10 @@ function HeroSection() {
                   <img
                     src={heroHeart}
                     alt=""
+                    width={40}
+                    height={40}
+                    loading="lazy"
+                    decoding="async"
                     className="pointer-events-none absolute -top-7 left-1/2 h-8 w-8 -translate-x-1/2 object-contain sm:h-9 sm:w-9 lg:h-10 lg:w-10"
                     aria-hidden="true"
                   />
@@ -106,6 +118,10 @@ function HeroSection() {
           <img
             src={heroSun}
             alt=""
+            width={80}
+            height={80}
+            loading="lazy"
+            decoding="async"
             className="pointer-events-none absolute -top-5 left-4 z-10 h-16 w-16 object-contain sm:-top-6 sm:left-6 sm:h-[4.5rem] sm:w-[4.5rem] lg:-top-7 lg:left-8 lg:h-20 lg:w-20"
             aria-hidden="true"
           />
