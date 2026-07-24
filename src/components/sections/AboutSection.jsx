@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import aboutLeaf from '../../assets/about-leaf.webp'
 import aboutGradIcon from '../../assets/New_World_Icon00050-removebg-preview.webp'
-import aboutRoom from '../../assets/about-room.png'
+import aboutKids from '../../assets/about-kids.webp'
 import { useContactFormPopup } from '../../context/ContactFormContext'
 import BrushHighlightText from '../ui/BrushHighlightText'
 import Button from '../ui/Button'
@@ -85,13 +85,13 @@ function AboutImageFrame() {
       <div className="relative rounded-[var(--radius-feature)] p-3 sm:rounded-[3rem] sm:p-4">
         <div className="overflow-hidden rounded-[2rem] sm:rounded-[2.5rem]">
           <img
-            src={aboutRoom}
-            alt="Bright nursery playroom with a teepee and soft floor cushions"
-            width={600}
-            height={400}
+            src={aboutKids}
+            alt="A happy child exploring and playing at New World Nursery"
+            width={900}
+            height={675}
             loading="lazy"
             decoding="async"
-            className="h-[320px] w-full object-cover sm:h-[380px] lg:h-[400px]"
+            className="h-[320px] w-full object-cover object-center sm:h-[380px] lg:h-[400px]"
           />
         </div>
       </div>
@@ -106,7 +106,7 @@ function AboutLeafDecoration({ sectionRef }) {
         src={aboutGradIcon}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 left-0 z-0 hidden w-28 opacity-95 sm:block sm:w-32 lg:w-40"
+        className="pointer-events-none absolute bottom-0 left-0 z-20 hidden w-28 opacity-95 sm:block sm:w-32 lg:w-40"
       />
       <img
         src={aboutLeaf}
