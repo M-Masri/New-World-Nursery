@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import useLottieScroll from '../../hooks/useLottieScroll'
 
 /**
  * Lottie مرتبط بالسكرول. يدعم animationData جاهز أو animationImport للـ lazy-load.
+ * الـ JSON لا يُحمَّل إلا عند ظهور العنصر في الـ viewport.
  */
 function LottieScroll({
   animationData,
@@ -17,10 +18,35 @@ function LottieScroll({
   repeatCount = 1,
   rendererSettings,
 }) {
+  const hostRef = useRef(null)
   const [resolvedData, setResolvedData] = useState(animationData ?? null)
+  const [shouldLoad, setShouldLoad] = useState(!animationImport || Boolean(animationData))
 
   useEffect(() => {
-    if (resolvedData || !animationImport) return undefined
+    if (!animationImport || animationData || shouldLoad) return undefined
+
+    const node = hostRef.current
+    if (!node || typeof IntersectionObserver === 'undefined') {
+      setShouldLoad(true)
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoad(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '120px', threshold: 0.01 },
+    )
+
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [animationImport, animationData, shouldLoad])
+
+  useEffect(() => {
+    if (!shouldLoad || resolvedData || !animationImport) return undefined
 
     let cancelled = false
 
@@ -36,7 +62,7 @@ function LottieScroll({
     return () => {
       cancelled = true
     }
-  }, [animationImport, resolvedData])
+  }, [animationImport, resolvedData, shouldLoad])
 
   const containerRef = useLottieScroll({
     animationData: resolvedData,
@@ -50,7 +76,11 @@ function LottieScroll({
     rendererSettings,
   })
 
-  return <div ref={containerRef} className={className} aria-hidden="true" />
+  return (
+    <div ref={hostRef} className={className} aria-hidden="true">
+      <div ref={containerRef} className="h-full w-full" />
+    </div>
+  )
 }
 
 export default LottieScroll

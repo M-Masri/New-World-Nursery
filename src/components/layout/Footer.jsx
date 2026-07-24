@@ -75,14 +75,26 @@ function Footer() {
       <div className="bg-nursery-footer page-gutter py-4">
         <div className="mx-auto flex max-w-page flex-wrap items-center justify-between gap-3 text-sm text-white/90">
           <p>© {new Date().getFullYear()} New World Nursery. All rights reserved.</p>
-          <div className="flex items-center gap-3">
-            <a href="#facebook" className="hover:text-white" aria-label="Facebook">
+          <div className="flex items-center gap-1">
+            <a
+              href="#facebook"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center hover:text-white"
+              aria-label="Facebook"
+            >
               <FacebookIcon className="h-4 w-4" />
             </a>
-            <a href="#instagram" className="hover:text-white" aria-label="Instagram">
+            <a
+              href="#instagram"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center hover:text-white"
+              aria-label="Instagram"
+            >
               <InstagramIcon className="h-4 w-4" />
             </a>
-            <a href="#youtube" className="hover:text-white" aria-label="YouTube">
+            <a
+              href="#youtube"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center hover:text-white"
+              aria-label="YouTube"
+            >
               <YoutubeIcon className="h-4 w-4" />
             </a>
           </div>

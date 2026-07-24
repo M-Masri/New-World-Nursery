@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import CloudScroll3D from '../ui/CloudScroll3D'
 import { useContactFormPopup } from '../../context/ContactFormContext'
 import heroCloud from '../../assets/hero-cloud.png'
-import heroHeart from '../../assets/hero-heart.png'
-import heroKids from '../../assets/hero-kids.png'
-import heroRainbow from '../../assets/hero-rainbow.png'
-import heroSun from '../../assets/hero-sun.png'
+import heroHeart from '../../assets/hero-heart.webp'
+import heroKids from '../../assets/hero-kids.webp'
+import heroRainbow from '../../assets/hero-rainbow.webp'
+import heroSun from '../../assets/hero-sun.webp'
 
 const heroPhoto = heroKids
 
@@ -16,6 +16,7 @@ function HeroCloudPhoto({ className = '', src, alt }) {
       alt={alt}
       width={600}
       height={340}
+      sizes="(max-width: 640px) 92vw, (max-width: 1024px) 560px, 600px"
       fetchPriority="high"
       decoding="async"
       className={`hero-cloud-mask block object-cover ${className}`}
@@ -195,7 +196,10 @@ function HeroFlyingDecorations() {
     return () => media.removeEventListener('change', update)
   }, [])
 
-  const items = isNarrow ? flyingItems.slice(0, 6) : flyingItems
+  // Skip infinite fly animations on mobile — saves main-thread work for PSI.
+  if (isNarrow) return null
+
+  const items = flyingItems
 
   return (
     <div

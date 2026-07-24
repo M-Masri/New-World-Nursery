@@ -40,6 +40,14 @@ export function useCloudScroll3D(canvasRef, userConfig = {}) {
       return undefined
     }
 
+    // Skip WebGL on phones / coarse pointers — big mobile PSI win.
+    const skipWebGL = window.matchMedia(
+      '(max-width: 768px), (pointer: coarse), (hover: none)',
+    ).matches
+    if (skipWebGL) {
+      return undefined
+    }
+
     let renderer
     let scene
     let camera

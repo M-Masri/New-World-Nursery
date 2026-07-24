@@ -1,4 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
+import {
+  Handshake,
+  ShieldCheck,
+  Sparkles,
+  Sprout,
+  Users,
+} from 'lucide-react'
 import LottieScroll from '../ui/LottieScroll'
 
 const WIGGLE_INTERVAL_MS = 28_000
@@ -7,6 +14,7 @@ const WIGGLE_DURATION_MS = 1200
 const features = [
   {
     animationImport: () => import('../../assets/lottie/shield.json'),
+    Icon: ShieldCheck,
     title: 'Safe & Secure',
     description:
       'Supervised spaces and clear routines so families feel at ease every day.',
@@ -14,6 +22,7 @@ const features = [
   },
   {
     animationImport: () => import('../../assets/lottie/teacher.json'),
+    Icon: Users,
     title: 'Caring Educators',
     description:
       'Warm, experienced teachers who know each child by name and pace.',
@@ -21,6 +30,7 @@ const features = [
   },
   {
     animationImport: () => import('../../assets/lottie/slide.json'),
+    Icon: Sparkles,
     title: 'Play-based Learning',
     description:
       'Hands-on play that builds language, curiosity, and early skills.',
@@ -28,6 +38,7 @@ const features = [
   },
   {
     animationImport: () => import('../../assets/lottie/success.json'),
+    Icon: Sprout,
     title: 'Whole-Child Growth',
     description:
       'Social, emotional, cognitive, and physical development in balance.',
@@ -35,6 +46,7 @@ const features = [
   },
   {
     animationImport: () => import('../../assets/lottie/handshake.json'),
+    Icon: Handshake,
     title: 'Parent Partnership',
     description:
       'Open updates and shared goals so home and nursery stay aligned.',
@@ -47,6 +59,15 @@ function FeaturesSection() {
   const intervalRef = useRef(null)
   const wiggleTimeoutRef = useRef(null)
   const [isWiggling, setIsWiggling] = useState(false)
+  const [preferStaticIcons, setPreferStaticIcons] = useState(false)
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 768px)')
+    const update = () => setPreferStaticIcons(media.matches)
+    update()
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
 
   useEffect(() => {
     const section = sectionRef.current
@@ -55,7 +76,7 @@ function FeaturesSection() {
     const prefersReducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)',
     ).matches
-    if (prefersReducedMotion) return undefined
+    if (prefersReducedMotion || preferStaticIcons) return undefined
 
     const clearWiggleTimers = () => {
       if (intervalRef.current) {
@@ -102,7 +123,7 @@ function FeaturesSection() {
       observer.disconnect()
       clearWiggleTimers()
     }
-  }, [])
+  }, [preferStaticIcons])
 
   return (
     <section id="why-us" ref={sectionRef} className="bg-[#f3ebe0] py-10 sm:py-12">
@@ -122,13 +143,17 @@ function FeaturesSection() {
               }`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <LottieScroll
-                animationImport={feature.animationImport}
-                triggerRef={sectionRef}
-                mode="playWhileInView"
-                speed={0.55}
-                className="h-10 w-10"
-              />
+              {preferStaticIcons ? (
+                <feature.Icon className="h-7 w-7 text-[#2d3a4a]" strokeWidth={1.6} />
+              ) : (
+                <LottieScroll
+                  animationImport={feature.animationImport}
+                  triggerRef={sectionRef}
+                  mode="playWhileInView"
+                  speed={0.55}
+                  className="h-10 w-10"
+                />
+              )}
             </div>
             <h3 className="mb-1.5 text-[15px] font-bold text-brand-ink">
               {feature.title}

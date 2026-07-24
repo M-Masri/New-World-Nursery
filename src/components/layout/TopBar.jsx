@@ -24,15 +24,27 @@ function TopBar() {
             <MapPin className="h-3.5 w-3.5 shrink-0 text-nursery-teal" />
             Find Us
           </a>
-          <div className="flex items-center gap-2.5 border-l border-gray-200 pl-4">
-            <a href="#facebook" className="text-nursery-teal hover:text-nursery-teal-dark" aria-label="Facebook">
-              <FacebookIcon className="h-3.5 w-3.5" />
+          <div className="flex items-center gap-1 border-l border-gray-200 pl-3 sm:gap-1.5 sm:pl-4">
+            <a
+              href="#facebook"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center text-nursery-teal hover:text-nursery-teal-dark"
+              aria-label="Facebook"
+            >
+              <FacebookIcon className="h-4 w-4" />
             </a>
-            <a href="#instagram" className="text-nursery-teal hover:text-nursery-teal-dark" aria-label="Instagram">
-              <InstagramIcon className="h-3.5 w-3.5" />
+            <a
+              href="#instagram"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center text-nursery-teal hover:text-nursery-teal-dark"
+              aria-label="Instagram"
+            >
+              <InstagramIcon className="h-4 w-4" />
             </a>
-            <a href="#youtube" className="text-nursery-teal hover:text-nursery-teal-dark" aria-label="YouTube">
-              <YoutubeIcon className="h-3.5 w-3.5" />
+            <a
+              href="#youtube"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center text-nursery-teal hover:text-nursery-teal-dark"
+              aria-label="YouTube"
+            >
+              <YoutubeIcon className="h-4 w-4" />
             </a>
           </div>
         </div>
