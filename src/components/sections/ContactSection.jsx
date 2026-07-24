@@ -12,7 +12,7 @@ function ContactSection() {
     <section
       id="contact"
       ref={sectionRef}
-      className="relative overflow-hidden bg-white py-16 sm:py-20"
+      className="relative overflow-hidden bg-white py-10 sm:py-12"
     >
       <div className="relative z-10 mx-auto grid max-w-page items-center gap-12 page-gutter lg:grid-cols-2 lg:gap-16">
         <div>

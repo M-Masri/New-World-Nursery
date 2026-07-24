@@ -208,6 +208,65 @@ body {
   .hero-fly-item {
     display: none;
   }
+
+  .instagram-walker {
+    animation: none !important;
+  }
+}
+
+@keyframes instagram-walk-rtl {
+  0% {
+    left: 100%;
+    transform: translateX(0);
+  }
+
+  100% {
+    left: 0;
+    transform: translateX(-100%);
+  }
+}
+
+.instagram-walker-track {
+  position: relative;
+  width: 100%;
+  height: 5.5rem;
+  overflow: hidden;
+}
+
+.instagram-walker {
+  position: absolute;
+  bottom: 0;
+  left: 100%;
+  width: 10.5rem;
+  height: 100%;
+  animation: instagram-walk-rtl 22s linear infinite;
+  animation-play-state: paused;
+}
+
+@media (min-width: 640px) {
+  .instagram-walker {
+    width: 14rem;
+  }
+
+  .instagram-walker-track {
+    height: 7.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .instagram-walker {
+    width: 16rem;
+  }
+
+  .instagram-walker-track {
+    height: 8.5rem;
+  }
+}
+
+.instagram-walk-lottie svg {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .about-title-highlight {

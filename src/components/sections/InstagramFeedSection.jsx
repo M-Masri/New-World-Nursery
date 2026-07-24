@@ -1,8 +1,8 @@
-import { useRef } from 'react'
-import instagramIcon from '../../assets/New_World_Icon00010-removebg-preview.webp'
+import { useEffect, useRef } from 'react'
 import { InstagramIcon } from '../ui/SocialIcons'
 import BrushHighlightText from '../ui/BrushHighlightText'
 import AnimatedCard from '../ui/AnimatedCard'
+import LottieScroll from '../ui/LottieScroll'
 
 const instagramPosts = [
   {
@@ -57,22 +57,38 @@ const instagramPosts = [
 
 function InstagramFeedSection() {
   const sectionRef = useRef(null)
+  const walkerRef = useRef(null)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    const walker = walkerRef.current
+    if (!section || !walker) return undefined
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        walker.style.animationPlayState = entry.isIntersecting
+          ? 'running'
+          : 'paused'
+      },
+      { rootMargin: '40px', threshold: 0.05 },
+    )
+
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <section
       id="instagram"
       ref={sectionRef}
-      className="relative overflow-hidden bg-white py-16 sm:py-20"
+      className="relative overflow-hidden bg-white py-10 sm:py-12"
     >
-      <img
-        src={instagramIcon}
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 left-0 z-20 w-28 opacity-95 sm:w-32 lg:w-40"
-      />
-
       <div className="relative z-10 mx-auto max-w-page page-gutter">
-        <div className="mb-10 text-center">
+        <div className="mb-8 text-center">
           <p className="section-eyebrow">Instagram</p>
           <h2 className="section-title">
             Follow{' '}
@@ -119,6 +135,20 @@ function InstagramFeedSection() {
             <InstagramIcon className="h-5 w-5" />
             Follow Us on Instagram
           </a>
+        </div>
+
+        <div className="instagram-walker-track mx-auto mt-6" aria-hidden="true">
+          <div ref={walkerRef} className="instagram-walker">
+            <LottieScroll
+              animationImport={() =>
+                import('../../assets/lottie/loading-walk.json')
+              }
+              triggerRef={sectionRef}
+              mode="playWhileInView"
+              speed={0.65}
+              className="instagram-walk-lottie h-full w-full"
+            />
+          </div>
         </div>
       </div>
     </section>

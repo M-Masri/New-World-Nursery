@@ -63,7 +63,7 @@ function OurLocationSection() {
     <section
       id="locations"
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#fff8f2] py-16 sm:py-20"
+      className="relative overflow-hidden bg-[#fff8f2] pt-10 pb-10 sm:pt-12 sm:pb-10"
     >
       <img
         src={locationIcon}
@@ -73,7 +73,7 @@ function OurLocationSection() {
       />
 
       <div className="relative z-10 mx-auto max-w-page page-gutter">
-        <div className="mb-12 text-center">
+        <div className="mb-8 text-center">
           <p className="section-eyebrow">Our Locations</p>
           <h2 className="section-title">
             Find us across{' '}

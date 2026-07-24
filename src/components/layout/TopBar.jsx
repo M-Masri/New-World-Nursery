@@ -3,7 +3,7 @@ import { FacebookIcon, InstagramIcon, YoutubeIcon } from '../ui/SocialIcons'
 
 function TopBar() {
   return (
-    <div className="border-b border-gray-100 bg-nursery-cream">
+    <div className="hidden border-b border-gray-100 bg-nursery-cream sm:block">
       <div className="mx-auto flex max-w-page flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-2.5 text-xs text-gray-600 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
           <a href="tel:+971501234567" className="flex items-center gap-1.5 hover:text-nursery-teal">

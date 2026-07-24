@@ -61,12 +61,12 @@ function ProgramsSection() {
     <section
       id="programs"
       ref={sectionRef}
-      className="relative scroll-mt-24 overflow-hidden bg-white py-16 sm:py-20"
+      className="relative scroll-mt-24 overflow-hidden bg-white py-10 sm:py-12"
     >
       <ProgramsDecorations />
 
       <div className="relative mx-auto max-w-page page-gutter">
-        <div className="mb-12 text-center">
+        <div className="mb-8 text-center">
           <p className="section-eyebrow">Our Programs</p>
           <h2 className="section-title">
             Learning by{' '}

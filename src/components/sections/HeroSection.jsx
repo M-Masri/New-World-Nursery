@@ -44,7 +44,7 @@ function HeroSection() {
       <HeroDecorations />
       <HeroFlyingDecorations />
 
-      <div className="relative z-10 mx-auto grid max-w-page items-center gap-12 px-6 py-14 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:py-20">
+      <div className="relative z-10 mx-auto grid max-w-page items-center gap-10 px-6 py-10 sm:px-8 lg:grid-cols-2 lg:gap-14 lg:py-14">
         <div className="text-center lg:text-left">
           <p className="mb-4 text-xs font-extrabold tracking-[0.25em] text-[#5bb5a2] uppercase">
             New World Nursery · Dubai

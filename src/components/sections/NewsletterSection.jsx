@@ -32,7 +32,7 @@ function NewsletterSection() {
         />
       </svg>
 
-      <div className="relative bg-[#eef8f5] page-gutter pt-14 pb-12">
+      <div className="relative bg-[#eef8f5] page-gutter pt-10 pb-8">
         <div className="relative z-10 mx-auto flex max-w-page flex-col items-center gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center gap-4 sm:gap-5">
             <LottieScroll

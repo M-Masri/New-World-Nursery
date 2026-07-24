@@ -12,7 +12,7 @@ function AboutSection() {
   const { openContactForm } = useContactFormPopup()
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-white py-16 sm:py-20">
+    <section ref={sectionRef} className="relative overflow-hidden bg-white py-10 pb-10 sm:py-12 sm:pb-10">
       <AboutLeafDecoration sectionRef={sectionRef} />
 
       <div className="relative mx-auto grid max-w-page items-center gap-12 page-gutter lg:grid-cols-2 lg:gap-16">
@@ -106,7 +106,7 @@ function AboutLeafDecoration({ sectionRef }) {
         src={aboutGradIcon}
         alt=""
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 left-0 z-0 w-28 opacity-95 sm:w-32 lg:w-40"
+        className="pointer-events-none absolute bottom-0 left-0 z-0 hidden w-28 opacity-95 sm:block sm:w-32 lg:w-40"
       />
       <img
         src={aboutLeaf}
@@ -125,7 +125,7 @@ function AboutLeafDecoration({ sectionRef }) {
         triggerRef={sectionRef}
         mode="playWhileInView"
         speed={0.55}
-        className="pointer-events-none absolute right-10 bottom-0 z-20 h-36 w-72 opacity-100 brightness-75 contrast-125 saturate-125 sm:right-12 sm:h-40 sm:w-80 lg:right-16 lg:h-48 lg:w-96"
+        className="pointer-events-none absolute right-0 bottom-0 z-20 h-28 w-52 opacity-100 brightness-75 contrast-125 saturate-125 sm:right-12 sm:h-40 sm:w-80 lg:right-16 lg:h-48 lg:w-96"
       />
     </>
   )

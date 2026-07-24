@@ -126,7 +126,7 @@ function FeaturesSection() {
   }, [preferStaticIcons])
 
   return (
-    <section id="why-us" ref={sectionRef} className="bg-[#f3ebe0] py-10 sm:py-12">
+    <section id="why-us" ref={sectionRef} className="bg-[#f3ebe0] py-8 sm:py-10">
       <div className="mx-auto grid max-w-page grid-cols-1 gap-7 page-gutter sm:grid-cols-2 lg:grid-cols-5 lg:gap-0">
         {features.map((feature, index) => (
           <div
