@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { ContactFormProvider } from '../../context/ContactFormContext'
+import { HomeDataProvider } from '../../context/HomeDataContext'
 import ContactFormPopup from '../ui/ContactFormPopup'
 import CustomCursor from './CustomCursor'
 import TopBar from './TopBar'
@@ -8,18 +9,20 @@ import Footer from './Footer'
 
 function Layout() {
   return (
-    <ContactFormProvider>
-      <div className="min-h-screen bg-white text-gray-800">
-        <CustomCursor />
-        <TopBar />
-        <Navbar />
-        <main>
-          <Outlet />
-        </main>
-        <Footer />
-        <ContactFormPopup />
-      </div>
-    </ContactFormProvider>
+    <HomeDataProvider>
+      <ContactFormProvider>
+        <div className="min-h-screen bg-white text-gray-800">
+          <CustomCursor />
+          <TopBar />
+          <Navbar />
+          <main>
+            <Outlet />
+          </main>
+          <Footer />
+          <ContactFormPopup />
+        </div>
+      </ContactFormProvider>
+    </HomeDataProvider>
   )
 }
 

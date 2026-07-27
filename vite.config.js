@@ -47,9 +47,21 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://new-world-nursery.test',
+        changeOrigin: true,
+      },
+    },
   },
   preview: {
     host: true,
     port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://new-world-nursery.test',
+        changeOrigin: true,
+      },
+    },
   },
 })

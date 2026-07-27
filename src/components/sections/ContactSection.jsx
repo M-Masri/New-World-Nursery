@@ -4,9 +4,19 @@ import BrushHighlightText from '../ui/BrushHighlightText'
 import CloudScroll3D from '../ui/CloudScroll3D'
 import ContactForm from '../ui/ContactForm'
 import LottieScroll from '../ui/LottieScroll'
+import { useHomeData } from '../../context/HomeDataContext'
 
 function ContactSection() {
   const sectionRef = useRef(null)
+  const { settings, programs } = useHomeData()
+  const contact = settings?.contact ?? null
+  const programOptions = [
+    'Select...',
+    ...programs.map((program) => program.title).filter(Boolean),
+    'General Enquiry',
+  ]
+
+  if (!contact) return null
 
   return (
     <section
@@ -27,67 +37,82 @@ function ContactSection() {
             />
           </div>
 
-          <p className="section-eyebrow mb-4">
-            Plan a Visit
-          </p>
-          <h2 className="section-title mb-5 lg:text-[2.75rem]">
-            <span className="block">Talk with</span>
-            <span className="relative inline-block">
-              <BrushHighlightText triggerRef={sectionRef} className="font-normal">
-                Our Team
-              </BrushHighlightText>
-              <LottieScroll
-                animationImport={() =>
-                  import('../../assets/lottie/contact-needs.json')
-                }
-                triggerRef={sectionRef}
-                mode="playWhileInView"
-                speed={0.7}
-                className="pointer-events-none absolute top-1/2 left-full -ml-3 h-28 w-32 -translate-y-1/2 shrink-0 sm:-ml-4 sm:h-32 sm:w-36 lg:-ml-13 lg:h-46 lg:w-45"
-              />
-            </span>
-          </h2>
-          <p className="mb-10 max-w-md text-sm leading-relaxed text-brand-muted">
-            Tell us your child&apos;s age and preferred program — we&apos;ll
-            help you book a tour of our Al Barsha nursery and answer enrolment
-            questions.
-          </p>
+          {contact.label ? (
+            <p className="section-eyebrow mb-4">{contact.label}</p>
+          ) : null}
+
+          {contact.title || contact.title_highlight ? (
+            <h2 className="section-title mb-5 lg:text-[2.75rem]">
+              {contact.title ? <span className="block">{contact.title}</span> : null}
+              {contact.title_highlight ? (
+                <span className="relative inline-block">
+                  <BrushHighlightText
+                    triggerRef={sectionRef}
+                    className="font-normal"
+                  >
+                    {contact.title_highlight}
+                  </BrushHighlightText>
+                  <LottieScroll
+                    animationImport={() =>
+                      import('../../assets/lottie/contact-needs.json')
+                    }
+                    triggerRef={sectionRef}
+                    mode="playWhileInView"
+                    speed={0.7}
+                    className="pointer-events-none absolute top-1/2 left-full -ml-3 h-28 w-32 -translate-y-1/2 shrink-0 sm:-ml-4 sm:h-32 sm:w-36 lg:-ml-13 lg:h-46 lg:w-45"
+                  />
+                </span>
+              ) : null}
+            </h2>
+          ) : null}
+
+          {contact.subtitle ? (
+            <p className="mb-10 max-w-md text-sm leading-relaxed text-brand-muted">
+              {contact.subtitle}
+            </p>
+          ) : null}
 
           <div className="space-y-6">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#5bb5a2]">
-                <Mail className="h-5 w-5 text-white" />
+            {contact.email ? (
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#5bb5a2]">
+                  <Mail className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-brand-muted">E-mail</p>
+                  <a
+                    href={`mailto:${contact.email}`}
+                    className="text-sm font-semibold text-brand-ink hover:text-[#5bb5a2]"
+                  >
+                    {contact.email}
+                  </a>
+                </div>
               </div>
-              <div>
-                <p className="text-xs font-bold text-brand-muted">E-mail</p>
-                <a
-                  href="mailto:info@newworldnursery.ae"
-                  className="text-sm font-semibold text-brand-ink hover:text-[#5bb5a2]"
-                >
-                  info@newworldnursery.ae
-                </a>
-              </div>
-            </div>
+            ) : null}
 
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#5bb5a2]">
-                <Phone className="h-5 w-5 text-white" />
+            {contact.phone ? (
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#5bb5a2]">
+                  <Phone className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-brand-muted">
+                    Phone number
+                  </p>
+                  <a
+                    href={`tel:${contact.phone.replace(/\s+/g, '')}`}
+                    className="text-sm font-semibold text-brand-ink hover:text-[#5bb5a2]"
+                  >
+                    {contact.phone}
+                  </a>
+                </div>
               </div>
-              <div>
-                <p className="text-xs font-bold text-brand-muted">Phone number</p>
-                <a
-                  href="tel:+971501234567"
-                  className="text-sm font-semibold text-brand-ink hover:text-[#5bb5a2]"
-                >
-                  +971 50 123 4567
-                </a>
-              </div>
-            </div>
+            ) : null}
           </div>
         </div>
 
         <div className="card-surface p-6 sm:p-8">
-          <ContactForm idPrefix="contact" />
+          <ContactForm idPrefix="contact" programOptions={programOptions} />
         </div>
       </div>
     </section>

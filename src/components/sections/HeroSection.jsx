@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import CloudScroll3D from '../ui/CloudScroll3D'
 import { useContactFormPopup } from '../../context/ContactFormContext'
+import { useHomeData } from '../../context/HomeDataContext'
 import heroCloud from '../../assets/hero-cloud.png'
 import heroHeart from '../../assets/hero-heart.webp'
-import heroKids from '../../assets/hero-kids.webp'
 import heroRainbow from '../../assets/hero-rainbow.webp'
 import heroSun from '../../assets/hero-sun.webp'
 
-const heroPhoto = heroKids
+const TITLE_COLORS = ['#8cb83a', '#f4a0b0', '#f5b942', '#a682b8', '#5bb5a2', '#5a5a5a', '#f4a0b0']
 
 function HeroCloudPhoto({ className = '', src, alt }) {
   return (
@@ -24,8 +24,57 @@ function HeroCloudPhoto({ className = '', src, alt }) {
   )
 }
 
+function HeroTitle({ title }) {
+  const words = title.trim().split(/\s+/).filter(Boolean)
+  const mid = Math.ceil(words.length / 2)
+  const firstLine = words.slice(0, mid)
+  const secondLine = words.slice(mid)
+
+  const renderWord = (word, index, offset) => {
+    const color = TITLE_COLORS[(offset + index) % TITLE_COLORS.length]
+    const lower = word.toLowerCase()
+
+    return (
+      <span key={`${offset}-${word}-${index}`} className="relative inline-block" style={{ color }}>
+        {lower === 'place' ? (
+          <img
+            src={heroHeart}
+            alt=""
+            width={40}
+            height={40}
+            loading="lazy"
+            decoding="async"
+            className="pointer-events-none absolute -top-7 left-1/2 h-8 w-8 -translate-x-1/2 object-contain sm:h-9 sm:w-9 lg:h-10 lg:w-10"
+            aria-hidden="true"
+          />
+        ) : null}
+        {word}
+        {index < (offset === 0 ? firstLine.length : secondLine.length) - 1 ? '\u00A0' : ''}
+        {lower === 'grow' ? (
+          <TitleLeafAccent
+            variant="end"
+            className="pointer-events-none absolute -right-11 -bottom-5 h-12 w-14 sm:-right-13 sm:-bottom-4 sm:h-14 sm:w-16 lg:-right-14 lg:-bottom-3"
+          />
+        ) : null}
+      </span>
+    )
+  }
+
+  return (
+    <h1 className="text-[2.4rem] leading-[1.15] font-extrabold sm:text-5xl lg:text-[3.4rem]">
+      {firstLine.map((word, i) => renderWord(word, i, 0))}
+      {secondLine.length > 0 ? <br /> : null}
+      {secondLine.map((word, i) => renderWord(word, i, firstLine.length))}
+    </h1>
+  )
+}
+
 function HeroSection() {
   const { openContactForm } = useContactFormPopup()
+  const { settings } = useHomeData()
+  const hero = settings?.hero ?? null
+
+  if (!hero) return null
 
   return (
     <section className="relative overflow-hidden bg-white">
@@ -46,101 +95,86 @@ function HeroSection() {
 
       <div className="relative z-10 mx-auto grid max-w-page items-center gap-10 px-6 py-10 sm:px-8 lg:grid-cols-2 lg:gap-14 lg:py-14">
         <div className="text-center lg:text-left">
-          <p className="mb-4 text-xs font-extrabold tracking-[0.25em] text-[#5bb5a2] uppercase">
-            New World Nursery · Dubai
-          </p>
+          {hero.eyebrow ? (
+            <p className="mb-4 text-xs font-extrabold tracking-[0.25em] text-[#5bb5a2] uppercase">
+              {hero.eyebrow}
+            </p>
+          ) : null}
 
-          <div className="mb-6 text-center lg:text-left">
-            <div className="relative inline-block">
-              <TitleLeafAccent
-                variant="start"
-                className="pointer-events-none absolute -left-12 -top-6 h-12 w-14 sm:-left-14 sm:-top-5 sm:h-14 sm:w-16 lg:-left-16 lg:-top-4"
-              />
-              <h1 className="text-[2.4rem] leading-[1.15] font-extrabold sm:text-5xl lg:text-[3.4rem]">
-                <span className="text-[#8cb83a]">A </span>
-                <span className="text-[#f4a0b0]">Happy </span>
-                <span className="relative inline-block">
-                  <img
-                    src={heroHeart}
-                    alt=""
-                    width={40}
-                    height={40}
-                    loading="lazy"
-                    decoding="async"
-                    className="pointer-events-none absolute -top-7 left-1/2 h-8 w-8 -translate-x-1/2 object-contain sm:h-9 sm:w-9 lg:h-10 lg:w-10"
-                    aria-hidden="true"
-                  />
-                  <span className="text-[#f5b942]">Place</span>
-                </span>
-                <br />
-                <span className="text-[#a682b8]">to </span>
-                <span className="text-[#5bb5a2]">Learn </span>
-                <span className="text-[#5a5a5a]">& </span>
-                <span className="relative inline-block">
-                  <span className="text-[#f4a0b0]">Grow</span>
-                  <TitleLeafAccent
-                    variant="end"
-                    className="pointer-events-none absolute -right-11 -bottom-5 h-12 w-14 sm:-right-13 sm:-bottom-4 sm:h-14 sm:w-16 lg:-right-14 lg:-bottom-3"
-                  />
-                </span>
-              </h1>
+          {hero.title ? (
+            <div className="mb-6 text-center lg:text-left">
+              <div className="relative inline-block">
+                <TitleLeafAccent
+                  variant="start"
+                  className="pointer-events-none absolute -left-12 -top-6 h-12 w-14 sm:-left-14 sm:-top-5 sm:h-14 sm:w-16 lg:-left-16 lg:-top-4"
+                />
+                <HeroTitle title={hero.title} />
+              </div>
             </div>
-          </div>
+          ) : null}
 
-          <p className="mx-auto mb-9 max-w-md text-[15px] leading-relaxed text-[#5a5a5a] lg:mx-0">
-            A warm Dubai nursery where play-based learning, caring educators,
-            and close parent partnership help little ones explore and grow with
-            confidence.
-          </p>
+          {hero.subtitle ? (
+            <p className="mx-auto mb-9 max-w-md text-[15px] leading-relaxed text-[#5a5a5a] lg:mx-0">
+              {hero.subtitle}
+            </p>
+          ) : null}
 
-          <div className="flex flex-wrap justify-center gap-4 lg:justify-start">
-            <button
-              type="button"
-              onClick={openContactForm}
-              className="rounded-xl bg-[#5bb5a2] px-8 py-3 text-sm font-extrabold tracking-wide text-white uppercase shadow-md shadow-[#5bb5a2]/25 transition hover:bg-[#4a9e8d]"
-            >
-              Enquire Now
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                document
-                  .getElementById('programs')
-                  ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-              }}
-              className="rounded-xl border-2 border-[#5bb5a2] bg-white px-8 py-3 text-sm font-extrabold tracking-wide text-[#5bb5a2] uppercase transition hover:bg-[#eef8f5]"
-            >
-              Our Programs
-            </button>
-          </div>
+          {(hero.cta_primary || hero.cta_secondary) && (
+            <div className="flex flex-wrap justify-center gap-4 lg:justify-start">
+              {hero.cta_primary ? (
+                <button
+                  type="button"
+                  onClick={openContactForm}
+                  className="rounded-xl bg-[#5bb5a2] px-8 py-3 text-sm font-extrabold tracking-wide text-white uppercase shadow-md shadow-[#5bb5a2]/25 transition hover:bg-[#4a9e8d]"
+                >
+                  {hero.cta_primary}
+                </button>
+              ) : null}
+              {hero.cta_secondary ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    document
+                      .getElementById('programs')
+                      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  }}
+                  className="rounded-xl border-2 border-[#5bb5a2] bg-white px-8 py-3 text-sm font-extrabold tracking-wide text-[#5bb5a2] uppercase transition hover:bg-[#eef8f5]"
+                >
+                  {hero.cta_secondary}
+                </button>
+              ) : null}
+            </div>
+          )}
         </div>
 
-        <div className="relative flex w-full max-w-[700px] justify-center px-6 py-2 lg:justify-self-end lg:px-4">
-          <img
-            src={heroSun}
-            alt=""
-            width={80}
-            height={80}
-            loading="lazy"
-            decoding="async"
-            className="pointer-events-none absolute -top-5 left-4 z-10 h-16 w-16 object-contain sm:-top-6 sm:left-6 sm:h-[4.5rem] sm:w-[4.5rem] lg:-top-7 lg:left-8 lg:h-20 lg:w-20"
-            aria-hidden="true"
-          />
+        {hero.image ? (
+          <div className="relative flex w-full max-w-[700px] justify-center px-6 py-2 lg:justify-self-end lg:px-4">
+            <img
+              src={heroSun}
+              alt=""
+              width={80}
+              height={80}
+              loading="lazy"
+              decoding="async"
+              className="pointer-events-none absolute -top-5 left-4 z-10 h-16 w-16 object-contain sm:-top-6 sm:left-6 sm:h-[4.5rem] sm:w-[4.5rem] lg:-top-7 lg:left-8 lg:h-20 lg:w-20"
+              aria-hidden="true"
+            />
 
-          <svg
-            className="pointer-events-none absolute top-11 left-10 z-10 h-4 w-4 rotate-45 text-[#f4a0b0] sm:top-12 sm:left-12 sm:h-5 sm:w-5 lg:top-14 lg:left-14"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path fill="currentColor" d={heartPath} />
-          </svg>
+            <svg
+              className="pointer-events-none absolute top-11 left-10 z-10 h-4 w-4 rotate-45 text-[#f4a0b0] sm:top-12 sm:left-12 sm:h-5 sm:w-5 lg:top-14 lg:left-14"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path fill="currentColor" d={heartPath} />
+            </svg>
 
-          <HeroCloudPhoto
-            className="h-[280px] w-full max-w-[520px] sm:h-[310px] sm:max-w-[560px] lg:h-[340px] lg:max-w-[600px]"
-            src={heroPhoto}
-            alt="Children building with colorful wooden blocks"
-          />
-        </div>
+            <HeroCloudPhoto
+              className="h-[280px] w-full max-w-[520px] sm:h-[310px] sm:max-w-[560px] lg:h-[340px] lg:max-w-[600px]"
+              src={hero.image}
+              alt={hero.title || 'Nursery'}
+            />
+          </div>
+        ) : null}
       </div>
     </section>
   )
@@ -182,7 +216,6 @@ const flyingItems = [
   { id: 12, type: 'dot', top: '42%', duration: 52, delay: 18, size: 'h-2 w-2', color: 'bg-[#f5c842]', opacity: 0.24 },
 ]
 
-// Higher = slower, calmer drift across the hero
 const FLY_SPEED = 1.05
 
 function HeroFlyingDecorations() {
@@ -196,17 +229,14 @@ function HeroFlyingDecorations() {
     return () => media.removeEventListener('change', update)
   }, [])
 
-  // Skip infinite fly animations on mobile — saves main-thread work for PSI.
   if (isNarrow) return null
-
-  const items = flyingItems
 
   return (
     <div
       className="pointer-events-none absolute inset-0 z-[5] overflow-hidden"
       aria-hidden="true"
     >
-      {items.map((item) => (
+      {flyingItems.map((item) => (
         <div
           key={item.id}
           className="hero-fly-item"

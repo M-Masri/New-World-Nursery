@@ -1,8 +1,13 @@
 import { useRef } from 'react'
 import LottieScroll from '../ui/LottieScroll'
+import { useHomeData } from '../../context/HomeDataContext'
 
 function NewsletterSection() {
   const sectionRef = useRef(null)
+  const { settings } = useHomeData()
+  const title = settings?.newsletter_title
+
+  if (!title) return null
 
   return (
     <section ref={sectionRef} className="relative overflow-hidden">
@@ -45,11 +50,8 @@ function NewsletterSection() {
             />
             <div>
               <h2 className="text-lg font-extrabold text-brand-ink sm:text-xl lg:text-2xl">
-                Come see New World in action
+                {title}
               </h2>
-              <p className="mt-1 text-sm text-brand-muted">
-                Leave your email and we&apos;ll help you schedule a visit.
-              </p>
             </div>
           </div>
 

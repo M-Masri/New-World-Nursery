@@ -1,61 +1,18 @@
 import { useRef } from 'react'
-import { Baby, Flower2, GraduationCap, Lightbulb } from 'lucide-react'
 import programsIcon from '../../assets/New_World_Icon00018-removebg-preview.webp'
 import { useContactFormPopup } from '../../context/ContactFormContext'
+import { useHomeData } from '../../context/HomeDataContext'
 import BrushHighlightText from '../ui/BrushHighlightText'
 import AnimatedCard from '../ui/AnimatedCard'
 import Button from '../ui/Button'
 
-const programs = [
-  {
-    title: 'Toddlers',
-    age: '18 Months - 2.5 Years',
-    description:
-      'Soft routines, sensory play, and first friendships that ease the start of nursery life.',
-    image:
-      'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400&h=260&fit=crop&fm=webp&q=70',
-    icon: Baby,
-    color: '#8cb83a',
-    lightBg: '#eef6e0',
-  },
-  {
-    title: 'Nursery',
-    age: '2.5 - 3.5 Years',
-    description:
-      'Growing independence through language, sharing, and confident everyday skills.',
-    image:
-      'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=260&fit=crop&fm=webp&q=70',
-    icon: Flower2,
-    color: '#f4a0b0',
-    lightBg: '#fce8ee',
-  },
-  {
-    title: 'Pre-Nursery',
-    age: '3.5 - 4.5 Years',
-    description:
-      'Curiosity-led projects that stretch thinking, creativity, and social confidence.',
-    image:
-      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=260&fit=crop&fm=webp&q=70',
-    icon: Lightbulb,
-    color: '#f5b942',
-    lightBg: '#fdf0c8',
-  },
-  {
-    title: 'KG',
-    age: '4.5 - 5.5 Years',
-    description:
-      'School-ready focus on literacy, numeracy, and the social skills for a smooth move up.',
-    image:
-      'https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=400&h=260&fit=crop&fm=webp&q=70',
-    icon: GraduationCap,
-    color: '#5bb5a2',
-    lightBg: '#d8f0ea',
-  },
-]
-
 function ProgramsSection() {
   const sectionRef = useRef(null)
   const { openContactForm } = useContactFormPopup()
+  const { settings, programs } = useHomeData()
+  const copy = settings?.programs ?? {}
+
+  if (programs.length === 0) return null
 
   return (
     <section
@@ -67,20 +24,27 @@ function ProgramsSection() {
 
       <div className="relative mx-auto max-w-page page-gutter">
         <div className="mb-8 text-center">
-          <p className="section-eyebrow">Our Programs</p>
-          <h2 className="section-title">
-            Learning by{' '}
-            <BrushHighlightText triggerRef={sectionRef}>age & stage</BrushHighlightText>
-          </h2>
-          <p className="section-lead">
-            Play-led pathways from first steps to school readiness — each stage
-            matched to how children learn best.
-          </p>
+          {copy.label ? <p className="section-eyebrow">{copy.label}</p> : null}
+          {copy.title || copy.title_highlight ? (
+            <h2 className="section-title">
+              {copy.title ? <>{copy.title} </> : null}
+              {copy.title_highlight ? (
+                <BrushHighlightText triggerRef={sectionRef}>
+                  {copy.title_highlight}
+                </BrushHighlightText>
+              ) : null}
+            </h2>
+          ) : null}
+          {copy.subtitle ? <p className="section-lead">{copy.subtitle}</p> : null}
         </div>
 
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {programs.map((program, index) => (
-            <ProgramCard key={program.title} program={program} index={index} />
+            <ProgramCard
+              key={program.id ?? program.title}
+              program={program}
+              index={index}
+            />
           ))}
         </div>
 
@@ -101,20 +65,25 @@ function ProgramsSection() {
 }
 
 function ProgramCard({ program, index }) {
-  const Icon = program.icon
+  const accent = program.icon_color || '#5bb5a2'
+  const lightBg = program.color || '#eef8f5'
 
   return (
     <AnimatedCard index={index} className="card-surface flex h-full flex-col">
       <div className="relative shrink-0">
-        <img
-          src={program.image}
-          alt={program.title}
-          width={400}
-          height={260}
-          loading="lazy"
-          decoding="async"
-          className="h-44 w-full object-cover"
-        />
+        {program.image ? (
+          <img
+            src={program.image}
+            alt={program.title}
+            width={400}
+            height={260}
+            loading="lazy"
+            decoding="async"
+            className="h-44 w-full object-cover"
+          />
+        ) : (
+          <div className="h-44 w-full" style={{ backgroundColor: lightBg }} />
+        )}
 
         <svg
           className="absolute bottom-0 left-0 w-full"
@@ -124,33 +93,45 @@ function ProgramCard({ program, index }) {
         >
           <path
             d="M0,18 C60,4 140,26 200,14 C260,2 340,24 400,12 L400,28 L0,28 Z"
-            fill={program.lightBg}
+            fill={lightBg}
           />
         </svg>
 
         <div
-          className="absolute -bottom-5 left-5 z-10 flex h-11 w-11 items-center justify-center rounded-full shadow-md"
-          style={{ backgroundColor: program.color }}
+          className="absolute -bottom-5 left-5 z-10 flex h-11 w-11 items-center justify-center rounded-full text-lg shadow-md"
+          style={{ backgroundColor: accent }}
         >
-          <Icon className="h-5 w-5 text-white" strokeWidth={2} />
+          {program.icon ? (
+            <span aria-hidden="true">{program.icon}</span>
+          ) : (
+            <span className="text-sm font-bold text-white">
+              {(program.title || '?').slice(0, 1)}
+            </span>
+          )}
         </div>
       </div>
 
       <div
         className="flex min-h-0 flex-1 flex-col"
         style={{
-          backgroundColor: program.lightBg,
-          borderBottom: `5px solid ${program.color}`,
+          backgroundColor: lightBg,
+          borderBottom: `5px solid ${accent}`,
         }}
       >
         <div className="flex-1 px-5 pt-7 pb-6">
           <h3 className="mb-1 text-base font-extrabold text-brand-ink">
             {program.title}
           </h3>
-          <p className="mb-3 text-xs font-bold text-brand-ink">{program.age}</p>
-          <p className="text-xs leading-relaxed text-brand-muted">
-            {program.description}
-          </p>
+          {program.age_range ? (
+            <p className="mb-3 text-xs font-bold text-brand-ink">
+              {program.age_range}
+            </p>
+          ) : null}
+          {program.description ? (
+            <p className="text-xs leading-relaxed text-brand-muted">
+              {program.description}
+            </p>
+          ) : null}
         </div>
       </div>
     </AnimatedCard>

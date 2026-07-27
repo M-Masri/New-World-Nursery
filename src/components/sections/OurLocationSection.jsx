@@ -2,62 +2,16 @@ import { useRef } from 'react'
 import { ArrowUpRight, Clock, Mail, MapPin, Phone } from 'lucide-react'
 import locationIcon from '../../assets/New_World_Icon00032-removebg-preview.webp'
 import { useContactFormPopup } from '../../context/ContactFormContext'
+import { useHomeData } from '../../context/HomeDataContext'
 import BrushHighlightText from '../ui/BrushHighlightText'
 import AnimatedCard from '../ui/AnimatedCard'
 
-const branches = [
-  {
-    id: 1,
-    country: 'United Arab Emirates',
-    city: 'Dubai',
-    address: 'Al Barsha, Dubai, UAE',
-    phone: '+971 50 123 4567',
-    email: 'dubai@newworldnursery.ae',
-    hours: 'Sun – Thu: 7:00 AM – 6:00 PM',
-    accent: '#5bb5a2',
-    image:
-      'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=600&h=400&fit=crop&fm=webp&q=70',
-  },
-  {
-    id: 2,
-    country: 'Saudi Arabia',
-    city: 'Riyadh',
-    address: 'Al Olaya District, Riyadh',
-    phone: '+966 50 123 4567',
-    email: 'riyadh@newworldnursery.ae',
-    hours: 'Sun – Thu: 7:00 AM – 6:00 PM',
-    accent: '#f4a0b0',
-    image:
-      'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&h=400&fit=crop&fm=webp&q=70',
-  },
-  {
-    id: 3,
-    country: 'Qatar',
-    city: 'Doha',
-    address: 'West Bay, Doha',
-    phone: '+974 50 123 4567',
-    email: 'doha@newworldnursery.ae',
-    hours: 'Sun – Thu: 7:00 AM – 6:00 PM',
-    accent: '#f5b942',
-    image:
-      'https://images.unsplash.com/photo-1544776193-352d25ca82cd?w=600&h=400&fit=crop&fm=webp&q=70',
-  },
-  {
-    id: 4,
-    country: 'Kuwait',
-    city: 'Kuwait City',
-    address: 'Salmiya, Kuwait City',
-    phone: '+965 50 123 4567',
-    email: 'kuwait@newworldnursery.ae',
-    hours: 'Sun – Thu: 7:00 AM – 6:00 PM',
-    accent: '#a682b8',
-    image:
-      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=400&fit=crop&fm=webp&q=70',
-  },
-]
-
 function OurLocationSection() {
   const sectionRef = useRef(null)
+  const { settings, locations } = useHomeData()
+  const copy = settings?.locations ?? {}
+
+  if (locations.length === 0) return null
 
   return (
     <section
@@ -74,20 +28,25 @@ function OurLocationSection() {
 
       <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="mb-8 text-center">
-          <p className="section-eyebrow">Our Locations</p>
-          <h2 className="section-title">
-            Find us across{' '}
-            <BrushHighlightText triggerRef={sectionRef}>the region</BrushHighlightText>
-          </h2>
-          <p className="section-lead max-w-2xl">
-            Start with our Dubai home in Al Barsha — then explore sister
-            nurseries welcoming families across the Gulf.
-          </p>
+          {copy.label ? <p className="section-eyebrow">{copy.label}</p> : null}
+          {copy.title || copy.title_highlight ? (
+            <h2 className="section-title">
+              {copy.title ? <>{copy.title} </> : null}
+              {copy.title_highlight ? (
+                <BrushHighlightText triggerRef={sectionRef}>
+                  {copy.title_highlight}
+                </BrushHighlightText>
+              ) : null}
+            </h2>
+          ) : null}
+          {copy.subtitle ? (
+            <p className="section-lead max-w-2xl">{copy.subtitle}</p>
+          ) : null}
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {branches.map((branch, index) => (
-            <LocationCard key={branch.id} branch={branch} index={index} />
+          {locations.map((location, index) => (
+            <LocationCard key={location.id ?? index} location={location} index={index} />
           ))}
         </div>
       </div>
@@ -95,8 +54,17 @@ function OurLocationSection() {
   )
 }
 
-function LocationCard({ branch, index }) {
+function LocationCard({ location, index }) {
   const { openContactForm } = useContactFormPopup()
+  const accent = location.badge_color || '#5bb5a2'
+
+  const handleVisit = () => {
+    if (location.visit_url?.startsWith('http')) {
+      window.open(location.visit_url, '_blank', 'noopener,noreferrer')
+      return
+    }
+    openContactForm()
+  }
 
   return (
     <AnimatedCard
@@ -105,43 +73,57 @@ function LocationCard({ branch, index }) {
       className="group card-surface transition-shadow duration-300 hover:shadow-[0_16px_40px_rgba(45,58,74,0.12)]"
     >
       <div className="relative h-44 overflow-hidden sm:h-48">
-        <img
-          src={branch.image}
-          alt={`${branch.city}, ${branch.country}`}
-          width={600}
-          height={400}
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-        />
+        {location.image ? (
+          <img
+            src={location.image}
+            alt={`${location.city}, ${location.country}`}
+            width={600}
+            height={400}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="h-full w-full bg-[#eef8f5]" />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-[#2d3a4a]/80 via-[#2d3a4a]/20 to-transparent" />
 
         <span
           className="absolute top-3 left-3 rounded-full px-3 py-1 text-[10px] font-extrabold tracking-wide text-white uppercase shadow-sm"
-          style={{ backgroundColor: branch.accent }}
+          style={{ backgroundColor: accent }}
         >
-          {branch.city}
+          {location.city}
         </span>
 
         <div className="absolute right-3 bottom-3 left-3">
           <p className="text-[10px] font-bold tracking-wide text-white/80 uppercase">
-            {branch.country}
+            {location.country}
           </p>
-          <h3 className="text-lg font-extrabold text-white">{branch.city}</h3>
+          <h3 className="text-lg font-extrabold text-white">
+            {location.city}
+          </h3>
         </div>
       </div>
 
-      <div className="border-t-4 p-4" style={{ borderColor: branch.accent }}>
+      <div className="border-t-4 p-4" style={{ borderColor: accent }}>
         <ul className="space-y-3">
-          <LocationDetail icon={MapPin} text={branch.address} />
-          <LocationDetail icon={Phone} text={branch.phone} />
-          <LocationDetail icon={Mail} text={branch.email} />
-          <LocationDetail icon={Clock} text={branch.hours} />
+          {location.address ? (
+            <LocationDetail icon={MapPin} text={location.address} />
+          ) : null}
+          {location.phone ? (
+            <LocationDetail icon={Phone} text={location.phone} />
+          ) : null}
+          {location.email ? (
+            <LocationDetail icon={Mail} text={location.email} />
+          ) : null}
+          {location.working_hours ? (
+            <LocationDetail icon={Clock} text={location.working_hours} />
+          ) : null}
         </ul>
 
         <button
           type="button"
-          onClick={openContactForm}
+          onClick={handleVisit}
           className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#5bb5a2] transition group-hover:gap-2.5"
         >
           Plan a Visit

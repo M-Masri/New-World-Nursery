@@ -9,6 +9,9 @@ const OurLocationSection = lazy(
 const ProgramsSection = lazy(
   () => import('../components/sections/ProgramsSection'),
 )
+const GalleryTestimonialsSection = lazy(
+  () => import('../components/sections/GalleryTestimonialsSection'),
+)
 const InstagramFeedSection = lazy(
   () => import('../components/sections/InstagramFeedSection'),
 )
@@ -26,6 +29,7 @@ function Home() {
         <AboutSection />
         <OurLocationSection />
         <ProgramsSection />
+        <GalleryTestimonialsSection />
         <InstagramFeedSection />
         <ContactSection />
         <NewsletterSection />

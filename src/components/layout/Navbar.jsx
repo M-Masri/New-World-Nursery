@@ -2,6 +2,7 @@ import { useEffect, useId, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { useContactFormPopup } from '../../context/ContactFormContext'
+import { useHomeData } from '../../context/HomeDataContext'
 import Logo from '../ui/Logo'
 import Button from '../ui/Button'
 
@@ -15,6 +16,8 @@ const navLinks = [
 
 function Navbar() {
   const { openContactForm } = useContactFormPopup()
+  const { settings } = useHomeData()
+  const enquireLabel = settings?.hero?.cta_primary
   const [menuOpen, setMenuOpen] = useState(false)
   const menuId = useId()
 
@@ -80,12 +83,14 @@ function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <Button
-            className="hidden shrink-0 px-6 py-2.5 text-sm sm:inline-flex"
-            onClick={openContactForm}
-          >
-            Enquire Now
-          </Button>
+          {enquireLabel ? (
+            <Button
+              className="hidden shrink-0 px-6 py-2.5 text-sm sm:inline-flex"
+              onClick={openContactForm}
+            >
+              {enquireLabel}
+            </Button>
+          ) : null}
 
           <button
             type="button"
@@ -127,9 +132,11 @@ function Navbar() {
                 </a>
               ),
             )}
-            <Button className="mt-2 w-full py-3 text-sm" onClick={handleEnquire}>
-              Enquire Now
-            </Button>
+            {enquireLabel ? (
+              <Button className="mt-2 w-full py-3 text-sm" onClick={handleEnquire}>
+                {enquireLabel}
+              </Button>
+            ) : null}
           </nav>
         </div>
       ) : null}

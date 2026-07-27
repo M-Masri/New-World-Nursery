@@ -65,7 +65,9 @@ function ContactFormPopup() {
 
         <ContactForm
           idPrefix="contact-popup"
-          onSubmitSuccess={closeContactForm}
+          onSubmitSuccess={() => {
+            window.setTimeout(closeContactForm, 1400)
+          }}
         />
       </div>
     </div>,

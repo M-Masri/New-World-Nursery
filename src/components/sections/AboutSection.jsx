@@ -1,8 +1,8 @@
 import { useRef } from 'react'
 import aboutLeaf from '../../assets/about-leaf.webp'
 import aboutGradIcon from '../../assets/New_World_Icon00050-removebg-preview.webp'
-import aboutKids from '../../assets/about-kids.webp'
 import { useContactFormPopup } from '../../context/ContactFormContext'
+import { useHomeData } from '../../context/HomeDataContext'
 import BrushHighlightText from '../ui/BrushHighlightText'
 import Button from '../ui/Button'
 import LottieScroll from '../ui/LottieScroll'
@@ -10,44 +10,64 @@ import LottieScroll from '../ui/LottieScroll'
 function AboutSection() {
   const sectionRef = useRef(null)
   const { openContactForm } = useContactFormPopup()
+  const { settings } = useHomeData()
+  const about = settings?.about ?? null
+
+  if (!about) return null
+
+  const titleBefore = about.highlight
+    ? (about.title || '').replace(about.highlight, '').trim()
+    : about.title
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-white py-10 pb-10 sm:py-12 sm:pb-10">
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden bg-white py-10 pb-10 sm:py-12 sm:pb-10"
+    >
       <AboutLeafDecoration sectionRef={sectionRef} />
 
       <div className="relative mx-auto grid max-w-page items-center gap-12 page-gutter lg:grid-cols-2 lg:gap-16">
-        <AboutImageFrame />
+        {about.image ? <AboutImageFrame image={about.image} /> : null}
 
         <div className="relative">
-          <p className="section-eyebrow">
-            About Us
-          </p>
+          {about.label ? <p className="section-eyebrow">{about.label}</p> : null}
 
-          <h2 className="section-title mb-6">
-            Welcome to
-            <br />
-            <BrushHighlightText triggerRef={sectionRef}>
-              New World Nursery
-            </BrushHighlightText>
-          </h2>
+          {about.title || about.highlight ? (
+            <h2 className="section-title mb-6">
+              {titleBefore ? (
+                <>
+                  {titleBefore}
+                  <br />
+                </>
+              ) : null}
+              {about.highlight ? (
+                <BrushHighlightText triggerRef={sectionRef}>
+                  {about.highlight}
+                </BrushHighlightText>
+              ) : (
+                about.title
+              )}
+            </h2>
+          ) : null}
 
-          <p className="mb-8 max-w-md text-[15px] leading-relaxed text-brand-muted">
-            Based in Dubai, we welcome children into bright classrooms and
-            thoughtful routines built around curiosity, creativity, and care.
-            From toddlers to kindergarten, every day balances play, early
-            skills, and the confidence to take the next step.
-          </p>
+          {about.content ? (
+            <p className="mb-8 max-w-md text-[15px] leading-relaxed text-brand-muted">
+              {about.content}
+            </p>
+          ) : null}
 
-          <Button variant="outlineCoral" onClick={openContactForm}>
-            Book a Visit
-          </Button>
+          {about.cta ? (
+            <Button variant="outlineCoral" onClick={openContactForm}>
+              {about.cta}
+            </Button>
+          ) : null}
         </div>
       </div>
     </section>
   )
 }
 
-function AboutImageFrame() {
+function AboutImageFrame({ image }) {
   return (
     <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
       <svg
@@ -85,8 +105,8 @@ function AboutImageFrame() {
       <div className="relative rounded-[var(--radius-feature)] p-3 sm:rounded-[3rem] sm:p-4">
         <div className="overflow-hidden rounded-[2rem] sm:rounded-[2.5rem]">
           <img
-            src={aboutKids}
-            alt="A happy child exploring and playing at New World Nursery"
+            src={image}
+            alt=""
             width={900}
             height={675}
             loading="lazy"
@@ -130,6 +150,5 @@ function AboutLeafDecoration({ sectionRef }) {
     </>
   )
 }
-
 
 export default AboutSection
