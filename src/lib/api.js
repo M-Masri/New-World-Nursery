@@ -111,20 +111,20 @@ let siteContentPromise = null
 
 export function fetchSiteContent() {
   if (!siteContentPromise) {
+    // Gallery section is hidden on Home — skip that request on the critical path.
     siteContentPromise = Promise.all([
       fetchSettings(),
       fetchFeatures(),
       fetchLocations(),
       fetchPrograms(),
-      fetchGallery(),
       fetchInstagramGallery(),
     ])
-      .then(([settings, features, locations, programs, gallery, instagramFeed]) => ({
+      .then(([settings, features, locations, programs, instagramFeed]) => ({
         settings,
         features,
         locations,
         programs,
-        gallery,
+        gallery: [],
         instagramFeed,
       }))
       .catch((error) => {

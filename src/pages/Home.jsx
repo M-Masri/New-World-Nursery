@@ -19,7 +19,7 @@ const NewsletterSection = lazy(
   () => import('../components/sections/NewsletterSection'),
 )
 
-const LOADER_FADE_MS = 480
+const LOADER_FADE_MS = 220
 
 function Home() {
   const { isLoading } = useHomeData()

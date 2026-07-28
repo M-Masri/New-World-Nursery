@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { fetchSiteContent } from '../lib/api'
-import { preloadHomeImages } from '../lib/preloadHomeImages'
+import { preloadCriticalImages } from '../lib/preloadHomeImages'
 
 const HomeDataContext = createContext(null)
 
@@ -29,7 +29,8 @@ export function HomeDataProvider({ children }) {
         const next = await fetchSiteContent()
         if (cancelled) return
 
-        await preloadHomeImages(next)
+        // Only wait for hero (LCP) — not every CMS image
+        await preloadCriticalImages(next)
         if (cancelled) return
 
         setData({

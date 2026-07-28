@@ -1,11 +1,13 @@
+import { lazy, Suspense } from 'react'
 import { Outlet } from 'react-router-dom'
 import { ContactFormProvider } from '../../context/ContactFormContext'
 import { HomeDataProvider } from '../../context/HomeDataContext'
-import ContactFormPopup from '../ui/ContactFormPopup'
 import CustomCursor from './CustomCursor'
 import TopBar from './TopBar'
 import Navbar from './Navbar'
 import Footer from './Footer'
+
+const ContactFormPopup = lazy(() => import('../ui/ContactFormPopup'))
 
 function Layout() {
   return (
@@ -19,7 +21,9 @@ function Layout() {
             <Outlet />
           </main>
           <Footer />
-          <ContactFormPopup />
+          <Suspense fallback={null}>
+            <ContactFormPopup />
+          </Suspense>
         </div>
       </ContactFormProvider>
     </HomeDataProvider>

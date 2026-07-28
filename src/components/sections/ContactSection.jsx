@@ -1,10 +1,11 @@
-import { useRef } from 'react'
+import { lazy, Suspense, useRef } from 'react'
 import { Mail, Phone } from 'lucide-react'
 import BrushHighlightText from '../ui/BrushHighlightText'
-import CloudScroll3D from '../ui/CloudScroll3D'
 import ContactForm from '../ui/ContactForm'
 import LottieScroll from '../ui/LottieScroll'
 import { useHomeData } from '../../context/HomeDataContext'
+
+const CloudScroll3D = lazy(() => import('../ui/CloudScroll3D'))
 
 function ContactSection() {
   const sectionRef = useRef(null)
@@ -27,14 +28,16 @@ function ContactSection() {
       <div className="relative z-10 mx-auto grid max-w-page items-center gap-12 page-gutter lg:grid-cols-2 lg:gap-16">
         <div>
           <div className="relative -ml-10 mb-3 h-28 w-52 sm:mb-4 sm:h-32 sm:w-60">
-            <CloudScroll3D
-              horizontalPosition={0}
-              verticalPosition={0.7}
-              cloudScale={1.25}
-              driftAmplitude={0}
-              bobAmplitude={9}
-              bobSpeed={1.25}
-            />
+            <Suspense fallback={null}>
+              <CloudScroll3D
+                horizontalPosition={0}
+                verticalPosition={0.7}
+                cloudScale={1.25}
+                driftAmplitude={0}
+                bobAmplitude={9}
+                bobSpeed={1.25}
+              />
+            </Suspense>
           </div>
 
           {contact.label ? (

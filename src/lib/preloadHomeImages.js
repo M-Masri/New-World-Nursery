@@ -1,16 +1,9 @@
 /**
- * Collect image URLs from split homepage API payloads.
+ * Critical-path images only (above the fold).
+ * Below-fold media loads lazily in each section.
  */
-export function collectHomeImageUrls({
-  settings = null,
-  features = [],
-  locations = [],
-  programs = [],
-  gallery = [],
-  instagramFeed = [],
-} = {}) {
+export function collectCriticalImageUrls({ settings = null } = {}) {
   const urls = new Set()
-
   const add = (value) => {
     if (typeof value !== 'string') return
     const url = value.trim()
@@ -18,14 +11,6 @@ export function collectHomeImageUrls({
   }
 
   add(settings?.hero?.image)
-  add(settings?.about?.image)
-
-  for (const feature of features) add(feature.icon_image)
-  for (const location of locations) add(location.image)
-  for (const program of programs) add(program.image)
-  for (const item of gallery) add(item.image)
-  for (const item of instagramFeed) add(item.image)
-
   return [...urls]
 }
 
@@ -33,6 +18,7 @@ function preloadImage(url) {
   return new Promise((resolve) => {
     const img = new Image()
     img.decoding = 'async'
+    img.fetchPriority = 'high'
     img.onload = () => resolve(true)
     img.onerror = () => resolve(false)
     img.src = url
@@ -40,16 +26,15 @@ function preloadImage(url) {
 }
 
 /**
- * Wait until home media is in the browser cache (or timeout / failures).
- * Never rejects — bad images should not trap the loader forever.
+ * Preload only the hero image so the loader can dismiss quickly.
  * Dedupes concurrent calls (e.g. React Strict Mode).
  */
 let preloadPromise = null
 
-export function preloadHomeImages(payload, { timeoutMs = 20_000 } = {}) {
+export function preloadCriticalImages(payload, { timeoutMs = 8_000 } = {}) {
   if (preloadPromise) return preloadPromise
 
-  const urls = collectHomeImageUrls(payload)
+  const urls = collectCriticalImageUrls(payload)
   if (urls.length === 0) {
     preloadPromise = Promise.resolve()
     return preloadPromise
@@ -66,3 +51,6 @@ export function preloadHomeImages(payload, { timeoutMs = 20_000 } = {}) {
 
   return preloadPromise
 }
+
+/** @deprecated Use preloadCriticalImages */
+export const preloadHomeImages = preloadCriticalImages

@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react'
-import CloudScroll3D from '../ui/CloudScroll3D'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { useContactFormPopup } from '../../context/ContactFormContext'
 import { useHomeData } from '../../context/HomeDataContext'
 import heroCloud from '../../assets/hero-cloud.png'
 import heroHeart from '../../assets/hero-heart.webp'
 import heroRainbow from '../../assets/hero-rainbow.webp'
 import heroSun from '../../assets/hero-sun.webp'
+
+const CloudScroll3D = lazy(() => import('../ui/CloudScroll3D'))
 
 const TITLE_COLORS = ['#8cb83a', '#f4a0b0', '#f5b942', '#a682b8', '#5bb5a2', '#5a5a5a', '#f4a0b0']
 
@@ -73,12 +74,39 @@ function HeroSection() {
   const { openContactForm } = useContactFormPopup()
   const { settings } = useHomeData()
   const hero = settings?.hero ?? null
+  const [showCloud, setShowCloud] = useState(false)
+
+  useEffect(() => {
+    if (!hero) return undefined
+
+    let idleId = 0
+    let timer = 0
+
+    const enable = () => setShowCloud(true)
+
+    if (typeof window.requestIdleCallback === 'function') {
+      idleId = window.requestIdleCallback(enable, { timeout: 1200 })
+    } else {
+      timer = window.setTimeout(enable, 400)
+    }
+
+    return () => {
+      if (idleId && typeof window.cancelIdleCallback === 'function') {
+        window.cancelIdleCallback(idleId)
+      }
+      if (timer) window.clearTimeout(timer)
+    }
+  }, [hero])
 
   if (!hero) return null
 
   return (
     <section className="relative overflow-hidden bg-white">
-      <CloudScroll3D driftAmplitude={0} bobAmplitude={10} bobSpeed={0.65} />
+      {showCloud ? (
+        <Suspense fallback={null}>
+          <CloudScroll3D driftAmplitude={0} bobAmplitude={10} bobSpeed={0.65} />
+        </Suspense>
+      ) : null}
 
       <img
         src={heroRainbow}
