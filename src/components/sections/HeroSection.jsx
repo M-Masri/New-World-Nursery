@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { useContactFormPopup } from '../../context/ContactFormContext'
 import { useHomeData } from '../../context/HomeDataContext'
+import { isMobilePerf } from '../../lib/mobilePerf'
 import heroCloud from '../../assets/hero-cloud.png'
 import heroHeart from '../../assets/hero-heart.webp'
 import heroRainbow from '../../assets/hero-rainbow.webp'
@@ -78,6 +79,9 @@ function HeroSection() {
 
   useEffect(() => {
     if (!hero) return undefined
+
+    // Never pull the Three.js chunk on phones — WebGL is skipped anyway.
+    if (isMobilePerf()) return undefined
 
     let idleId = 0
     let timer = 0

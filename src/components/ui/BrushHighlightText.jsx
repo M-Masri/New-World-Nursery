@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { gsap } from '../../lib/gsap'
+import { isMobilePerf } from '../../lib/mobilePerf'
 
 export const BRAND_HIGHLIGHT = '#5bb5a2'
 
@@ -9,6 +9,7 @@ const BRUSH_HIGHLIGHT_PATH =
 /**
  * Same brush wipe for every section (Locations, Programs, …).
  * Uses IntersectionObserver so scroll timing stays consistent.
+ * Mobile: instant reveal (no GSAP chunk).
  */
 function BrushHighlightText({
   children,
@@ -35,6 +36,10 @@ function BrushHighlightText({
     const prefersReducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)',
     ).matches
+    const skipAnim = prefersReducedMotion || isMobilePerf()
+
+    let cancelled = false
+    let gsap = null
 
     const finish = () => {
       brushFill.style.willChange = 'auto'
@@ -42,14 +47,33 @@ function BrushHighlightText({
       onCompleteRef.current?.()
     }
 
-    const revealBrush = () => {
+    const revealInstant = () => {
       if (hasDrawnRef.current) return
       hasDrawnRef.current = true
       onRevealRef.current?.()
+      brushFill.style.clipPath = 'inset(0% 0 0 0)'
+      titleText.style.color = '#ffffff'
+      finish()
+    }
 
-      if (prefersReducedMotion) {
-        gsap.set(brushFill, { clipPath: 'inset(0% 0 0 0)' })
-        gsap.set(titleText, { color: '#ffffff' })
+    const revealBrush = async () => {
+      if (hasDrawnRef.current) return
+
+      if (skipAnim) {
+        revealInstant()
+        return
+      }
+
+      hasDrawnRef.current = true
+      onRevealRef.current?.()
+
+      try {
+        const mod = await import('../../lib/gsap')
+        if (cancelled) return
+        gsap = mod.gsap
+      } catch {
+        brushFill.style.clipPath = 'inset(0% 0 0 0)'
+        titleText.style.color = '#ffffff'
         finish()
         return
       }
@@ -76,13 +100,13 @@ function BrushHighlightText({
         )
     }
 
-    // Matches previous ScrollTrigger start: "top 70%"
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return
         observer.disconnect()
-        // Next frame keeps the wipe smooth (same feel on Locations & Programs)
-        requestAnimationFrame(() => revealBrush())
+        requestAnimationFrame(() => {
+          void revealBrush()
+        })
       },
       { root: null, rootMargin: '0px 0px -30% 0px', threshold: 0 },
     )
@@ -90,8 +114,9 @@ function BrushHighlightText({
     observer.observe(section)
 
     return () => {
+      cancelled = true
       observer.disconnect()
-      gsap.killTweensOf([brushFill, titleText])
+      if (gsap) gsap.killTweensOf([brushFill, titleText])
       brushFill.style.willChange = 'auto'
       titleText.style.willChange = 'auto'
       hasDrawnRef.current = false

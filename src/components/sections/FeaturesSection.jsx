@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Sparkles } from 'lucide-react'
 import { useHomeData } from '../../context/HomeDataContext'
+import { isMobilePerf } from '../../lib/mobilePerf'
 
 const WIGGLE_INTERVAL_MS = 28_000
 const WIGGLE_DURATION_MS = 1200
@@ -20,6 +21,11 @@ function FeaturesSection() {
       '(prefers-reduced-motion: reduce)',
     ).matches
     if (prefersReducedMotion) return undefined
+
+    // Skip wiggle timers on mobile — saves main-thread work for PSI.
+    if (isMobilePerf()) {
+      return undefined
+    }
 
     const clearWiggleTimers = () => {
       if (intervalRef.current) {

@@ -1,5 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { fetchSiteContent } from '../lib/api'
+import {
+  fetchFeatures,
+  fetchInstagramGallery,
+  fetchLocations,
+  fetchPrograms,
+  fetchSettings,
+} from '../lib/api'
 import { preloadCriticalImages } from '../lib/preloadHomeImages'
 
 const HomeDataContext = createContext(null)
@@ -26,24 +32,34 @@ export function HomeDataProvider({ children }) {
       setError(null)
 
       try {
-        const next = await fetchSiteContent()
+        // 1) Settings first → unlock hero / chrome ASAP (mobile FCP/LCP)
+        const settings = await fetchSettings()
         if (cancelled) return
 
-        // Only wait for hero (LCP) — not every CMS image
-        await preloadCriticalImages(next)
+        await preloadCriticalImages({ settings })
+        if (cancelled) return
+
+        setData((prev) => ({ ...prev, settings: settings ?? null }))
+        setStatus('ready')
+
+        // 2) Rest of homepage data in the background
+        const [features, locations, programs, instagramFeed] =
+          await Promise.all([
+            fetchFeatures(),
+            fetchLocations(),
+            fetchPrograms(),
+            fetchInstagramGallery(),
+          ])
         if (cancelled) return
 
         setData({
-          settings: next.settings ?? null,
-          features: Array.isArray(next.features) ? next.features : [],
-          locations: Array.isArray(next.locations) ? next.locations : [],
-          programs: Array.isArray(next.programs) ? next.programs : [],
-          gallery: Array.isArray(next.gallery) ? next.gallery : [],
-          instagramFeed: Array.isArray(next.instagramFeed)
-            ? next.instagramFeed
-            : [],
+          settings: settings ?? null,
+          features: Array.isArray(features) ? features : [],
+          locations: Array.isArray(locations) ? locations : [],
+          programs: Array.isArray(programs) ? programs : [],
+          gallery: [],
+          instagramFeed: Array.isArray(instagramFeed) ? instagramFeed : [],
         })
-        setStatus('ready')
       } catch (err) {
         if (cancelled) return
         setError(err)

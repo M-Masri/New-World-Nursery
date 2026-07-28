@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import useLottieScroll from '../../hooks/useLottieScroll'
+import { isMobilePerf } from '../../lib/mobilePerf'
 
 /**
  * Lottie مرتبط بالسكرول. يدعم animationData جاهز أو animationImport للـ lazy-load.
  * الـ JSON لا يُحمَّل إلا عند ظهور العنصر في الـ viewport.
+ * On mobile, Lottie is skipped entirely (placeholder only).
  */
 function LottieScroll({
   animationData,
@@ -19,10 +21,16 @@ function LottieScroll({
   rendererSettings,
 }) {
   const hostRef = useRef(null)
-  const [resolvedData, setResolvedData] = useState(animationData ?? null)
-  const [shouldLoad, setShouldLoad] = useState(!animationImport || Boolean(animationData))
+  const skipHeavy = isMobilePerf()
+  const [resolvedData, setResolvedData] = useState(
+    skipHeavy ? null : (animationData ?? null),
+  )
+  const [shouldLoad, setShouldLoad] = useState(
+    skipHeavy ? false : !animationImport || Boolean(animationData),
+  )
 
   useEffect(() => {
+    if (skipHeavy) return undefined
     if (!animationImport || animationData || shouldLoad) return undefined
 
     const node = hostRef.current
@@ -46,7 +54,9 @@ function LottieScroll({
   }, [animationImport, animationData, shouldLoad])
 
   useEffect(() => {
-    if (!shouldLoad || resolvedData || !animationImport) return undefined
+    if (skipHeavy || !shouldLoad || resolvedData || !animationImport) {
+      return undefined
+    }
 
     let cancelled = false
 
@@ -62,10 +72,10 @@ function LottieScroll({
     return () => {
       cancelled = true
     }
-  }, [animationImport, resolvedData, shouldLoad])
+  }, [animationImport, resolvedData, shouldLoad, skipHeavy])
 
   const containerRef = useLottieScroll({
-    animationData: resolvedData,
+    animationData: skipHeavy ? null : resolvedData,
     triggerRef,
     start,
     end,

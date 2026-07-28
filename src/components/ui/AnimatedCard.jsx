@@ -1,92 +1,48 @@
-import { motion, useReducedMotion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
+import { isMobilePerf, MOBILE_PERF_QUERY } from '../../lib/mobilePerf'
 
-const EASE = [0.25, 0.1, 0.25, 1]
+const MotionAnimatedCard = lazy(() => import('./AnimatedCardMotion'))
 
-function useCanHover() {
-  const [canHover, setCanHover] = useState(false)
+function PlainCard({ children, className = '', as = 'div', ...props }) {
+  const Tag = as === 'a' ? 'a' : as === 'article' ? 'article' : 'div'
+  // Strip motion-only props if any leaked through
+  const {
+    index: _index,
+    gated: _gated,
+    active: _active,
+    ...rest
+  } = props
+  return (
+    <Tag className={className} {...rest}>
+      {children}
+    </Tag>
+  )
+}
+
+/**
+ * Mobile: plain DOM (no framer-motion chunk).
+ * Desktop: lazy-loads motion implementation.
+ */
+function AnimatedCard(props) {
+  const [useMotion, setUseMotion] = useState(() => !isMobilePerf())
 
   useEffect(() => {
-    const media = window.matchMedia('(hover: hover) and (pointer: fine)')
-    const update = () => setCanHover(media.matches)
+    const media = window.matchMedia(MOBILE_PERF_QUERY)
+    const update = () => setUseMotion(!media.matches)
     update()
     media.addEventListener('change', update)
     return () => media.removeEventListener('change', update)
   }, [])
 
-  return canHover
-}
-
-/**
- * @param {boolean} active - When false, stays at initial (hidden). When true, plays enter animation.
- *   Defaults to true (whileInView) for sections that don't sequence motion.
- * @param {boolean} gated - If true, use controlled `active` instead of whileInView.
- */
-function AnimatedCard({
-  children,
-  index = 0,
-  className = '',
-  as = 'div',
-  gated = false,
-  active = true,
-  ...props
-}) {
-  const prefersReducedMotion = useReducedMotion()
-  const canHover = useCanHover()
-  const reduce = Boolean(prefersReducedMotion)
-
-  const hover =
-    reduce || !canHover
-      ? undefined
-      : { y: -2, transition: { duration: 0.3, ease: EASE } }
-
-  const shared = {
-    className,
-    style: { willChange: 'transform, opacity' },
-    whileHover: hover,
-    ...props,
+  if (!useMotion) {
+    return <PlainCard {...props} />
   }
 
-  let motionProps
-
-  if (gated) {
-    motionProps = {
-      ...shared,
-      initial: reduce ? false : { opacity: 0, y: 12 },
-      animate: reduce
-        ? { opacity: 1, y: 0 }
-        : active
-          ? { opacity: 1, y: 0 }
-          : { opacity: 0, y: 12 },
-      transition: {
-        duration: reduce ? 0 : 0.5,
-        delay: reduce || !active ? 0 : index * 0.07,
-        ease: EASE,
-      },
-    }
-  } else {
-    motionProps = {
-      ...shared,
-      initial: reduce ? false : { opacity: 0, y: 12 },
-      whileInView: reduce ? undefined : { opacity: 1, y: 0 },
-      viewport: { once: true, amount: 0.15 },
-      transition: {
-        duration: reduce ? 0 : 0.75,
-        delay: reduce ? 0 : index * 0.06,
-        ease: EASE,
-      },
-    }
-  }
-
-  if (as === 'a') {
-    return <motion.a {...motionProps}>{children}</motion.a>
-  }
-
-  if (as === 'article') {
-    return <motion.article {...motionProps}>{children}</motion.article>
-  }
-
-  return <motion.div {...motionProps}>{children}</motion.div>
+  return (
+    <Suspense fallback={<PlainCard {...props} />}>
+      <MotionAnimatedCard {...props} />
+    </Suspense>
+  )
 }
 
 export default AnimatedCard

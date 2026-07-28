@@ -31,7 +31,7 @@ function preloadImage(url) {
  */
 let preloadPromise = null
 
-export function preloadCriticalImages(payload, { timeoutMs = 8_000 } = {}) {
+export function preloadCriticalImages(payload, { timeoutMs } = {}) {
   if (preloadPromise) return preloadPromise
 
   const urls = collectCriticalImageUrls(payload)
@@ -40,10 +40,18 @@ export function preloadCriticalImages(payload, { timeoutMs = 8_000 } = {}) {
     return preloadPromise
   }
 
+  // Mobile networks / PSI: don't hold the splash longer than needed.
+  const budget =
+    timeoutMs ??
+    (typeof window !== 'undefined' &&
+    window.matchMedia('(max-width: 768px), (pointer: coarse)').matches
+      ? 2_500
+      : 8_000)
+
   preloadPromise = Promise.race([
     Promise.all(urls.map(preloadImage)),
     new Promise((resolve) => {
-      window.setTimeout(resolve, timeoutMs)
+      window.setTimeout(resolve, budget)
     }),
   ]).catch(() => {
     preloadPromise = null
