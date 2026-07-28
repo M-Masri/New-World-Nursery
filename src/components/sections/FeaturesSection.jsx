@@ -74,7 +74,15 @@ function FeaturesSection() {
     }
   }, [features.length])
 
-  if (features.length === 0) return null
+  if (features.length === 0) {
+    return (
+      <section
+        id="why-us"
+        className="min-h-[11rem] bg-[#f3ebe0] py-8 sm:min-h-[12rem] sm:py-10"
+        aria-hidden="true"
+      />
+    )
+  }
 
   return (
     <section id="why-us" ref={sectionRef} className="bg-[#f3ebe0] py-8 sm:py-10">

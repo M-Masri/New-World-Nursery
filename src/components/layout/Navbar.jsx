@@ -83,14 +83,12 @@ function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          {enquireLabel ? (
-            <Button
-              className="hidden shrink-0 px-6 py-2.5 text-sm sm:inline-flex"
-              onClick={openContactForm}
-            >
-              {enquireLabel}
-            </Button>
-          ) : null}
+          <Button
+            className="hidden min-w-[8.5rem] shrink-0 px-6 py-2.5 text-sm sm:inline-flex"
+            onClick={openContactForm}
+          >
+            {enquireLabel || 'Enquire Now'}
+          </Button>
 
           <button
             type="button"

@@ -17,7 +17,7 @@ function Layout() {
           <CustomCursor />
           <TopBar />
           <Navbar />
-          <main>
+          <main className="min-h-[85vh]">
             <Outlet />
           </main>
           <Footer />

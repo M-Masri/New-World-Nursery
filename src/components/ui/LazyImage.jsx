@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 /**
  * Loads an image when enabled.
- * - eager: attach src as soon as enabled (no viewport wait)
- * - lazy (default): wait until near viewport, then load
+ * Host always keeps layout size (CLS-safe) even before src attaches.
  */
 function LazyImage({
   src,
@@ -64,7 +63,7 @@ function LazyImage({
   }, [src, staggerMs, rootMargin, enabled, eager])
 
   return (
-    <div ref={hostRef} className={className}>
+    <div ref={hostRef} className={`relative overflow-hidden bg-[#f3ebe0]/50 ${className}`.trim()}>
       {activeSrc ? (
         <img
           src={activeSrc}
@@ -72,7 +71,7 @@ function LazyImage({
           loading={eager ? 'eager' : 'lazy'}
           fetchPriority={eager ? 'high' : 'low'}
           decoding="async"
-          className="h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover"
           onLoad={(event) => onLoadRef.current?.(event)}
           onError={(event) => onErrorRef.current?.(event)}
           {...imgProps}
