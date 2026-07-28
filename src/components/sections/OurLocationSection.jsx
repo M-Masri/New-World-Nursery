@@ -1,15 +1,31 @@
-import { useRef } from 'react'
+import { startTransition, useEffect, useRef, useState } from 'react'
 import { ArrowUpRight, Clock, Mail, MapPin, Phone } from 'lucide-react'
 import locationIcon from '../../assets/New_World_Icon00032-removebg-preview.webp'
 import { useContactFormPopup } from '../../context/ContactFormContext'
 import { useHomeData } from '../../context/HomeDataContext'
-import BrushHighlightText from '../ui/BrushHighlightText'
 import AnimatedCard from '../ui/AnimatedCard'
+import BrushHighlightText from '../ui/BrushHighlightText'
+import LazyImage from '../ui/LazyImage'
+
+const HIGHLIGHT_PRIORITY_MS = 550
+const IMAGE_STAGGER_MS = 220
 
 function OurLocationSection() {
   const sectionRef = useRef(null)
   const { settings, locations } = useHomeData()
   const copy = settings?.locations ?? {}
+  const hasHighlight = Boolean(copy.title_highlight)
+  const [allowImages, setAllowImages] = useState(!hasHighlight)
+
+  useEffect(() => {
+    if (!hasHighlight) setAllowImages(true)
+  }, [hasHighlight])
+
+  const handleHighlightReveal = () => {
+    window.setTimeout(() => {
+      startTransition(() => setAllowImages(true))
+    }, HIGHLIGHT_PRIORITY_MS)
+  }
 
   if (locations.length === 0) return null
 
@@ -22,6 +38,10 @@ function OurLocationSection() {
       <img
         src={locationIcon}
         alt=""
+        width={160}
+        height={160}
+        loading="lazy"
+        decoding="async"
         aria-hidden="true"
         className="pointer-events-none absolute right-0 bottom-0 z-20 w-28 opacity-95 sm:w-32 lg:w-40"
       />
@@ -33,7 +53,10 @@ function OurLocationSection() {
             <h2 className="section-title">
               {copy.title ? <>{copy.title} </> : null}
               {copy.title_highlight ? (
-                <BrushHighlightText triggerRef={sectionRef}>
+                <BrushHighlightText
+                  triggerRef={sectionRef}
+                  onReveal={handleHighlightReveal}
+                >
                   {copy.title_highlight}
                 </BrushHighlightText>
               ) : null}
@@ -46,7 +69,12 @@ function OurLocationSection() {
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {locations.map((location, index) => (
-            <LocationCard key={location.id ?? index} location={location} index={index} />
+            <LocationCard
+              key={location.id ?? index}
+              location={location}
+              index={index}
+              allowImages={allowImages}
+            />
           ))}
         </div>
       </div>
@@ -54,7 +82,7 @@ function OurLocationSection() {
   )
 }
 
-function LocationCard({ location, index }) {
+function LocationCard({ location, index, allowImages }) {
   const { openContactForm } = useContactFormPopup()
   const accent = location.badge_color || '#5bb5a2'
 
@@ -70,23 +98,24 @@ function LocationCard({ location, index }) {
     <AnimatedCard
       as="article"
       index={index}
-      className="group card-surface transition-shadow duration-300 hover:shadow-[0_16px_40px_rgba(45,58,74,0.12)]"
+      className="location-card group card-surface transition-shadow duration-300 hover:shadow-[0_16px_40px_rgba(45,58,74,0.12)]"
     >
-      <div className="relative h-44 overflow-hidden sm:h-48">
+      <div className="relative h-44 overflow-hidden bg-[#eef8f5] sm:h-48">
         {location.image ? (
-          <img
+          <LazyImage
             src={location.image}
             alt={`${location.city}, ${location.country}`}
+            enabled={allowImages}
+            eager={index === 0}
+            staggerMs={index === 0 ? 0 : index * IMAGE_STAGGER_MS}
+            rootMargin="80px"
             width={600}
             height={400}
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="absolute inset-0 h-full w-full"
           />
-        ) : (
-          <div className="h-full w-full bg-[#eef8f5]" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#2d3a4a]/80 via-[#2d3a4a]/20 to-transparent" />
+        ) : null}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#2d3a4a]/80 via-[#2d3a4a]/20 to-transparent" />
 
         <span
           className="absolute top-3 left-3 rounded-full px-3 py-1 text-[10px] font-extrabold tracking-wide text-white uppercase shadow-sm"
@@ -99,9 +128,7 @@ function LocationCard({ location, index }) {
           <p className="text-[10px] font-bold tracking-wide text-white/80 uppercase">
             {location.country}
           </p>
-          <h3 className="text-lg font-extrabold text-white">
-            {location.city}
-          </h3>
+          <h3 className="text-lg font-extrabold text-white">{location.city}</h3>
         </div>
       </div>
 

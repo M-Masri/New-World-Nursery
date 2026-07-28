@@ -1,6 +1,8 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import HeroSection from '../components/sections/HeroSection'
 import FeaturesSection from '../components/sections/FeaturesSection'
+import HomePageLoader from '../components/ui/HomePageLoader'
+import { useHomeData } from '../context/HomeDataContext'
 
 const AboutSection = lazy(() => import('../components/sections/AboutSection'))
 const OurLocationSection = lazy(
@@ -8,9 +10,6 @@ const OurLocationSection = lazy(
 )
 const ProgramsSection = lazy(
   () => import('../components/sections/ProgramsSection'),
-)
-const GalleryTestimonialsSection = lazy(
-  () => import('../components/sections/GalleryTestimonialsSection'),
 )
 const InstagramFeedSection = lazy(
   () => import('../components/sections/InstagramFeedSection'),
@@ -20,20 +19,58 @@ const NewsletterSection = lazy(
   () => import('../components/sections/NewsletterSection'),
 )
 
+const LOADER_FADE_MS = 480
+
 function Home() {
+  const { isLoading } = useHomeData()
+  const [showLoader, setShowLoader] = useState(true)
+  const [fading, setFading] = useState(false)
+
+  useEffect(() => {
+    if (isLoading) {
+      setShowLoader(true)
+      setFading(false)
+      return undefined
+    }
+
+    setFading(true)
+    const timer = window.setTimeout(() => {
+      setShowLoader(false)
+      setFading(false)
+    }, LOADER_FADE_MS)
+
+    return () => window.clearTimeout(timer)
+  }, [isLoading])
+
+  useEffect(() => {
+    if (!showLoader) return undefined
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [showLoader])
+
   return (
     <>
-      <HeroSection />
-      <FeaturesSection />
-      <Suspense fallback={null}>
-        <AboutSection />
-        <OurLocationSection />
-        <ProgramsSection />
-        <GalleryTestimonialsSection />
-        <InstagramFeedSection />
-        <ContactSection />
-        <NewsletterSection />
-      </Suspense>
+      {showLoader ? <HomePageLoader fading={fading} /> : null}
+
+      {!isLoading ? (
+        <>
+          <HeroSection />
+          <FeaturesSection />
+          <Suspense fallback={null}>
+            <AboutSection />
+            <OurLocationSection />
+            <ProgramsSection />
+            <InstagramFeedSection />
+            <ContactSection />
+            <NewsletterSection />
+          </Suspense>
+        </>
+      ) : null}
     </>
   )
 }

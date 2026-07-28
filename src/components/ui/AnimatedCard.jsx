@@ -17,25 +17,65 @@ function useCanHover() {
   return canHover
 }
 
-function AnimatedCard({ children, index = 0, className = '', as = 'div', ...props }) {
+/**
+ * @param {boolean} active - When false, stays at initial (hidden). When true, plays enter animation.
+ *   Defaults to true (whileInView) for sections that don't sequence motion.
+ * @param {boolean} gated - If true, use controlled `active` instead of whileInView.
+ */
+function AnimatedCard({
+  children,
+  index = 0,
+  className = '',
+  as = 'div',
+  gated = false,
+  active = true,
+  ...props
+}) {
   const prefersReducedMotion = useReducedMotion()
   const canHover = useCanHover()
+  const reduce = Boolean(prefersReducedMotion)
 
-  const motionProps = {
+  const hover =
+    reduce || !canHover
+      ? undefined
+      : { y: -2, transition: { duration: 0.3, ease: EASE } }
+
+  const shared = {
     className,
-    initial: prefersReducedMotion ? false : { opacity: 0, y: 12 },
-    whileInView: prefersReducedMotion ? undefined : { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.15 },
-    transition: {
-      duration: prefersReducedMotion ? 0 : 0.75,
-      delay: prefersReducedMotion ? 0 : index * 0.06,
-      ease: EASE,
-    },
-    whileHover:
-      prefersReducedMotion || !canHover
-        ? undefined
-        : { y: -2, transition: { duration: 0.4, ease: EASE } },
+    style: { willChange: 'transform, opacity' },
+    whileHover: hover,
     ...props,
+  }
+
+  let motionProps
+
+  if (gated) {
+    motionProps = {
+      ...shared,
+      initial: reduce ? false : { opacity: 0, y: 12 },
+      animate: reduce
+        ? { opacity: 1, y: 0 }
+        : active
+          ? { opacity: 1, y: 0 }
+          : { opacity: 0, y: 12 },
+      transition: {
+        duration: reduce ? 0 : 0.5,
+        delay: reduce || !active ? 0 : index * 0.07,
+        ease: EASE,
+      },
+    }
+  } else {
+    motionProps = {
+      ...shared,
+      initial: reduce ? false : { opacity: 0, y: 12 },
+      whileInView: reduce ? undefined : { opacity: 1, y: 0 },
+      viewport: { once: true, amount: 0.15 },
+      transition: {
+        duration: reduce ? 0 : 0.75,
+        delay: reduce ? 0 : index * 0.06,
+        ease: EASE,
+      },
+    }
   }
 
   if (as === 'a') {

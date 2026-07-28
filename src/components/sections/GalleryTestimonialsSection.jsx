@@ -1,8 +1,8 @@
-import Button from '../ui/Button'
-
-const galleryImages = []
+import { useHomeData } from '../../context/HomeDataContext'
 
 function GalleryTestimonialsSection() {
+  const { gallery } = useHomeData()
+
   return (
     <section id="gallery" className="hidden bg-white py-16" aria-hidden="true">
       <div className="mx-auto w-full max-w-page px-4 sm:px-6">
@@ -15,21 +15,31 @@ function GalleryTestimonialsSection() {
           </h2>
         </div>
 
-        <div className="mb-8 grid w-full grid-cols-2 gap-4 sm:grid-cols-4">
-          {galleryImages.map((src, i) => (
-            <div key={i} className="overflow-hidden rounded-2xl shadow-sm">
-              <img
-                src={src}
-                alt={`Gallery moment ${i + 1}`}
-                className="h-36 w-full object-cover transition-transform duration-300 hover:scale-105 sm:h-44 lg:h-52"
-              />
-            </div>
-          ))}
-        </div>
-
-        <div className="text-center">
-          <Button variant="outline">View Gallery</Button>
-        </div>
+        {gallery.length > 0 ? (
+          <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-4">
+            {gallery.map((item, i) => (
+              <div
+                key={item.id ?? i}
+                className="overflow-hidden rounded-2xl shadow-sm"
+              >
+                <img
+                  src={item.image}
+                  alt={item.alt || `Gallery moment ${i + 1}`}
+                  width={400}
+                  height={280}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  fetchPriority={i === 0 ? 'high' : 'low'}
+                  decoding="async"
+                  className="h-36 w-full object-cover transition-transform duration-300 hover:scale-105 sm:h-44 lg:h-52"
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-sm text-brand-muted">
+            No gallery images yet.
+          </p>
+        )}
       </div>
     </section>
   )

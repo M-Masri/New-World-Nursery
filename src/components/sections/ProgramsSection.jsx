@@ -1,16 +1,32 @@
-import { useRef } from 'react'
+import { startTransition, useEffect, useRef, useState } from 'react'
 import programsIcon from '../../assets/New_World_Icon00018-removebg-preview.webp'
 import { useContactFormPopup } from '../../context/ContactFormContext'
 import { useHomeData } from '../../context/HomeDataContext'
-import BrushHighlightText from '../ui/BrushHighlightText'
 import AnimatedCard from '../ui/AnimatedCard'
+import BrushHighlightText from '../ui/BrushHighlightText'
 import Button from '../ui/Button'
+import LazyImage from '../ui/LazyImage'
+
+const HIGHLIGHT_PRIORITY_MS = 550
+const IMAGE_STAGGER_MS = 220
 
 function ProgramsSection() {
   const sectionRef = useRef(null)
   const { openContactForm } = useContactFormPopup()
   const { settings, programs } = useHomeData()
   const copy = settings?.programs ?? {}
+  const hasHighlight = Boolean(copy.title_highlight)
+  const [allowImages, setAllowImages] = useState(!hasHighlight)
+
+  useEffect(() => {
+    if (!hasHighlight) setAllowImages(true)
+  }, [hasHighlight])
+
+  const handleHighlightReveal = () => {
+    window.setTimeout(() => {
+      startTransition(() => setAllowImages(true))
+    }, HIGHLIGHT_PRIORITY_MS)
+  }
 
   if (programs.length === 0) return null
 
@@ -18,18 +34,21 @@ function ProgramsSection() {
     <section
       id="programs"
       ref={sectionRef}
-      className="relative scroll-mt-24 overflow-hidden bg-white py-10 sm:py-12"
+      className="relative scroll-mt-24 overflow-hidden bg-white pt-10 pb-10 sm:pt-12 sm:pb-10"
     >
       <ProgramsDecorations />
 
-      <div className="relative mx-auto max-w-page page-gutter">
+      <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="mb-8 text-center">
           {copy.label ? <p className="section-eyebrow">{copy.label}</p> : null}
           {copy.title || copy.title_highlight ? (
             <h2 className="section-title">
               {copy.title ? <>{copy.title} </> : null}
               {copy.title_highlight ? (
-                <BrushHighlightText triggerRef={sectionRef}>
+                <BrushHighlightText
+                  triggerRef={sectionRef}
+                  onReveal={handleHighlightReveal}
+                >
                   {copy.title_highlight}
                 </BrushHighlightText>
               ) : null}
@@ -44,6 +63,7 @@ function ProgramsSection() {
               key={program.id ?? program.title}
               program={program}
               index={index}
+              allowImages={allowImages}
             />
           ))}
         </div>
@@ -55,6 +75,10 @@ function ProgramsSection() {
           <img
             src={programsIcon}
             alt=""
+            width={144}
+            height={144}
+            loading="lazy"
+            decoding="async"
             aria-hidden="true"
             className="pointer-events-none w-28 sm:w-32 lg:w-36"
           />
@@ -64,25 +88,31 @@ function ProgramsSection() {
   )
 }
 
-function ProgramCard({ program, index }) {
+function ProgramCard({ program, index, allowImages }) {
   const accent = program.icon_color || '#5bb5a2'
   const lightBg = program.color || '#eef8f5'
 
   return (
-    <AnimatedCard index={index} className="card-surface flex h-full flex-col">
-      <div className="relative shrink-0">
+    <AnimatedCard
+      index={index}
+      className="program-card card-surface flex h-full flex-col"
+    >
+      <div className="relative shrink-0" style={{ backgroundColor: lightBg }}>
         {program.image ? (
-          <img
+          <LazyImage
             src={program.image}
             alt={program.title}
+            enabled={allowImages}
+            eager={index === 0}
+            staggerMs={index === 0 ? 0 : index * IMAGE_STAGGER_MS}
+            rootMargin="80px"
             width={400}
-            height={260}
-            loading="lazy"
-            decoding="async"
-            className="h-44 w-full object-cover"
+            height={176}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="h-44 w-full"
           />
         ) : (
-          <div className="h-44 w-full" style={{ backgroundColor: lightBg }} />
+          <div className="h-44 w-full" />
         )}
 
         <svg

@@ -8,9 +8,10 @@ import { useHomeData } from '../../context/HomeDataContext'
 function InstagramFeedSection() {
   const sectionRef = useRef(null)
   const walkerRef = useRef(null)
-  const { settings, gallery } = useHomeData()
+  const { settings, instagramFeed } = useHomeData()
   const copy = settings?.gallery ?? {}
   const instagramUrl = settings?.instagram_url
+  const items = instagramFeed
 
   useEffect(() => {
     const section = sectionRef.current
@@ -32,9 +33,9 @@ function InstagramFeedSection() {
 
     observer.observe(section)
     return () => observer.disconnect()
-  }, [gallery.length])
+  }, [items.length])
 
-  if (gallery.length === 0) return null
+  if (items.length === 0) return null
 
   return (
     <section
@@ -59,7 +60,7 @@ function InstagramFeedSection() {
         </div>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-          {gallery.map((post, index) => (
+          {items.map((post, index) => (
             <AnimatedCard
               key={post.id ?? index}
               as={instagramUrl ? 'a' : 'div'}
@@ -74,7 +75,7 @@ function InstagramFeedSection() {
                 alt={post.alt || ''}
                 width={400}
                 height={400}
-                loading="lazy"
+                loading="eager"
                 decoding="async"
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               />

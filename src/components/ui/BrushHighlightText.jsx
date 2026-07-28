@@ -1,15 +1,30 @@
 import { useEffect, useRef } from 'react'
-import { gsap, ScrollTrigger } from '../../lib/gsap'
+import { gsap } from '../../lib/gsap'
 
 export const BRAND_HIGHLIGHT = '#5bb5a2'
 
 const BRUSH_HIGHLIGHT_PATH =
   'M 2 49 C 24 52, 46 44, 70 49 C 94 54, 116 45, 140 50 C 164 55, 186 46, 210 51 C 234 56, 256 47, 280 52 C 296 54, 305 50, 310 48 L 308 5 C 286 2, 264 9, 240 4 C 216 -1, 194 8, 170 3 C 146 -2, 124 7, 100 2 C 76 -3, 54 6, 30 2 C 16 0, 6 3, 2 5 Z'
 
-function BrushHighlightText({ children, triggerRef, className = '', textColor = '#2d3a4a' }) {
+/**
+ * Same brush wipe for every section (Locations, Programs, …).
+ * Uses IntersectionObserver so scroll timing stays consistent.
+ */
+function BrushHighlightText({
+  children,
+  triggerRef,
+  className = '',
+  textColor = '#2d3a4a',
+  onReveal,
+  onComplete,
+}) {
   const brushFillRef = useRef(null)
   const titleTextRef = useRef(null)
   const hasDrawnRef = useRef(false)
+  const onRevealRef = useRef(onReveal)
+  const onCompleteRef = useRef(onComplete)
+  onRevealRef.current = onReveal
+  onCompleteRef.current = onComplete
 
   useEffect(() => {
     const section = triggerRef?.current
@@ -17,22 +32,37 @@ function BrushHighlightText({ children, triggerRef, className = '', textColor = 
     const titleText = titleTextRef.current
     if (!section || !brushFill || !titleText) return undefined
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches
+
+    const finish = () => {
+      brushFill.style.willChange = 'auto'
+      titleText.style.willChange = 'auto'
+      onCompleteRef.current?.()
+    }
 
     const revealBrush = () => {
       if (hasDrawnRef.current) return
       hasDrawnRef.current = true
+      onRevealRef.current?.()
 
       if (prefersReducedMotion) {
         gsap.set(brushFill, { clipPath: 'inset(0% 0 0 0)' })
         gsap.set(titleText, { color: '#ffffff' })
+        finish()
         return
       }
 
+      brushFill.style.willChange = 'clip-path'
+      titleText.style.willChange = 'color'
       gsap.set(titleText, { color: textColor })
 
       gsap
-        .timeline({ defaults: { ease: 'power2.inOut' } })
+        .timeline({
+          defaults: { ease: 'power2.inOut' },
+          onComplete: finish,
+        })
         .fromTo(
           brushFill,
           { clipPath: 'inset(90% 0 0 0)' },
@@ -46,22 +76,24 @@ function BrushHighlightText({ children, triggerRef, className = '', textColor = 
         )
     }
 
-    const scrollTrigger = ScrollTrigger.create({
-      trigger: section,
-      start: 'top 70%',
-      once: true,
-      onEnter: revealBrush,
-    })
+    // Matches previous ScrollTrigger start: "top 70%"
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        observer.disconnect()
+        // Next frame keeps the wipe smooth (same feel on Locations & Programs)
+        requestAnimationFrame(() => revealBrush())
+      },
+      { root: null, rootMargin: '0px 0px -30% 0px', threshold: 0 },
+    )
 
-    ScrollTrigger.refresh()
-
-    if (scrollTrigger.isActive) {
-      revealBrush()
-    }
+    observer.observe(section)
 
     return () => {
-      scrollTrigger.kill()
+      observer.disconnect()
       gsap.killTweensOf([brushFill, titleText])
+      brushFill.style.willChange = 'auto'
+      titleText.style.willChange = 'auto'
       hasDrawnRef.current = false
     }
   }, [triggerRef, textColor])

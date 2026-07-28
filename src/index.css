@@ -71,6 +71,24 @@ body {
   box-shadow: var(--shadow-card);
 }
 
+.program-card {
+  contain: layout paint style;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  transition: box-shadow 0.25s ease;
+}
+
+.location-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .program-card:hover {
+    box-shadow: 0 14px 34px rgba(45, 58, 74, 0.12);
+  }
+}
+
 .card-media {
   overflow: hidden;
   border-radius: var(--radius-media);
@@ -285,7 +303,6 @@ body {
   z-index: 0;
   clip-path: inset(90% 0 0 0);
   pointer-events: none;
-  will-change: clip-path;
 }
 
 .about-title-brush {
@@ -348,4 +365,63 @@ body {
   width: 100% !important;
   height: 100% !important;
   overflow: visible;
+}
+
+/* Home page API loader */
+.home-loader-logo-wrap {
+  display: grid;
+  place-items: center;
+}
+
+.home-loader-ring {
+  position: absolute;
+  inset: -1.15rem;
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  border-top-color: #5bb5a2;
+  border-right-color: rgba(91, 181, 162, 0.35);
+  animation: home-loader-spin 1s linear infinite;
+}
+
+.home-loader-dot {
+  display: block;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 9999px;
+  animation: home-loader-bounce 1.05s ease-in-out infinite;
+}
+
+.home-loader-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.home-loader-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes home-loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes home-loader-bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+
+  40% {
+    transform: translateY(-0.4rem);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-loader-ring,
+  .home-loader-dot {
+    animation: none;
+  }
 }

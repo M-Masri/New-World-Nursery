@@ -1,5 +1,8 @@
+const DEFAULT_API_ORIGIN = 'https://neworld-backend.sawatech.ae'
+
 const API_BASE_URL = (
-  import.meta.env.VITE_API_BASE_URL || 'http://new-world-nursery.test/api'
+  import.meta.env.VITE_API_BASE_URL ||
+  `${import.meta.env.VITE_API_ORIGIN || DEFAULT_API_ORIGIN}/api`
 ).replace(/\/$/, '')
 
 export class ApiError extends Error {
@@ -47,6 +50,15 @@ async function request(endpoint, options = {}) {
   return payload
 }
 
+function unwrapList(payload) {
+  const data = payload?.data ?? payload
+  return Array.isArray(data) ? data : []
+}
+
+function unwrapObject(payload) {
+  return payload?.data ?? payload ?? null
+}
+
 export const api = {
   get: (endpoint, options) => request(endpoint, { ...options, method: 'GET' }),
   post: (endpoint, body, options) =>
@@ -65,9 +77,63 @@ export const api = {
     request(endpoint, { ...options, method: 'DELETE' }),
 }
 
-/** Full homepage payload: settings + features + locations + programs + gallery */
-export function fetchHome() {
-  return api.get('/home')
+export function fetchSettings() {
+  return api.get('/settings').then(unwrapObject)
+}
+
+export function fetchFeatures() {
+  return api.get('/features').then(unwrapList)
+}
+
+export function fetchLocations() {
+  return api.get('/locations').then(unwrapList)
+}
+
+export function fetchPrograms() {
+  return api.get('/programs').then(unwrapList)
+}
+
+/** Gallery section images (no type filter). */
+export function fetchGallery() {
+  return api.get('/gallery').then(unwrapList)
+}
+
+/** Instagram feed images. */
+export function fetchInstagramGallery() {
+  return api.get('/gallery?type=instagram').then(unwrapList)
+}
+
+/**
+ * Load all public homepage data in parallel (no /home).
+ * Dedupes in-flight requests so React Strict Mode remounts reuse the same Promise.
+ */
+let siteContentPromise = null
+
+export function fetchSiteContent() {
+  if (!siteContentPromise) {
+    siteContentPromise = Promise.all([
+      fetchSettings(),
+      fetchFeatures(),
+      fetchLocations(),
+      fetchPrograms(),
+      fetchGallery(),
+      fetchInstagramGallery(),
+    ])
+      .then(([settings, features, locations, programs, gallery, instagramFeed]) => ({
+        settings,
+        features,
+        locations,
+        programs,
+        gallery,
+        instagramFeed,
+      }))
+      .catch((error) => {
+        siteContentPromise = null
+        throw error
+      })
+  }
+
+  return siteContentPromise
 }
 
 /** Submit contact form. Throws ApiError on 422 with field errors. */

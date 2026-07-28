@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { fetchHome } from '../lib/api'
+import { fetchSiteContent } from '../lib/api'
+import { preloadHomeImages } from '../lib/preloadHomeImages'
 
 const HomeDataContext = createContext(null)
 
@@ -9,6 +10,7 @@ const EMPTY = {
   locations: [],
   programs: [],
   gallery: [],
+  instagramFeed: [],
 }
 
 export function HomeDataProvider({ children }) {
@@ -24,16 +26,21 @@ export function HomeDataProvider({ children }) {
       setError(null)
 
       try {
-        const payload = await fetchHome()
+        const next = await fetchSiteContent()
         if (cancelled) return
 
-        const home = payload?.data ?? payload ?? {}
+        await preloadHomeImages(next)
+        if (cancelled) return
+
         setData({
-          settings: home.settings ?? null,
-          features: Array.isArray(home.features) ? home.features : [],
-          locations: Array.isArray(home.locations) ? home.locations : [],
-          programs: Array.isArray(home.programs) ? home.programs : [],
-          gallery: Array.isArray(home.gallery) ? home.gallery : [],
+          settings: next.settings ?? null,
+          features: Array.isArray(next.features) ? next.features : [],
+          locations: Array.isArray(next.locations) ? next.locations : [],
+          programs: Array.isArray(next.programs) ? next.programs : [],
+          gallery: Array.isArray(next.gallery) ? next.gallery : [],
+          instagramFeed: Array.isArray(next.instagramFeed)
+            ? next.instagramFeed
+            : [],
         })
         setStatus('ready')
       } catch (err) {
