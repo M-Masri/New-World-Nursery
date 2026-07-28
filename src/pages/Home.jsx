@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import HeroSection from '../components/sections/HeroSection'
 import FeaturesSection from '../components/sections/FeaturesSection'
 import HomePageLoader from '../components/ui/HomePageLoader'
@@ -19,7 +19,40 @@ const NewsletterSection = lazy(
   () => import('../components/sections/NewsletterSection'),
 )
 
-const LOADER_FADE_MS = 220
+const LOADER_FADE_MS = 160
+
+/**
+ * Mount heavy below-fold chunks only when near the viewport
+ * so they don't compete with LCP bandwidth/CPU.
+ */
+function DeferredSection({ children, rootMargin = '280px' }) {
+  const ref = useRef(null)
+  const [active, setActive] = useState(false)
+
+  useEffect(() => {
+    const node = ref.current
+    if (!node || active) return undefined
+
+    if (typeof IntersectionObserver === 'undefined') {
+      setActive(true)
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        setActive(true)
+        observer.disconnect()
+      },
+      { rootMargin, threshold: 0.01 },
+    )
+
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [active, rootMargin])
+
+  return <div ref={ref}>{active ? children : null}</div>
+}
 
 function Home() {
   const { isLoading } = useHomeData()
@@ -61,14 +94,36 @@ function Home() {
         <>
           <HeroSection />
           <FeaturesSection />
-          <Suspense fallback={null}>
-            <AboutSection />
-            <OurLocationSection />
-            <ProgramsSection />
-            <InstagramFeedSection />
-            <ContactSection />
-            <NewsletterSection />
-          </Suspense>
+          <DeferredSection>
+            <Suspense fallback={null}>
+              <AboutSection />
+            </Suspense>
+          </DeferredSection>
+          <DeferredSection>
+            <Suspense fallback={null}>
+              <OurLocationSection />
+            </Suspense>
+          </DeferredSection>
+          <DeferredSection>
+            <Suspense fallback={null}>
+              <ProgramsSection />
+            </Suspense>
+          </DeferredSection>
+          <DeferredSection>
+            <Suspense fallback={null}>
+              <InstagramFeedSection />
+            </Suspense>
+          </DeferredSection>
+          <DeferredSection>
+            <Suspense fallback={null}>
+              <ContactSection />
+            </Suspense>
+          </DeferredSection>
+          <DeferredSection>
+            <Suspense fallback={null}>
+              <NewsletterSection />
+            </Suspense>
+          </DeferredSection>
         </>
       ) : null}
     </>

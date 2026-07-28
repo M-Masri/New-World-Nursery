@@ -80,25 +80,27 @@ function HeroSection() {
   useEffect(() => {
     if (!hero) return undefined
 
-    // Never pull the Three.js chunk on phones — WebGL is skipped anyway.
+    // Defer Three.js well past LCP so it doesn't fight the hero image.
     if (isMobilePerf()) return undefined
 
     let idleId = 0
-    let timer = 0
+    let delayId = 0
 
     const enable = () => setShowCloud(true)
 
-    if (typeof window.requestIdleCallback === 'function') {
-      idleId = window.requestIdleCallback(enable, { timeout: 1200 })
-    } else {
-      timer = window.setTimeout(enable, 400)
-    }
+    delayId = window.setTimeout(() => {
+      if (typeof window.requestIdleCallback === 'function') {
+        idleId = window.requestIdleCallback(enable, { timeout: 2000 })
+      } else {
+        enable()
+      }
+    }, 2800)
 
     return () => {
+      window.clearTimeout(delayId)
       if (idleId && typeof window.cancelIdleCallback === 'function') {
         window.cancelIdleCallback(idleId)
       }
-      if (timer) window.clearTimeout(timer)
     }
   }, [hero])
 

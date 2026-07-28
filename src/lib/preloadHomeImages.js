@@ -14,50 +14,38 @@ export function collectCriticalImageUrls({ settings = null } = {}) {
   return [...urls]
 }
 
-function preloadImage(url) {
-  return new Promise((resolve) => {
-    const img = new Image()
-    img.decoding = 'async'
-    img.fetchPriority = 'high'
-    img.onload = () => resolve(true)
-    img.onerror = () => resolve(false)
-    img.src = url
-  })
+/**
+ * Hint the browser to fetch the LCP image without blocking React paint.
+ * Returns a cleanup that removes the link (optional).
+ */
+export function hintHeroImagePreload(payload) {
+  if (typeof document === 'undefined') return () => {}
+
+  const [url] = collectCriticalImageUrls(payload)
+  if (!url) return () => {}
+
+  const existing = document.head.querySelector('link[data-hero-preload="1"]')
+  if (existing) {
+    if (existing.getAttribute('href') === url) return () => {}
+    existing.remove()
+  }
+  const link = document.createElement('link')
+  link.rel = 'preload'
+  link.as = 'image'
+  link.href = url
+  link.fetchPriority = 'high'
+  link.dataset.heroPreload = '1'
+  document.head.appendChild(link)
+
+  return () => {
+    link.remove()
+  }
 }
 
-/**
- * Preload only the hero image so the loader can dismiss quickly.
- * Dedupes concurrent calls (e.g. React Strict Mode).
- */
-let preloadPromise = null
-
-export function preloadCriticalImages(payload, { timeoutMs } = {}) {
-  if (preloadPromise) return preloadPromise
-
-  const urls = collectCriticalImageUrls(payload)
-  if (urls.length === 0) {
-    preloadPromise = Promise.resolve()
-    return preloadPromise
-  }
-
-  // Mobile networks / PSI: don't hold the splash longer than needed.
-  const budget =
-    timeoutMs ??
-    (typeof window !== 'undefined' &&
-    window.matchMedia('(max-width: 768px), (pointer: coarse)').matches
-      ? 2_500
-      : 8_000)
-
-  preloadPromise = Promise.race([
-    Promise.all(urls.map(preloadImage)),
-    new Promise((resolve) => {
-      window.setTimeout(resolve, budget)
-    }),
-  ]).catch(() => {
-    preloadPromise = null
-  })
-
-  return preloadPromise
+/** @deprecated Prefer hintHeroImagePreload — do not block first paint on decode. */
+export function preloadCriticalImages(payload) {
+  hintHeroImagePreload(payload)
+  return Promise.resolve()
 }
 
 /** @deprecated Use preloadCriticalImages */

@@ -103,7 +103,7 @@ function ProgramCard({ program, index, allowImages }) {
             src={program.image}
             alt={program.title}
             enabled={allowImages}
-            eager={index === 0}
+            eager={false}
             staggerMs={index === 0 ? 0 : index * IMAGE_STAGGER_MS}
             rootMargin="80px"
             width={400}

@@ -1,11 +1,10 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { isMobilePerf, MOBILE_PERF_QUERY } from '../../lib/mobilePerf'
 
 const MotionAnimatedCard = lazy(() => import('./AnimatedCardMotion'))
 
-function PlainCard({ children, className = '', as = 'div', ...props }) {
+function PlainCard({ children, className = '', as = 'div', cardRef, ...props }) {
   const Tag = as === 'a' ? 'a' : as === 'article' ? 'article' : 'div'
-  // Strip motion-only props if any leaked through
   const {
     index: _index,
     gated: _gated,
@@ -13,29 +12,53 @@ function PlainCard({ children, className = '', as = 'div', ...props }) {
     ...rest
   } = props
   return (
-    <Tag className={className} {...rest}>
+    <Tag ref={cardRef} className={className} {...rest}>
       {children}
     </Tag>
   )
 }
 
 /**
- * Mobile: plain DOM (no framer-motion chunk).
- * Desktop: lazy-loads motion implementation.
+ * Mobile: plain DOM.
+ * Desktop: plain until near viewport, then lazy-loads framer-motion.
  */
 function AnimatedCard(props) {
-  const [useMotion, setUseMotion] = useState(() => !isMobilePerf())
+  const cardRef = useRef(null)
+  const [useMotion, setUseMotion] = useState(false)
+
+  useEffect(() => {
+    if (isMobilePerf()) return undefined
+
+    const node = cardRef.current
+    if (!node || typeof IntersectionObserver === 'undefined') {
+      setUseMotion(true)
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        setUseMotion(true)
+        observer.disconnect()
+      },
+      { rootMargin: '80px', threshold: 0.01 },
+    )
+
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     const media = window.matchMedia(MOBILE_PERF_QUERY)
-    const update = () => setUseMotion(!media.matches)
-    update()
+    const update = () => {
+      if (media.matches) setUseMotion(false)
+    }
     media.addEventListener('change', update)
     return () => media.removeEventListener('change', update)
   }, [])
 
   if (!useMotion) {
-    return <PlainCard {...props} />
+    return <PlainCard {...props} cardRef={cardRef} />
   }
 
   return (

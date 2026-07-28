@@ -21,7 +21,24 @@ function ContactSection() {
 
   useEffect(() => {
     if (isMobilePerf()) return undefined
-    setShowCloud(true)
+
+    const section = sectionRef.current
+    if (!section || typeof IntersectionObserver === 'undefined') {
+      setShowCloud(true)
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        setShowCloud(true)
+        observer.disconnect()
+      },
+      { rootMargin: '120px', threshold: 0.01 },
+    )
+
+    observer.observe(section)
+    return () => observer.disconnect()
   }, [])
 
   if (!contact) return null

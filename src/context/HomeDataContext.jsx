@@ -6,7 +6,7 @@ import {
   fetchPrograms,
   fetchSettings,
 } from '../lib/api'
-import { preloadCriticalImages } from '../lib/preloadHomeImages'
+import { hintHeroImagePreload } from '../lib/preloadHomeImages'
 
 const HomeDataContext = createContext(null)
 
@@ -26,23 +26,21 @@ export function HomeDataProvider({ children }) {
 
   useEffect(() => {
     let cancelled = false
+    let removePreload = () => {}
 
     async function load() {
       setStatus('loading')
       setError(null)
 
       try {
-        // 1) Settings first → unlock hero / chrome ASAP (mobile FCP/LCP)
+        // Unlock UI as soon as settings arrive — don't wait for image decode (PSI LCP).
         const settings = await fetchSettings()
         if (cancelled) return
 
-        await preloadCriticalImages({ settings })
-        if (cancelled) return
-
+        removePreload = hintHeroImagePreload({ settings })
         setData((prev) => ({ ...prev, settings: settings ?? null }))
         setStatus('ready')
 
-        // 2) Rest of homepage data in the background
         const [features, locations, programs, instagramFeed] =
           await Promise.all([
             fetchFeatures(),
@@ -70,6 +68,7 @@ export function HomeDataProvider({ children }) {
     load()
     return () => {
       cancelled = true
+      removePreload()
     }
   }, [])
 

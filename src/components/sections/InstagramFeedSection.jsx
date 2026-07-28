@@ -1,39 +1,15 @@
-import { useEffect, useRef } from 'react'
-import { InstagramIcon } from '../ui/SocialIcons'
+import { useRef } from 'react'
 import BrushHighlightText from '../ui/BrushHighlightText'
 import AnimatedCard from '../ui/AnimatedCard'
-import LottieScroll from '../ui/LottieScroll'
+import { InstagramIcon } from '../ui/SocialIcons'
 import { useHomeData } from '../../context/HomeDataContext'
 
 function InstagramFeedSection() {
   const sectionRef = useRef(null)
-  const walkerRef = useRef(null)
   const { settings, instagramFeed } = useHomeData()
   const copy = settings?.gallery ?? {}
   const instagramUrl = settings?.instagram_url
   const items = instagramFeed
-
-  useEffect(() => {
-    const section = sectionRef.current
-    const walker = walkerRef.current
-    if (!section || !walker) return undefined
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      return undefined
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        walker.style.animationPlayState = entry.isIntersecting
-          ? 'running'
-          : 'paused'
-      },
-      { rootMargin: '40px', threshold: 0.05 },
-    )
-
-    observer.observe(section)
-    return () => observer.disconnect()
-  }, [items.length])
 
   if (items.length === 0) return null
 
@@ -75,7 +51,7 @@ function InstagramFeedSection() {
                 alt={post.alt || ''}
                 width={400}
                 height={400}
-                loading="eager"
+                loading="lazy"
                 decoding="async"
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               />
@@ -99,20 +75,6 @@ function InstagramFeedSection() {
             </a>
           </div>
         ) : null}
-
-        <div className="instagram-walker-track mx-auto mt-6" aria-hidden="true">
-          <div ref={walkerRef} className="instagram-walker">
-            <LottieScroll
-              animationImport={() =>
-                import('../../assets/lottie/loading-walk.json')
-              }
-              triggerRef={sectionRef}
-              mode="playWhileInView"
-              speed={0.65}
-              className="instagram-walk-lottie h-full w-full"
-            />
-          </div>
-        </div>
       </div>
     </section>
   )

@@ -106,7 +106,7 @@ function LocationCard({ location, index, allowImages }) {
             src={location.image}
             alt={`${location.city}, ${location.country}`}
             enabled={allowImages}
-            eager={index === 0}
+            eager={false}
             staggerMs={index === 0 ? 0 : index * IMAGE_STAGGER_MS}
             rootMargin="80px"
             width={600}
