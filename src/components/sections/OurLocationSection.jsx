@@ -1,31 +1,22 @@
-import { startTransition, useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { ArrowUpRight, Clock, Mail, MapPin, Phone } from 'lucide-react'
 import locationIcon from '../../assets/New_World_Icon00032-removebg-preview.webp'
 import { useContactFormPopup } from '../../context/ContactFormContext'
 import { useHomeData } from '../../context/HomeDataContext'
+import { useSectionRevealGate } from '../../hooks/useSectionRevealGate'
 import AnimatedCard from '../ui/AnimatedCard'
 import BrushHighlightText from '../ui/BrushHighlightText'
 import LazyImage from '../ui/LazyImage'
 
-const HIGHLIGHT_PRIORITY_MS = 550
-const IMAGE_STAGGER_MS = 220
+const IMAGE_STAGGER_MS = 280
 
 function OurLocationSection() {
   const sectionRef = useRef(null)
   const { settings, locations } = useHomeData()
   const copy = settings?.locations ?? {}
   const hasHighlight = Boolean(copy.title_highlight)
-  const [allowImages, setAllowImages] = useState(!hasHighlight)
-
-  useEffect(() => {
-    if (!hasHighlight) setAllowImages(true)
-  }, [hasHighlight])
-
-  const handleHighlightReveal = () => {
-    window.setTimeout(() => {
-      startTransition(() => setAllowImages(true))
-    }, HIGHLIGHT_PRIORITY_MS)
-  }
+  const { cardsReady, allowImages, onHighlightComplete, skipEntrance } =
+    useSectionRevealGate(hasHighlight, 'home-locations')
 
   if (locations.length === 0) return null
 
@@ -55,7 +46,8 @@ function OurLocationSection() {
               {copy.title_highlight ? (
                 <BrushHighlightText
                   triggerRef={sectionRef}
-                  onReveal={handleHighlightReveal}
+                  onceKey="home-locations-highlight"
+                  onComplete={onHighlightComplete}
                 >
                   {copy.title_highlight}
                 </BrushHighlightText>
@@ -73,7 +65,9 @@ function OurLocationSection() {
               key={location.id ?? index}
               location={location}
               index={index}
+              cardsReady={cardsReady}
               allowImages={allowImages}
+              skipEntrance={skipEntrance}
             />
           ))}
         </div>
@@ -82,7 +76,7 @@ function OurLocationSection() {
   )
 }
 
-function LocationCard({ location, index, allowImages }) {
+function LocationCard({ location, index, cardsReady, allowImages, skipEntrance }) {
   const { openContactForm } = useContactFormPopup()
   const accent = location.badge_color || '#5bb5a2'
 
@@ -98,7 +92,13 @@ function LocationCard({ location, index, allowImages }) {
     <AnimatedCard
       as="article"
       index={index}
-      className="location-card group card-surface transition-shadow duration-300 hover:shadow-[0_16px_40px_rgba(45,58,74,0.12)]"
+      gated
+      active={cardsReady}
+      motionEnabled={cardsReady}
+      skipEntrance={skipEntrance}
+      className={`location-card group card-surface transition-shadow duration-300 hover:shadow-[0_16px_40px_rgba(45,58,74,0.12)] ${
+        cardsReady ? '' : 'opacity-0'
+      }`}
     >
       <div className="relative h-44 overflow-hidden bg-[#eef8f5] sm:h-48">
         {location.image ? (

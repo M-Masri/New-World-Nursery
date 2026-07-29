@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { useContactFormPopup } from '../../context/ContactFormContext'
 import { useHomeData } from '../../context/HomeDataContext'
+import { lockBodyScroll } from '../../lib/bodyScrollLock'
 import Logo from '../ui/Logo'
 import Button from '../ui/Button'
 
@@ -11,6 +12,7 @@ const navLinks = [
   { label: 'About Us', to: '/about', isRoute: true },
   { label: 'Blogs', to: '/blog', isRoute: true },
   { label: 'Our Programs', to: '/programs', isRoute: true },
+  { label: 'Gallery', to: '/gallery', isRoute: true },
   { label: 'Why Choose Us', to: '/why-us', isRoute: true },
   { label: 'Contact Us', to: '/contact', isRoute: true },
 ]
@@ -29,12 +31,11 @@ function Navbar() {
       if (event.key === 'Escape') setMenuOpen(false)
     }
 
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    const unlockScroll = lockBodyScroll()
     window.addEventListener('keydown', onKeyDown)
 
     return () => {
-      document.body.style.overflow = previousOverflow
+      unlockScroll()
       window.removeEventListener('keydown', onKeyDown)
     }
   }, [menuOpen])

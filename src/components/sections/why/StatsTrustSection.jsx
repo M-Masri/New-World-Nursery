@@ -1,5 +1,7 @@
+import { useRef } from 'react'
 import aboutLeaf from '../../../assets/about-leaf.webp'
 import featuresIcon from '../../../assets/New_World_Icon00010-removebg-preview.webp'
+import BrushHighlightText from '../../ui/BrushHighlightText'
 
 const STATS = [
   {
@@ -32,9 +34,12 @@ const STATS = [
  * Stats & trust — white section softened with home leaf + icon décor.
  */
 function StatsTrustSection() {
+  const sectionRef = useRef(null)
+
   return (
     <section
       id="stats-trust"
+      ref={sectionRef}
       className="relative overflow-hidden bg-white py-14 sm:py-16"
       aria-labelledby="stats-trust-heading"
     >
@@ -64,13 +69,9 @@ function StatsTrustSection() {
               className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
             >
               Trust you can{' '}
-              <span className="relative inline-block">
+              <BrushHighlightText triggerRef={sectionRef}>
                 feel
-                <span
-                  className="absolute right-0 -bottom-2 left-0 h-[3px] w-full rounded-full bg-[#5bb5a2]"
-                  aria-hidden="true"
-                />
-              </span>
+              </BrushHighlightText>
             </h2>
           </div>
           <p className="max-w-md text-sm leading-relaxed text-brand-muted sm:text-[15px] lg:justify-self-end lg:text-right">

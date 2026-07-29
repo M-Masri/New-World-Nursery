@@ -14,6 +14,7 @@ const ACCENTS = [
  */
 function BlogPostCard({ post, index = 0 }) {
   const { accent, bg: lightBg } = ACCENTS[index % ACCENTS.length]
+  const dateLabel = formatBlogDate(post.publishedAt)
 
   return (
     <Link
@@ -56,21 +57,25 @@ function BlogPostCard({ post, index = 0 }) {
             className="mb-1 text-[11px] font-extrabold tracking-[0.18em] uppercase"
             style={{ color: accent }}
           >
-            {post.category}
+            Blog
           </p>
           <h3 className="mb-1 text-base font-extrabold text-brand-ink">
             {post.title}
           </h3>
           <p className="mb-3 text-xs font-bold text-brand-ink">
-            {formatBlogDate(post.publishedAt)}
-            <span className="mx-1.5" style={{ color: accent }}>
-              ·
-            </span>
+            {dateLabel}
+            {dateLabel ? (
+              <span className="mx-1.5" style={{ color: accent }}>
+                ·
+              </span>
+            ) : null}
             {post.readMinutes} min read
           </p>
-          <p className="line-clamp-3 text-xs leading-relaxed text-brand-muted">
-            {post.excerpt}
-          </p>
+          {post.excerpt ? (
+            <p className="line-clamp-3 text-xs leading-relaxed text-brand-muted">
+              {post.excerpt}
+            </p>
+          ) : null}
         </div>
       </div>
     </Link>

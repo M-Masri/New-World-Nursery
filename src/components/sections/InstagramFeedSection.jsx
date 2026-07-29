@@ -40,15 +40,16 @@ function InstagramFeedSection() {
             const label =
               (typeof post.alt === 'string' && post.alt.trim()) ||
               `Instagram post ${index + 1}`
+            const href = post.permalink || instagramUrl
 
             return (
               <AnimatedCard
                 key={post.id ?? index}
-                as={instagramUrl ? 'a' : 'div'}
-                href={instagramUrl || undefined}
-                target={instagramUrl ? '_blank' : undefined}
-                rel={instagramUrl ? 'noreferrer' : undefined}
-                aria-label={instagramUrl ? label : undefined}
+                as={href ? 'a' : 'div'}
+                href={href || undefined}
+                target={href ? '_blank' : undefined}
+                rel={href ? 'noreferrer' : undefined}
+                aria-label={href ? label : undefined}
                 index={index}
                 className="group card-surface relative aspect-square"
               >

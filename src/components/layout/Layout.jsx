@@ -10,8 +10,6 @@ import RouteTransitionLoader from './RouteTransitionLoader'
 import ScrollToTop from './ScrollToTop'
 import HomePageLoader from '../ui/HomePageLoader'
 
-const ContactFormPopup = lazy(() => import('../ui/ContactFormPopup'))
-
 function Layout() {
   return (
     <HomeDataProvider>
@@ -28,9 +26,6 @@ function Layout() {
             </Suspense>
           </main>
           <Footer />
-          <Suspense fallback={null}>
-            <ContactFormPopup />
-          </Suspense>
         </div>
       </ContactFormProvider>
     </HomeDataProvider>

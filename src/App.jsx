@@ -9,6 +9,7 @@ const Blog = lazy(() => import('./pages/Blog'))
 const BlogPost = lazy(() => import('./pages/BlogPost'))
 const WhyChooseUs = lazy(() => import('./pages/WhyChooseUs'))
 const OurPrograms = lazy(() => import('./pages/OurPrograms'))
+const Gallery = lazy(() => import('./pages/Gallery'))
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="blog/:slug" element={<BlogPost />} />
           <Route path="why-us" element={<WhyChooseUs />} />
           <Route path="programs" element={<OurPrograms />} />
+          <Route path="gallery" element={<Gallery />} />
         </Route>
       </Routes>
     </BrowserRouter>

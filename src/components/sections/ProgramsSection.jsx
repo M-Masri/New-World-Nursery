@@ -1,14 +1,14 @@
-import { startTransition, useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import programsIcon from '../../assets/New_World_Icon00018-removebg-preview.webp'
 import { useContactFormPopup } from '../../context/ContactFormContext'
 import { useHomeData } from '../../context/HomeDataContext'
+import { useSectionRevealGate } from '../../hooks/useSectionRevealGate'
 import AnimatedCard from '../ui/AnimatedCard'
 import BrushHighlightText from '../ui/BrushHighlightText'
 import Button from '../ui/Button'
 import LazyImage from '../ui/LazyImage'
 
-const HIGHLIGHT_PRIORITY_MS = 550
-const IMAGE_STAGGER_MS = 220
+const IMAGE_STAGGER_MS = 280
 
 function ProgramsSection() {
   const sectionRef = useRef(null)
@@ -16,17 +16,8 @@ function ProgramsSection() {
   const { settings, programs } = useHomeData()
   const copy = settings?.programs ?? {}
   const hasHighlight = Boolean(copy.title_highlight)
-  const [allowImages, setAllowImages] = useState(!hasHighlight)
-
-  useEffect(() => {
-    if (!hasHighlight) setAllowImages(true)
-  }, [hasHighlight])
-
-  const handleHighlightReveal = () => {
-    window.setTimeout(() => {
-      startTransition(() => setAllowImages(true))
-    }, HIGHLIGHT_PRIORITY_MS)
-  }
+  const { cardsReady, allowImages, onHighlightComplete, skipEntrance } =
+    useSectionRevealGate(hasHighlight, 'home-programs')
 
   if (programs.length === 0) return null
 
@@ -47,7 +38,8 @@ function ProgramsSection() {
               {copy.title_highlight ? (
                 <BrushHighlightText
                   triggerRef={sectionRef}
-                  onReveal={handleHighlightReveal}
+                  onceKey="home-programs-highlight"
+                  onComplete={onHighlightComplete}
                 >
                   {copy.title_highlight}
                 </BrushHighlightText>
@@ -57,13 +49,15 @@ function ProgramsSection() {
           {copy.subtitle ? <p className="section-lead">{copy.subtitle}</p> : null}
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {programs.map((program, index) => (
             <ProgramCard
               key={program.id ?? program.title}
               program={program}
               index={index}
+              cardsReady={cardsReady}
               allowImages={allowImages}
+              skipEntrance={skipEntrance}
             />
           ))}
         </div>
@@ -88,16 +82,21 @@ function ProgramsSection() {
   )
 }
 
-function ProgramCard({ program, index, allowImages }) {
+function ProgramCard({ program, index, cardsReady, allowImages, skipEntrance }) {
   const accent = program.icon_color || '#5bb5a2'
   const lightBg = program.color || '#eef8f5'
 
   return (
     <AnimatedCard
+      as="article"
       index={index}
-      className="program-card card-surface flex h-full flex-col"
+      motionEnabled={false}
+      className="program-card group card-surface flex h-full flex-col transition-shadow duration-300 hover:shadow-[0_16px_40px_rgba(45,58,74,0.12)]"
     >
-      <div className="relative shrink-0" style={{ backgroundColor: lightBg }}>
+      <div
+        className="relative h-44 overflow-visible sm:h-48"
+        style={{ backgroundColor: lightBg }}
+      >
         {program.image ? (
           <LazyImage
             src={program.image}
@@ -106,17 +105,15 @@ function ProgramCard({ program, index, allowImages }) {
             eager={false}
             staggerMs={index === 0 ? 0 : index * IMAGE_STAGGER_MS}
             rootMargin="80px"
-            width={400}
-            height={176}
+            width={600}
+            height={400}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="h-44 w-full"
+            className="absolute inset-0 z-0 h-full w-full"
           />
-        ) : (
-          <div className="h-44 w-full" />
-        )}
+        ) : null}
 
         <svg
-          className="absolute bottom-0 left-0 w-full"
+          className="absolute bottom-0 left-0 z-0 h-[28px] w-full"
           viewBox="0 0 400 28"
           preserveAspectRatio="none"
           aria-hidden="true"
@@ -128,7 +125,7 @@ function ProgramCard({ program, index, allowImages }) {
         </svg>
 
         <div
-          className="absolute -bottom-5 left-5 z-10 flex h-11 w-11 items-center justify-center rounded-full text-lg shadow-md"
+          className="absolute -bottom-5 left-5 z-20 flex h-11 w-11 items-center justify-center rounded-full text-lg shadow-md"
           style={{ backgroundColor: accent }}
         >
           {program.icon ? (

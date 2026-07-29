@@ -1,11 +1,12 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import {
   fetchFeatures,
-  fetchInstagramGallery,
+  fetchInstagram,
   fetchLocations,
   fetchPrograms,
   fetchSettings,
 } from '../lib/api'
+import { normalizeInstagramPosts } from '../data/gallery'
 import { hintHeroImagePreload } from '../lib/preloadHomeImages'
 
 const HomeDataContext = createContext(null)
@@ -46,7 +47,7 @@ export function HomeDataProvider({ children }) {
             fetchFeatures(),
             fetchLocations(),
             fetchPrograms(),
-            fetchInstagramGallery(),
+            fetchInstagram(),
           ])
         if (cancelled) return
 
@@ -56,7 +57,7 @@ export function HomeDataProvider({ children }) {
           locations: Array.isArray(locations) ? locations : [],
           programs: Array.isArray(programs) ? programs : [],
           gallery: [],
-          instagramFeed: Array.isArray(instagramFeed) ? instagramFeed : [],
+          instagramFeed: normalizeInstagramPosts(instagramFeed),
         })
       } catch (err) {
         if (cancelled) return

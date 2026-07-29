@@ -1,20 +1,25 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const ContactFormContext = createContext(null)
 
 export function ContactFormProvider({ children }) {
-  const [isOpen, setIsOpen] = useState(false)
+  const navigate = useNavigate()
 
-  const openContactForm = useCallback(() => setIsOpen(true), [])
-  const closeContactForm = useCallback(() => setIsOpen(false), [])
+  const openContactForm = useCallback(() => {
+    navigate('/contact')
+  }, [navigate])
+
+  // Kept for backward-compat with ContactFormPopup (now removed from Layout).
+  const closeContactForm = useCallback(() => {}, [])
 
   const value = useMemo(
     () => ({
-      isOpen,
+      isOpen: false,
       openContactForm,
       closeContactForm,
     }),
-    [isOpen, openContactForm, closeContactForm],
+    [openContactForm, closeContactForm],
   )
 
   return (

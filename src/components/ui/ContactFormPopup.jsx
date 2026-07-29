@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
+import { lockBodyScroll } from '../../lib/bodyScrollLock'
 import ContactForm from './ContactForm'
 import { useContactFormPopup } from '../../context/ContactFormContext'
 
@@ -10,8 +11,7 @@ function ContactFormPopup() {
   useEffect(() => {
     if (!isOpen) return undefined
 
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    const unlockScroll = lockBodyScroll()
 
     const onKeyDown = (event) => {
       if (event.key === 'Escape') closeContactForm()
@@ -20,7 +20,7 @@ function ContactFormPopup() {
     window.addEventListener('keydown', onKeyDown)
 
     return () => {
-      document.body.style.overflow = previousOverflow
+      unlockScroll()
       window.removeEventListener('keydown', onKeyDown)
     }
   }, [isOpen, closeContactForm])

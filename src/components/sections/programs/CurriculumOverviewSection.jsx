@@ -1,4 +1,6 @@
+import { useRef } from 'react'
 import { BookOpen, Compass, Lightbulb, Puzzle } from 'lucide-react'
+import BrushHighlightText from '../../ui/BrushHighlightText'
 
 const PHILOSOPHY = [
   {
@@ -34,9 +36,12 @@ const SIGNATURE = [
  * Curriculum overview — Learning Philosophy + Signature Programmes.
  */
 function CurriculumOverviewSection() {
+  const sectionRef = useRef(null)
+
   return (
     <section
       id="curriculum"
+      ref={sectionRef}
       className="relative overflow-hidden bg-white py-14 sm:py-16"
       aria-labelledby="curriculum-heading"
     >
@@ -65,13 +70,9 @@ function CurriculumOverviewSection() {
             className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
           >
             Curriculum{' '}
-            <span className="relative inline-block">
+            <BrushHighlightText triggerRef={sectionRef}>
               overview
-              <span
-                className="absolute right-0 -bottom-2 left-0 h-[3px] w-full rounded-full bg-[#5bb5a2]"
-                aria-hidden="true"
-              />
-            </span>
+            </BrushHighlightText>
           </h2>
           <p className="mt-5 text-sm leading-relaxed text-brand-muted sm:text-[15px]">
             How we teach, and what makes our programmes feel unmistakably New

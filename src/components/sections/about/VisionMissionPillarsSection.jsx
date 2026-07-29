@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { Eye, Handshake, Heart, Lightbulb, Sparkles, Target } from 'lucide-react'
 import aboutLeaf from '../../../assets/about-leaf.webp'
 import aboutGradIcon from '../../../assets/New_World_Icon00050-removebg-preview.webp'
+import BrushHighlightText from '../../ui/BrushHighlightText'
 import LottieScroll from '../../ui/LottieScroll'
 
 const VISION =
@@ -87,7 +88,10 @@ function VisionMissionPillarsSection() {
             id="vision-mission-heading"
             className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
           >
-            Our Identity, Vision and Values
+            Our Identity, Vision and{' '}
+            <BrushHighlightText triggerRef={sectionRef}>
+              Values
+            </BrushHighlightText>
           </h2>
         </div>
 

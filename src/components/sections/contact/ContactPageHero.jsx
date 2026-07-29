@@ -8,10 +8,6 @@ import HeroSection from '../HeroSection'
 function ContactPageHero() {
   const { settings } = useHomeData()
   const image = settings?.about?.image || aboutKids
-  const tourLabel =
-    settings?.hero?.cta_primary?.trim() ||
-    settings?.about?.cta?.trim() ||
-    'Book a Tour'
 
   return (
     <HeroSection
@@ -28,8 +24,8 @@ function ContactPageHero() {
         subtitle:
           'Ask about enrolment, tours, or our branches — our team will get back to you with a warm reply.',
         image,
-        cta_primary: tourLabel,
-        cta_secondary: 'Send a Message',
+        cta_primary: null,
+        cta_secondary: null,
       }}
     />
   )

@@ -1,6 +1,11 @@
+import { useRef } from 'react'
 import { useHomeData } from '../../../context/HomeDataContext'
+import { useSectionRevealGate } from '../../../hooks/useSectionRevealGate'
 import AnimatedCard from '../../ui/AnimatedCard'
+import BrushHighlightText from '../../ui/BrushHighlightText'
 import LazyImage from '../../ui/LazyImage'
+
+const IMAGE_STAGGER_MS = 280
 
 const FALLBACK_PROGRAMS = [
   {
@@ -46,16 +51,20 @@ const FALLBACK_PROGRAMS = [
 ]
 
 /**
- * Age groups / programmes grid — same card language as Home programs.
+ * Age groups / programmes grid — same reveal gate as Home programs.
  */
 function AgeGroupsProgramsSection() {
+  const sectionRef = useRef(null)
   const { settings, programs } = useHomeData()
   const copy = settings?.programs ?? {}
   const items = programs.length > 0 ? programs : FALLBACK_PROGRAMS
+  const { cardsReady, allowImages, onHighlightComplete } =
+    useSectionRevealGate(true)
 
   return (
     <section
       id="age-groups"
+      ref={sectionRef}
       className="relative overflow-hidden bg-white py-14 sm:py-16"
       aria-labelledby="age-groups-heading"
     >
@@ -71,13 +80,12 @@ function AgeGroupsProgramsSection() {
             className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
           >
             Age{' '}
-            <span className="relative inline-block">
+            <BrushHighlightText
+              triggerRef={sectionRef}
+              onComplete={onHighlightComplete}
+            >
               groups
-              <span
-                className="absolute right-0 -bottom-2 left-0 mx-auto h-[3px] w-14 rounded-full bg-[#5bb5a2]"
-                aria-hidden="true"
-              />
-            </span>
+            </BrushHighlightText>
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-sm leading-relaxed text-brand-muted">
             {copy.subtitle ||
@@ -85,12 +93,14 @@ function AgeGroupsProgramsSection() {
           </p>
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((program, index) => (
             <ProgramCard
               key={program.id ?? program.title}
               program={program}
               index={index}
+              cardsReady={cardsReady}
+              allowImages={allowImages}
             />
           ))}
         </div>
@@ -99,35 +109,42 @@ function AgeGroupsProgramsSection() {
   )
 }
 
-function ProgramCard({ program, index }) {
+function ProgramCard({ program, index, cardsReady, allowImages }) {
   const accent = program.icon_color || '#5bb5a2'
   const lightBg = program.color || '#eef8f5'
 
   return (
     <AnimatedCard
+      as="article"
       index={index}
-      className="program-card card-surface flex h-full flex-col"
+      gated
+      active={cardsReady}
+      motionEnabled={cardsReady}
+      className={`program-card group card-surface flex h-full flex-col transition-shadow duration-300 hover:shadow-[0_16px_40px_rgba(45,58,74,0.12)] ${
+        cardsReady ? '' : 'opacity-0'
+      }`}
     >
-      <div className="relative shrink-0" style={{ backgroundColor: lightBg }}>
+      <div
+        className="relative h-44 overflow-visible sm:h-48"
+        style={{ backgroundColor: lightBg }}
+      >
         {program.image ? (
           <LazyImage
             src={program.image}
             alt={program.title}
-            enabled
+            enabled={allowImages}
             eager={false}
-            staggerMs={index === 0 ? 0 : index * 180}
+            staggerMs={index === 0 ? 0 : index * IMAGE_STAGGER_MS}
             rootMargin="80px"
-            width={400}
-            height={176}
+            width={600}
+            height={400}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="h-44 w-full"
+            className="absolute inset-0 z-0 h-full w-full"
           />
-        ) : (
-          <div className="h-44 w-full" />
-        )}
+        ) : null}
 
         <svg
-          className="absolute bottom-0 left-0 w-full"
+          className="absolute bottom-0 left-0 z-0 h-[28px] w-full"
           viewBox="0 0 400 28"
           preserveAspectRatio="none"
           aria-hidden="true"
@@ -139,7 +156,7 @@ function ProgramCard({ program, index }) {
         </svg>
 
         <div
-          className="absolute -bottom-5 left-5 z-10 flex h-11 w-11 items-center justify-center rounded-full text-lg shadow-md"
+          className="absolute -bottom-5 left-5 z-20 flex h-11 w-11 items-center justify-center rounded-full text-lg shadow-md"
           style={{ backgroundColor: accent }}
         >
           {program.icon ? (

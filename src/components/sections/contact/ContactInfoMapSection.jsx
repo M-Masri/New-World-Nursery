@@ -1,7 +1,9 @@
+import { useRef } from 'react'
 import { Clock, Mail, MapPin, Phone } from 'lucide-react'
 import aboutLeaf from '../../../assets/about-leaf.webp'
 import locationIcon from '../../../assets/New_World_Icon00032-removebg-preview.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
+import BrushHighlightText from '../../ui/BrushHighlightText'
 
 function mapsEmbedUrl(query) {
   if (!query) return null
@@ -17,6 +19,7 @@ function mapsOpenUrl(query) {
  * Contact details + embedded map, with branch cards when locations exist.
  */
 function ContactInfoMapSection() {
+  const sectionRef = useRef(null)
   const { settings, locations } = useHomeData()
   const contact = settings?.contact ?? {}
   const phone = contact.phone || settings?.top_bar_phone
@@ -34,6 +37,7 @@ function ContactInfoMapSection() {
   return (
     <section
       id="find-us"
+      ref={sectionRef}
       className="relative overflow-hidden bg-white py-14 sm:py-16"
       aria-labelledby="find-us-heading"
     >
@@ -76,7 +80,10 @@ function ContactInfoMapSection() {
         <div className="mb-10 max-w-2xl">
           <p className="section-eyebrow">Find us</p>
           <h2 id="find-us-heading" className="section-title">
-            Contact info &amp; map
+            Contact info &amp;{' '}
+            <BrushHighlightText triggerRef={sectionRef}>
+              map
+            </BrushHighlightText>
           </h2>
           <p className="section-lead">
             Visit us, call, or write — we are here to welcome your family.

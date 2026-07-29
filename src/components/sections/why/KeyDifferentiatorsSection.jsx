@@ -1,6 +1,8 @@
+import { useRef } from 'react'
 import { Heart, Leaf, Shield, Sparkles, Sun, Users } from 'lucide-react'
 import aboutLeaf from '../../../assets/about-leaf.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
+import BrushHighlightText from '../../ui/BrushHighlightText'
 
 const FALLBACKS = [
   {
@@ -63,6 +65,7 @@ const FALLBACKS = [
  * Key differentiators — editorial numbered rows (not generic cards).
  */
 function KeyDifferentiatorsSection() {
+  const sectionRef = useRef(null)
   const { features } = useHomeData()
   const items =
     features.length > 0
@@ -81,6 +84,7 @@ function KeyDifferentiatorsSection() {
   return (
     <section
       id="key-differentiators"
+      ref={sectionRef}
       className="relative overflow-hidden bg-white py-14 sm:py-16"
       aria-labelledby="differentiators-heading"
     >
@@ -105,13 +109,9 @@ function KeyDifferentiatorsSection() {
             className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
           >
             Why families{' '}
-            <span className="relative inline-block">
+            <BrushHighlightText triggerRef={sectionRef}>
               stay
-              <span
-                className="absolute right-0 -bottom-2 left-0 h-[3px] w-full rounded-full bg-[#5bb5a2]"
-                aria-hidden="true"
-              />
-            </span>
+            </BrushHighlightText>
           </h2>
           <p className="mt-5 text-sm leading-relaxed text-brand-muted sm:text-[15px]">
             Small details that make a big difference for little learners — and

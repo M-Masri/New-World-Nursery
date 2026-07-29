@@ -1,8 +1,10 @@
+import { useRef } from 'react'
 import aboutLeaf from '../../../assets/about-leaf.webp'
 import aboutKids from '../../../assets/about-kids.webp'
 import heroKids from '../../../assets/hero-kids.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
 import { useContactFormPopup } from '../../../context/ContactFormContext'
+import BrushHighlightText from '../../ui/BrushHighlightText'
 import Button from '../../ui/Button'
 
 const FALLBACK_STORY =
@@ -12,6 +14,7 @@ const FALLBACK_STORY =
  * Our Story — centered title, copy + CTA left, triple rounded photos right.
  */
 function OurStorySection() {
+  const sectionRef = useRef(null)
   const { openContactForm } = useContactFormPopup()
   const { settings } = useHomeData()
   const about = settings?.about
@@ -29,6 +32,7 @@ function OurStorySection() {
   return (
     <section
       id="our-story"
+      ref={sectionRef}
       className="relative overflow-hidden bg-white py-14 sm:py-16"
       aria-labelledby="our-story-heading"
     >
@@ -52,13 +56,9 @@ function OurStorySection() {
             className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
           >
             Our{' '}
-            <span className="relative inline-block">
+            <BrushHighlightText triggerRef={sectionRef}>
               Story
-              <span
-                className="absolute right-0 -bottom-2 left-0 mx-auto h-[3px] w-14 rounded-full bg-[#5bb5a2]"
-                aria-hidden="true"
-              />
-            </span>
+            </BrushHighlightText>
           </h2>
         </div>
 

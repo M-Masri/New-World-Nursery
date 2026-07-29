@@ -1,4 +1,6 @@
+import { useRef } from 'react'
 import ContactForm from '../../ui/ContactForm'
+import BrushHighlightText from '../../ui/BrushHighlightText'
 import aboutLeaf from '../../../assets/about-leaf.webp'
 import aboutIcon from '../../../assets/New_World_Icon00050-removebg-preview.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
@@ -7,6 +9,7 @@ import { useHomeData } from '../../../context/HomeDataContext'
  * Enquiry form — white section softened with home leaves, icon, and accents.
  */
 function EnquiryFormSection() {
+  const sectionRef = useRef(null)
   const { settings, programs } = useHomeData()
   const contact = settings?.contact ?? {}
   const programOptions = [
@@ -18,6 +21,7 @@ function EnquiryFormSection() {
   return (
     <section
       id="enquiry-form"
+      ref={sectionRef}
       className="relative overflow-hidden bg-white py-14 sm:py-16"
       aria-labelledby="enquiry-heading"
     >
@@ -60,13 +64,21 @@ function EnquiryFormSection() {
             {contact.label || 'Get in touch'}
           </p>
           <h2 id="enquiry-heading" className="section-title">
-            {contact.title || 'Send us an enquiry'}
             {contact.title_highlight ? (
               <>
-                {' '}
-                <span className="text-[#5bb5a2]">{contact.title_highlight}</span>
+                {contact.title ? <>{contact.title} </> : null}
+                <BrushHighlightText triggerRef={sectionRef}>
+                  {contact.title_highlight}
+                </BrushHighlightText>
               </>
-            ) : null}
+            ) : (
+              <>
+                Send us an{' '}
+                <BrushHighlightText triggerRef={sectionRef}>
+                  enquiry
+                </BrushHighlightText>
+              </>
+            )}
           </h2>
           {contact.subtitle ? (
             <p className="section-lead mx-auto max-w-xl">{contact.subtitle}</p>

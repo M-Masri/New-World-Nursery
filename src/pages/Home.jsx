@@ -3,6 +3,7 @@ import HeroSection from '../components/sections/HeroSection'
 import FeaturesSection from '../components/sections/FeaturesSection'
 import HomePageLoader from '../components/ui/HomePageLoader'
 import { useHomeData } from '../context/HomeDataContext'
+import { lockBodyScroll } from '../lib/bodyScrollLock'
 
 const AboutSection = lazy(() => import('../components/sections/AboutSection'))
 const OurLocationSection = lazy(
@@ -15,6 +16,9 @@ const InstagramFeedSection = lazy(
   () => import('../components/sections/InstagramFeedSection'),
 )
 const ContactSection = lazy(() => import('../components/sections/ContactSection'))
+const LatestBlogsSection = lazy(
+  () => import('../components/sections/LatestBlogsSection'),
+)
 const NewsletterSection = lazy(
   () => import('../components/sections/NewsletterSection'),
 )
@@ -90,13 +94,7 @@ function Home() {
 
   useEffect(() => {
     if (!showLoader) return undefined
-
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-
-    return () => {
-      document.body.style.overflow = previousOverflow
-    }
+    return lockBodyScroll()
   }, [showLoader])
 
   return (
@@ -127,6 +125,11 @@ function Home() {
           <DeferredSection minHeight="28rem">
             <Suspense fallback={null}>
               <InstagramFeedSection />
+            </Suspense>
+          </DeferredSection>
+          <DeferredSection minHeight="28rem">
+            <Suspense fallback={null}>
+              <LatestBlogsSection />
             </Suspense>
           </DeferredSection>
           <DeferredSection minHeight="36rem">

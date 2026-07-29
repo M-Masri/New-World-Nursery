@@ -1,27 +1,82 @@
 import { Link, useParams } from 'react-router-dom'
-import { useEffect, useMemo } from 'react'
-import { ArrowLeft, Quote, Sparkles } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { ArrowLeft, Sparkles } from 'lucide-react'
+import { ApiError, fetchBlogBySlug, fetchLatestBlogs } from '../lib/api'
 import {
-  getBlogPostBySlug,
   formatBlogDateShort,
-  blogPosts,
+  normalizeBlogPost,
+  normalizeBlogPosts,
 } from '../data/blogPosts'
 import LazyImage from '../components/ui/LazyImage'
+import BrushHighlightText from '../components/ui/BrushHighlightText'
 import BlogPostCard from '../components/sections/blog/BlogPostCard'
 import { FacebookIcon, InstagramIcon } from '../components/ui/SocialIcons'
 import { useHomeData } from '../context/HomeDataContext'
 import aboutLeaf from '../assets/about-leaf.webp'
 
 /**
- * Single blog post — editorial layout, brand colours, Related Blog.
+ * Single blog post — loaded from /api/blogs/{slug}.
  */
 function BlogPost() {
   const { slug } = useParams()
-  const post = getBlogPostBySlug(slug)
   const { settings } = useHomeData()
+  const relatedSectionRef = useRef(null)
+  const [post, setPost] = useState(null)
+  const [related, setRelated] = useState([])
+  const [status, setStatus] = useState('loading')
 
   useEffect(() => {
     window.scrollTo(0, 0)
+  }, [slug])
+
+  useEffect(() => {
+    if (!slug) {
+      setPost(null)
+      setStatus('notfound')
+      return undefined
+    }
+
+    let cancelled = false
+    setStatus('loading')
+    setPost(null)
+    setRelated([])
+
+    fetchBlogBySlug(slug)
+      .then((raw) => {
+        if (cancelled) return
+        const next = normalizeBlogPost(raw)
+        if (!next) {
+          setStatus('notfound')
+          return
+        }
+        setPost(next)
+        setStatus('ready')
+      })
+      .catch((error) => {
+        if (cancelled) return
+        if (error instanceof ApiError && error.status === 404) {
+          setStatus('notfound')
+          return
+        }
+        setStatus('error')
+      })
+
+    fetchLatestBlogs(4)
+      .then((list) => {
+        if (cancelled) return
+        const items = normalizeBlogPosts(list)
+          .filter((item) => item.slug !== slug)
+          .slice(0, 3)
+        setRelated(items)
+      })
+      .catch(() => {
+        if (cancelled) return
+        setRelated([])
+      })
+
+    return () => {
+      cancelled = true
+    }
   }, [slug])
 
   const shareUrl = useMemo(() => {
@@ -29,7 +84,41 @@ function BlogPost() {
     return window.location.href
   }, [slug])
 
-  if (!post) {
+  if (status === 'loading') {
+    return (
+      <section className="bg-white py-14 sm:py-16">
+        <div className="mx-auto max-w-page page-gutter animate-pulse">
+          <div className="mb-6 aspect-[16/9] rounded-[1.25rem] bg-nursery-mint sm:rounded-[1.5rem]" />
+          <div className="mb-4 h-10 w-3/4 rounded bg-nursery-mint" />
+          <div className="mb-3 h-4 w-full rounded bg-nursery-mint" />
+          <div className="h-4 w-5/6 rounded bg-nursery-mint" />
+        </div>
+      </section>
+    )
+  }
+
+  if (status === 'error') {
+    return (
+      <section className="bg-white py-20">
+        <div className="mx-auto max-w-page page-gutter text-center">
+          <p className="section-eyebrow">Blogs</p>
+          <h1 className="section-title mb-4">Could not load this post</h1>
+          <p className="section-lead mb-8">
+            Please try again in a moment, or browse our latest posts.
+          </p>
+          <Link
+            to="/blog"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#5bb5a2] px-6 py-3 text-sm font-extrabold text-white uppercase"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to blogs
+          </Link>
+        </div>
+      </section>
+    )
+  }
+
+  if (status === 'notfound' || !post) {
     return (
       <section className="bg-white py-20">
         <div className="mx-auto max-w-page page-gutter text-center">
@@ -51,11 +140,7 @@ function BlogPost() {
   }
 
   const author = post.author
-  const related = blogPosts.filter((item) => item.id !== post.id).slice(0, 3)
-  const [lead, ...restParagraphs] = post.content
-  const mid = Math.ceil(restParagraphs.length / 2)
-  const beforeQuote = restParagraphs.slice(0, mid)
-  const afterQuote = restParagraphs.slice(mid)
+  const dateLabel = formatBlogDateShort(post.publishedAt)
 
   const socials = [
     {
@@ -89,16 +174,18 @@ function BlogPost() {
           </div>
 
           <span className="mb-4 inline-flex rounded-md bg-[#5bb5a2] px-3 py-1 text-[11px] font-extrabold tracking-wide text-white uppercase">
-            {post.category}
+            Blog
           </span>
 
           <h1 className="mb-4 text-3xl font-extrabold leading-[1.15] text-brand-ink sm:text-4xl lg:text-[2.65rem]">
             {post.title}
           </h1>
 
-          <p className="mb-6 text-[15px] leading-relaxed text-brand-muted sm:text-base">
-            {post.excerpt}
-          </p>
+          {post.excerpt ? (
+            <p className="mb-6 text-[15px] leading-relaxed text-brand-muted sm:text-base">
+              {post.excerpt}
+            </p>
+          ) : null}
 
           <div className="mb-5 flex flex-wrap items-center gap-3">
             <img
@@ -111,8 +198,10 @@ function BlogPost() {
             <div>
               <p className="text-sm font-extrabold text-brand-ink">{author.name}</p>
               <p className="text-xs font-semibold text-brand-muted">
-                {formatBlogDateShort(post.publishedAt)}
-                <span className="mx-1.5 text-[#5bb5a2]">·</span>
+                {dateLabel}
+                {dateLabel ? (
+                  <span className="mx-1.5 text-[#5bb5a2]">·</span>
+                ) : null}
                 {post.readMinutes} min read
               </p>
             </div>
@@ -138,47 +227,11 @@ function BlogPost() {
             <ShareLinkButton url={shareUrl} title={post.title} />
           </div>
 
-          <div className="space-y-5 text-[15px] leading-relaxed text-brand-muted sm:text-base">
-            {lead ? <p>{lead}</p> : null}
-
-            {post.heading ? (
-              <h2 className="pt-2 text-xl font-extrabold text-brand-ink sm:text-2xl">
-                {post.heading}
-              </h2>
-            ) : null}
-
-            {beforeQuote.map((paragraph, index) => (
-              <p key={`b-${index}`}>{paragraph}</p>
-            ))}
-
-            {post.quote ? (
-              <blockquote className="relative my-8 border-l-[3px] border-[#5bb5a2] bg-nursery-mint/60 py-5 pr-6 pl-6 sm:pl-8">
-                <Quote
-                  className="mb-3 h-6 w-6 text-[#5bb5a2]/70"
-                  aria-hidden="true"
-                />
-                <p className="text-lg font-semibold leading-snug text-brand-ink sm:text-xl">
-                  {post.quote}
-                </p>
-              </blockquote>
-            ) : null}
-
-            {afterQuote.map((paragraph, index) => (
-              <p key={`a-${index}`}>{paragraph}</p>
-            ))}
-          </div>
-
-          {post.tags?.length ? (
-            <ul className="mt-10 flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
-                <li
-                  key={tag}
-                  className="rounded-md bg-[#f0f2f5] px-3 py-1.5 text-xs font-bold text-brand-muted"
-                >
-                  {tag}
-                </li>
-              ))}
-            </ul>
+          {post.content ? (
+            <div
+              className="blog-content"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
           ) : null}
 
           <div className="mt-10 flex gap-4 rounded-2xl border border-[#5bb5a2]/15 bg-[#faf7f2] p-5 sm:p-6">
@@ -208,6 +261,7 @@ function BlogPost() {
 
       {related.length > 0 ? (
         <section
+          ref={relatedSectionRef}
           className="relative overflow-hidden border-t border-gray-100 bg-white py-12 sm:py-14"
           aria-labelledby="related-blog-heading"
         >
@@ -228,13 +282,20 @@ function BlogPost() {
                 id="related-blog-heading"
                 className="text-xl font-extrabold text-brand-ink sm:text-2xl"
               >
-                Related Blog
+                Related{' '}
+                <BrushHighlightText triggerRef={relatedSectionRef}>
+                  Blog
+                </BrushHighlightText>
               </h2>
             </div>
 
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((item, index) => (
-                <BlogPostCard key={item.id} post={item} index={index} />
+                <BlogPostCard
+                  key={item.id ?? item.slug}
+                  post={item}
+                  index={index}
+                />
               ))}
             </div>
           </div>

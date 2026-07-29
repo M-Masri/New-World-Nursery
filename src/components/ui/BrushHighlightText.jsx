@@ -6,6 +6,9 @@ export const BRAND_HIGHLIGHT = '#5bb5a2'
 const BRUSH_HIGHLIGHT_PATH =
   'M 2 49 C 24 52, 46 44, 70 49 C 94 54, 116 45, 140 50 C 164 55, 186 46, 210 51 C 234 56, 256 47, 280 52 C 296 54, 305 50, 310 48 L 308 5 C 286 2, 264 9, 240 4 C 216 -1, 194 8, 170 3 C 146 -2, 124 7, 100 2 C 76 -3, 54 6, 30 2 C 16 0, 6 3, 2 5 Z'
 
+/** onceKey → already drawn this session (no re-run on remount / re-scroll). */
+const completedHighlights = new Set()
+
 /**
  * Same brush wipe for every section (Locations, Programs, …).
  * Uses IntersectionObserver so scroll timing stays consistent.
@@ -18,10 +21,13 @@ function BrushHighlightText({
   textColor = '#2d3a4a',
   onReveal,
   onComplete,
+  onceKey,
 }) {
   const brushFillRef = useRef(null)
   const titleTextRef = useRef(null)
-  const hasDrawnRef = useRef(false)
+  const hasDrawnRef = useRef(
+    Boolean(onceKey && completedHighlights.has(onceKey)),
+  )
   const onRevealRef = useRef(onReveal)
   const onCompleteRef = useRef(onComplete)
   onRevealRef.current = onReveal
@@ -41,19 +47,41 @@ function BrushHighlightText({
     let cancelled = false
     let gsap = null
 
+    const markDone = () => {
+      hasDrawnRef.current = true
+      if (onceKey) completedHighlights.add(onceKey)
+    }
+
     const finish = () => {
       brushFill.style.willChange = 'auto'
       titleText.style.willChange = 'auto'
       onCompleteRef.current?.()
     }
 
-    const revealInstant = () => {
-      if (hasDrawnRef.current) return
-      hasDrawnRef.current = true
-      onRevealRef.current?.()
+    const applyFinalStyles = () => {
       brushFill.style.clipPath = 'inset(0% 0 0 0)'
       titleText.style.color = '#ffffff'
+    }
+
+    const revealInstant = () => {
+      if (hasDrawnRef.current && onceKey && completedHighlights.has(onceKey)) {
+        applyFinalStyles()
+        finish()
+        return
+      }
+      if (hasDrawnRef.current) return
+      markDone()
+      onRevealRef.current?.()
+      applyFinalStyles()
       finish()
+    }
+
+    // Already played once this session — paint final state, no GSAP.
+    if (onceKey && completedHighlights.has(onceKey)) {
+      hasDrawnRef.current = true
+      applyFinalStyles()
+      finish()
+      return undefined
     }
 
     const revealBrush = async () => {
@@ -64,7 +92,7 @@ function BrushHighlightText({
         return
       }
 
-      hasDrawnRef.current = true
+      markDone()
       onRevealRef.current?.()
 
       try {
@@ -72,8 +100,7 @@ function BrushHighlightText({
         if (cancelled) return
         gsap = mod.gsap
       } catch {
-        brushFill.style.clipPath = 'inset(0% 0 0 0)'
-        titleText.style.color = '#ffffff'
+        applyFinalStyles()
         finish()
         return
       }
@@ -119,9 +146,10 @@ function BrushHighlightText({
       if (gsap) gsap.killTweensOf([brushFill, titleText])
       brushFill.style.willChange = 'auto'
       titleText.style.willChange = 'auto'
-      hasDrawnRef.current = false
+      // Keep drawn state when onceKey is set so remounts don't replay.
+      if (!onceKey) hasDrawnRef.current = false
     }
-  }, [triggerRef, textColor])
+  }, [triggerRef, textColor, onceKey])
 
   return (
     <span className="about-title-highlight">

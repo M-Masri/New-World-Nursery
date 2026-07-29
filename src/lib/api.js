@@ -93,14 +93,51 @@ export function fetchPrograms() {
   return api.get('/programs').then(unwrapList)
 }
 
-/** Gallery section images (no type filter). */
-export function fetchGallery() {
-  return api.get('/gallery').then(unwrapList)
+/** All gallery images (optional category slug or id). */
+export function fetchGallery(category) {
+  const query =
+    category && category !== 'all'
+      ? `?category=${encodeURIComponent(category)}`
+      : ''
+  return api.get(`/gallery${query}`).then(unwrapList)
 }
 
-/** Instagram feed images. */
+/** Categories with nested gallery images — best for tabs/filters UI. */
+export function fetchGalleryCategories() {
+  return api.get('/gallery/categories').then(unwrapList)
+}
+
+/** Single category and its images by slug. */
+export function fetchGalleryCategoryBySlug(slug) {
+  return api
+    .get(`/gallery/categories/${encodeURIComponent(slug)}`)
+    .then(unwrapObject)
+}
+
+/** Synced Instagram posts (separate from gallery images). */
+export function fetchInstagram() {
+  return api.get('/instagram').then(unwrapList)
+}
+
+/** @deprecated Use fetchInstagram */
 export function fetchInstagramGallery() {
-  return api.get('/gallery?type=instagram').then(unwrapList)
+  return fetchInstagram()
+}
+
+/** All published blogs (newest first). */
+export function fetchBlogs() {
+  return api.get('/blogs').then(unwrapList)
+}
+
+/** Latest blogs. `limit` is 1–20 (API default 5). */
+export function fetchLatestBlogs(limit = 5) {
+  const safe = Math.min(20, Math.max(1, Number(limit) || 5))
+  return api.get(`/blogs/latest?limit=${safe}`).then(unwrapList)
+}
+
+/** Single published blog by slug. */
+export function fetchBlogBySlug(slug) {
+  return api.get(`/blogs/${encodeURIComponent(slug)}`).then(unwrapObject)
 }
 
 /**
@@ -117,7 +154,7 @@ export function fetchSiteContent() {
       fetchFeatures(),
       fetchLocations(),
       fetchPrograms(),
-      fetchInstagramGallery(),
+      fetchInstagram(),
     ])
       .then(([settings, features, locations, programs, instagramFeed]) => ({
         settings,

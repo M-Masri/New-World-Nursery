@@ -24,20 +24,21 @@ function AnimatedCardMotion({
   as = 'div',
   gated = false,
   active = true,
+  skipEntrance = false,
+  motionEnabled: _motionEnabled,
   ...props
 }) {
   const prefersReducedMotion = useReducedMotion()
   const canHover = useCanHover()
-  const reduce = Boolean(prefersReducedMotion)
+  const reduce = Boolean(prefersReducedMotion) || skipEntrance
 
   const hover =
-    reduce || !canHover
+    prefersReducedMotion || !canHover
       ? undefined
       : { y: -2, transition: { duration: 0.3, ease: EASE } }
 
   const shared = {
     className,
-    style: { willChange: 'transform, opacity' },
     whileHover: hover,
     ...props,
   }
@@ -63,11 +64,10 @@ function AnimatedCardMotion({
     motionProps = {
       ...shared,
       initial: reduce ? false : { opacity: 0, y: 12 },
-      whileInView: reduce ? undefined : { opacity: 1, y: 0 },
-      viewport: { once: true, amount: 0.15 },
+      animate: reduce ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 },
       transition: {
-        duration: reduce ? 0 : 0.75,
-        delay: reduce ? 0 : index * 0.06,
+        duration: reduce ? 0 : 0.5,
+        delay: reduce ? 0 : index * 0.07,
         ease: EASE,
       },
     }

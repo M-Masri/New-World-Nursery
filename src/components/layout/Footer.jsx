@@ -8,6 +8,7 @@ const quickLinks = [
   { label: 'About Us', href: '/about' },
   { label: 'Blogs', href: '/blog' },
   { label: 'Our Programs', href: '/programs' },
+  { label: 'Gallery', href: '/gallery' },
   { label: 'Why Choose Us', href: '/why-us' },
   { label: 'Contact Us', href: '/contact' },
 ]

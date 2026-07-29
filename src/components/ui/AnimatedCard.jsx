@@ -9,6 +9,8 @@ function PlainCard({ children, className = '', as = 'div', cardRef, ...props }) 
     index: _index,
     gated: _gated,
     active: _active,
+    motionEnabled: _motionEnabled,
+    skipEntrance: _skipEntrance,
     ...rest
   } = props
   return (
@@ -19,15 +21,34 @@ function PlainCard({ children, className = '', as = 'div', cardRef, ...props }) 
 }
 
 /**
- * Mobile: plain DOM.
- * Desktop: plain until near viewport, then lazy-loads framer-motion.
+ * @param {object} props
+ * @param {boolean} [props.motionEnabled=true] When false, skip Framer entirely (keeps scroll smooth during highlight).
  */
-function AnimatedCard(props) {
+function AnimatedCard({ motionEnabled = true, ...props }) {
   const cardRef = useRef(null)
   const [useMotion, setUseMotion] = useState(false)
 
   useEffect(() => {
     if (isMobilePerf()) return undefined
+
+    let idleId
+    let timeoutId
+    if (typeof requestIdleCallback !== 'undefined') {
+      idleId = requestIdleCallback(() => import('./AnimatedCardMotion'))
+    } else {
+      timeoutId = setTimeout(() => import('./AnimatedCardMotion'), 1500)
+    }
+    return () => {
+      if (idleId && typeof cancelIdleCallback !== 'undefined') cancelIdleCallback(idleId)
+      if (timeoutId) clearTimeout(timeoutId)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!motionEnabled || isMobilePerf()) {
+      setUseMotion(false)
+      return undefined
+    }
 
     const node = cardRef.current
     if (!node || typeof IntersectionObserver === 'undefined') {
@@ -41,12 +62,12 @@ function AnimatedCard(props) {
         setUseMotion(true)
         observer.disconnect()
       },
-      { rootMargin: '80px', threshold: 0.01 },
+      { rootMargin: '120px', threshold: 0.01 },
     )
 
     observer.observe(node)
     return () => observer.disconnect()
-  }, [])
+  }, [motionEnabled])
 
   useEffect(() => {
     const media = window.matchMedia(MOBILE_PERF_QUERY)
@@ -57,13 +78,15 @@ function AnimatedCard(props) {
     return () => media.removeEventListener('change', update)
   }, [])
 
+  const cardProps = { ...props, motionEnabled }
+
   if (!useMotion) {
-    return <PlainCard {...props} cardRef={cardRef} />
+    return <PlainCard {...cardProps} cardRef={cardRef} />
   }
 
   return (
-    <Suspense fallback={<PlainCard {...props} />}>
-      <MotionAnimatedCard {...props} />
+    <Suspense fallback={<PlainCard {...cardProps} />}>
+      <MotionAnimatedCard {...cardProps} />
     </Suspense>
   )
 }

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import { lockBodyScroll } from '../../lib/bodyScrollLock'
 import HomePageLoader from '../ui/HomePageLoader'
 
 const LOADER_MIN_MS = 420
@@ -40,13 +41,7 @@ function RouteTransitionLoader() {
 
   useEffect(() => {
     if (!showLoader) return undefined
-
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-
-    return () => {
-      document.body.style.overflow = previousOverflow
-    }
+    return lockBodyScroll()
   }, [showLoader])
 
   if (!showLoader) return null
