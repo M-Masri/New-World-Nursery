@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Layout } from './components/layout'
 import Home from './pages/Home'
@@ -16,54 +16,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route
-            path="about"
-            element={
-              <Suspense fallback={null}>
-                <About />
-              </Suspense>
-            }
-          />
-          <Route
-            path="contact"
-            element={
-              <Suspense fallback={null}>
-                <Contact />
-              </Suspense>
-            }
-          />
-          <Route
-            path="blog"
-            element={
-              <Suspense fallback={null}>
-                <Blog />
-              </Suspense>
-            }
-          />
-          <Route
-            path="blog/:slug"
-            element={
-              <Suspense fallback={null}>
-                <BlogPost />
-              </Suspense>
-            }
-          />
-          <Route
-            path="why-us"
-            element={
-              <Suspense fallback={null}>
-                <WhyChooseUs />
-              </Suspense>
-            }
-          />
-          <Route
-            path="programs"
-            element={
-              <Suspense fallback={null}>
-                <OurPrograms />
-              </Suspense>
-            }
-          />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="blog" element={<Blog />} />
+          <Route path="blog/:slug" element={<BlogPost />} />
+          <Route path="why-us" element={<WhyChooseUs />} />
+          <Route path="programs" element={<OurPrograms />} />
         </Route>
       </Routes>
     </BrowserRouter>

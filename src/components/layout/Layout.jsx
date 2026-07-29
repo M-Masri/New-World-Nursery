@@ -6,6 +6,9 @@ import CustomCursor from './CustomCursor'
 import TopBar from './TopBar'
 import Navbar from './Navbar'
 import Footer from './Footer'
+import RouteTransitionLoader from './RouteTransitionLoader'
+import ScrollToTop from './ScrollToTop'
+import HomePageLoader from '../ui/HomePageLoader'
 
 const ContactFormPopup = lazy(() => import('../ui/ContactFormPopup'))
 
@@ -14,11 +17,15 @@ function Layout() {
     <HomeDataProvider>
       <ContactFormProvider>
         <div className="min-h-screen bg-white text-gray-800">
+          <ScrollToTop />
           <CustomCursor />
           <TopBar />
           <Navbar />
+          <RouteTransitionLoader />
           <main className="min-h-[85vh]">
-            <Outlet />
+            <Suspense fallback={<HomePageLoader />}>
+              <Outlet />
+            </Suspense>
           </main>
           <Footer />
           <Suspense fallback={null}>
