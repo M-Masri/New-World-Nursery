@@ -6,9 +6,10 @@ import { useHomeData } from '../../context/HomeDataContext'
 const quickLinks = [
   { label: 'Home', href: '/' },
   { label: 'About Us', href: '/about' },
-  { label: 'Our Programs', href: '#programs' },
-  { label: 'Why Choose Us', href: '#why-us' },
-  { label: 'Contact Us', href: '#contact' },
+  { label: 'Blogs', href: '/blog' },
+  { label: 'Our Programs', href: '/programs' },
+  { label: 'Why Choose Us', href: '/why-us' },
+  { label: 'Contact Us', href: '/contact' },
 ]
 
 function Footer() {
@@ -27,8 +28,8 @@ function Footer() {
 
   return (
     <footer className="bg-white">
-      <div className="page-gutter py-14">
-        <div className="mx-auto grid max-w-page items-start gap-10 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mx-auto max-w-page px-4 py-14 sm:px-6 lg:px-8">
+        <div className="grid items-start gap-10 sm:grid-cols-2 lg:grid-cols-3">
           <div className="-mt-10">
             <Logo className="h-24 sm:h-28" />
             {about ? (
@@ -99,8 +100,8 @@ function Footer() {
         </div>
       </div>
 
-      <div className="bg-nursery-footer page-gutter py-1.5">
-        <div className="mx-auto flex max-w-page flex-wrap items-center justify-between gap-2 text-[11px] text-white/90">
+      <div className="bg-nursery-footer">
+        <div className="mx-auto flex max-w-page flex-wrap items-center justify-between gap-2 px-4 py-1.5 text-[11px] text-white/90 sm:px-6 lg:px-8">
           <p>
             © {new Date().getFullYear()}
             {siteName ? ` ${siteName}` : ''}. All rights reserved.

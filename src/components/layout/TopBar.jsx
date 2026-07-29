@@ -47,7 +47,7 @@ function TopBar() {
 
           <div className="flex items-center gap-3">
             <a
-              href="#contact"
+              href="/contact#find-us"
               className="flex items-center gap-1.5 hover:text-nursery-teal"
             >
               <MapPin className="h-3 w-3 shrink-0 text-nursery-teal" />

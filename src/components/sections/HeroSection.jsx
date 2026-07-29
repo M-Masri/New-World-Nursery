@@ -11,7 +11,7 @@ const CloudScroll3D = lazy(() => import('../ui/CloudScroll3D'))
 
 const TITLE_COLORS = ['#8cb83a', '#f4a0b0', '#f5b942', '#a682b8', '#5bb5a2', '#5a5a5a', '#f4a0b0']
 
-function HeroCloudPhoto({ className = '', src, alt }) {
+function HeroCloudPhoto({ className = '', src, alt, fetchPriority = 'high' }) {
   return (
     <img
       src={src}
@@ -19,21 +19,50 @@ function HeroCloudPhoto({ className = '', src, alt }) {
       width={600}
       height={340}
       sizes="(max-width: 640px) 92vw, (max-width: 1024px) 560px, 600px"
-      fetchPriority="high"
+      fetchPriority={fetchPriority}
       decoding="async"
       className={`hero-cloud-mask block object-cover ${className}`}
     />
   )
 }
 
-function HeroTitle({ title }) {
-  const words = title.trim().split(/\s+/).filter(Boolean)
-  const mid = Math.ceil(words.length / 2)
-  const firstLine = words.slice(0, mid)
-  const secondLine = words.slice(mid)
+function splitHeroTitleLines(title, pyramid = false) {
+  const raw = String(title).trim()
+  if (raw.includes('\n')) {
+    return raw
+      .split('\n')
+      .map((line) => line.trim().split(/\s+/).filter(Boolean))
+      .filter((line) => line.length > 0)
+  }
 
-  const renderWord = (word, index, offset) => {
-    const color = TITLE_COLORS[(offset + index) % TITLE_COLORS.length]
+  const words = raw.split(/\s+/).filter(Boolean)
+
+  // 3-line pyramid: short → medium → longest
+  if (pyramid && words.length >= 5) {
+    const short = Math.max(1, Math.floor(words.length / 4))
+    const medium = Math.max(short + 1, Math.floor(words.length / 2) - short)
+    const a = words.slice(0, short)
+    const b = words.slice(short, short + medium)
+    const c = words.slice(short + medium)
+    if (c.length > 0) return [a, b, c]
+  }
+
+  const mid = Math.ceil(words.length / 2)
+  return [words.slice(0, mid), words.slice(mid)]
+}
+
+function HeroTitle({ title, pyramid = false }) {
+  const lines = splitHeroTitleLines(title, pyramid)
+  const flatWords = lines.flat()
+  const lastWordIndex = flatWords.length - 1
+  const titleGreen = TITLE_COLORS[0]
+
+  const renderWord = (word, index, offset, lineLength) => {
+    const wordIndex = offset + index
+    const color =
+      pyramid && (wordIndex === 0 || wordIndex === lastWordIndex)
+        ? titleGreen
+        : TITLE_COLORS[wordIndex % TITLE_COLORS.length]
     const lower = word.toLowerCase()
 
     return (
@@ -51,8 +80,8 @@ function HeroTitle({ title }) {
           />
         ) : null}
         {word}
-        {index < (offset === 0 ? firstLine.length : secondLine.length) - 1 ? '\u00A0' : ''}
-        {lower === 'grow' ? (
+        {index < lineLength - 1 ? '\u00A0' : ''}
+        {wordIndex === lastWordIndex ? (
           <TitleLeafAccent
             variant="end"
             className="pointer-events-none absolute -right-11 -bottom-5 h-12 w-14 sm:-right-13 sm:-bottom-4 sm:h-14 sm:w-16 lg:-right-14 lg:-bottom-3"
@@ -62,19 +91,37 @@ function HeroTitle({ title }) {
     )
   }
 
+  let colorOffset = 0
+  const titleSizeClass = pyramid
+    ? 'text-[2rem] leading-[1.2] font-extrabold sm:text-4xl lg:text-[2.75rem]'
+    : 'text-[2.4rem] leading-[1.15] font-extrabold sm:text-5xl lg:text-[3.4rem]'
+
   return (
-    <h1 className="text-[2.4rem] leading-[1.15] font-extrabold sm:text-5xl lg:text-[3.4rem]">
-      {firstLine.map((word, i) => renderWord(word, i, 0))}
-      {secondLine.length > 0 ? <br /> : null}
-      {secondLine.map((word, i) => renderWord(word, i, firstLine.length))}
+    <h1 className={titleSizeClass}>
+      {lines.map((line, lineIndex) => {
+        const offset = colorOffset
+        colorOffset += line.length
+        return (
+          <span key={`line-${lineIndex}`}>
+            {lineIndex > 0 ? <br /> : null}
+            <span className="inline-block whitespace-nowrap">
+              {line.map((word, i) => renderWord(word, i, offset, line.length))}
+            </span>
+          </span>
+        )
+      })}
     </h1>
   )
 }
 
-function HeroSection() {
+function HeroSection({
+  override = null,
+  onSecondaryClick = null,
+  imageFetchPriority = 'high',
+}) {
   const { openContactForm } = useContactFormPopup()
   const { settings } = useHomeData()
-  const hero = settings?.hero ?? null
+  const hero = override ?? settings?.hero ?? null
   const [showCloud, setShowCloud] = useState(false)
 
   useEffect(() => {
@@ -105,6 +152,16 @@ function HeroSection() {
   }, [hero])
 
   if (!hero) return null
+
+  const handleSecondary = () => {
+    if (onSecondaryClick) {
+      onSecondaryClick()
+      return
+    }
+    document
+      .getElementById('programs')
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
     <section className="relative overflow-hidden bg-white">
@@ -142,7 +199,10 @@ function HeroSection() {
                   variant="start"
                   className="pointer-events-none absolute -left-12 -top-6 h-12 w-14 sm:-left-14 sm:-top-5 sm:h-14 sm:w-16 lg:-left-16 lg:-top-4"
                 />
-                <HeroTitle title={hero.title} />
+                <HeroTitle
+                  title={hero.title}
+                  pyramid={Boolean(hero.titlePyramid)}
+                />
               </div>
             </div>
           ) : null}
@@ -167,11 +227,7 @@ function HeroSection() {
               {hero.cta_secondary ? (
                 <button
                   type="button"
-                  onClick={() => {
-                    document
-                      .getElementById('programs')
-                      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                  }}
+                  onClick={handleSecondary}
                   className="rounded-xl border-2 border-[#5bb5a2] bg-white px-8 py-3 text-sm font-extrabold tracking-wide text-[#5bb5a2] uppercase transition hover:bg-[#eef8f5]"
                 >
                   {hero.cta_secondary}
@@ -206,6 +262,7 @@ function HeroSection() {
               className="h-[280px] w-full max-w-[520px] sm:h-[310px] sm:max-w-[560px] lg:h-[340px] lg:max-w-[600px]"
               src={hero.image}
               alt={hero.title || 'Nursery'}
+              fetchPriority={imageFetchPriority}
             />
           </div>
         ) : null}

@@ -9,9 +9,10 @@ import Button from '../ui/Button'
 const navLinks = [
   { label: 'Home', to: '/', isRoute: true },
   { label: 'About Us', to: '/about', isRoute: true },
-  { label: 'Our Programs', to: '#programs', isRoute: false },
-  { label: 'Why Choose Us', to: '#why-us', isRoute: false },
-  { label: 'Contact Us', to: '#contact', isRoute: false },
+  { label: 'Blogs', to: '/blog', isRoute: true },
+  { label: 'Our Programs', to: '/programs', isRoute: true },
+  { label: 'Why Choose Us', to: '/why-us', isRoute: true },
+  { label: 'Contact Us', to: '/contact', isRoute: true },
 ]
 
 function Navbar() {
