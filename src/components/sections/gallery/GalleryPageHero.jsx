@@ -1,4 +1,4 @@
-import aboutKids from '../../../assets/about-kids.webp'
+import galleryPageHero from '../../../assets/gallery-page-hero.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
 import HeroSection from '../HeroSection'
 
@@ -7,7 +7,6 @@ import HeroSection from '../HeroSection'
  */
 function GalleryPageHero() {
   const { settings } = useHomeData()
-  const image = settings?.about?.image || aboutKids
   const tourLabel =
     settings?.hero?.cta_primary?.trim() ||
     settings?.about?.cta?.trim() ||
@@ -27,7 +26,7 @@ function GalleryPageHero() {
         titlePyramid: true,
         subtitle:
           'A peek into our classrooms, outdoor play, and the everyday joy that fills New World Nursery.',
-        image,
+        image: galleryPageHero,
         cta_primary: tourLabel,
         cta_secondary: 'Browse Photos',
       }}

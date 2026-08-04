@@ -10,6 +10,16 @@ import LazyImage from '../ui/LazyImage'
 
 const IMAGE_STAGGER_MS = 280
 
+function isComingSoonLocation(location) {
+  const status = String(location.status || '').toLowerCase()
+  const hours = String(location.working_hours || '').toLowerCase()
+  return (
+    status === 'coming_soon' ||
+    status === 'coming soon' ||
+    hours.includes('coming soon')
+  )
+}
+
 function OurLocationSection() {
   const sectionRef = useRef(null)
   const { settings, locations } = useHomeData()
@@ -59,7 +69,7 @@ function OurLocationSection() {
           ) : null}
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto flex flex-wrap justify-center gap-6">
           {locations.map((location, index) => (
             <LocationCard
               key={location.id ?? index}
@@ -79,10 +89,13 @@ function OurLocationSection() {
 function LocationCard({ location, index, cardsReady, allowImages, skipEntrance }) {
   const { openContactForm } = useContactFormPopup()
   const accent = location.badge_color || '#5bb5a2'
+  const isComingSoon = isComingSoonLocation(location)
 
   const handleVisit = () => {
-    if (location.visit_url?.startsWith('http')) {
-      window.open(location.visit_url, '_blank', 'noopener,noreferrer')
+    if (isComingSoon) return
+    const mapLink = location.visit_url || location.map_url
+    if (mapLink?.startsWith('http')) {
+      window.open(mapLink, '_blank', 'noopener,noreferrer')
       return
     }
     openContactForm()
@@ -96,7 +109,7 @@ function LocationCard({ location, index, cardsReady, allowImages, skipEntrance }
       active={cardsReady}
       motionEnabled={cardsReady}
       skipEntrance={skipEntrance}
-      className={`location-card group card-surface transition-shadow duration-300 hover:shadow-[0_16px_40px_rgba(45,58,74,0.12)] ${
+      className={`location-card group card-surface w-full max-w-[280px] transition-shadow duration-300 hover:shadow-[0_16px_40px_rgba(45,58,74,0.12)] ${
         cardsReady ? '' : 'opacity-0'
       }`}
     >
@@ -115,13 +128,19 @@ function LocationCard({ location, index, cardsReady, allowImages, skipEntrance }
             className="absolute inset-0 h-full w-full"
           />
         ) : null}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#2d3a4a]/80 via-[#2d3a4a]/20 to-transparent" />
+        <div
+          className={`pointer-events-none absolute inset-0 ${
+            isComingSoon
+              ? 'bg-gradient-to-t from-[#2d3a4a]/55 via-transparent to-transparent'
+              : 'bg-gradient-to-t from-[#2d3a4a]/80 via-[#2d3a4a]/20 to-transparent'
+          }`}
+        />
 
         <span
           className="absolute top-3 left-3 rounded-full px-3 py-1 text-[10px] font-extrabold tracking-wide text-white uppercase shadow-sm"
           style={{ backgroundColor: accent }}
         >
-          {location.city}
+          {isComingSoon ? 'Coming Soon' : location.city}
         </span>
 
         <div className="absolute right-3 bottom-3 left-3">
@@ -148,14 +167,20 @@ function LocationCard({ location, index, cardsReady, allowImages, skipEntrance }
           ) : null}
         </ul>
 
-        <button
-          type="button"
-          onClick={handleVisit}
-          className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#5bb5a2] transition group-hover:gap-2.5"
-        >
-          Plan a Visit
-          <ArrowUpRight className="h-4 w-4" />
-        </button>
+        {isComingSoon ? (
+          <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-brand-muted">
+            Coming Soon
+          </span>
+        ) : (
+          <button
+            type="button"
+            onClick={handleVisit}
+            className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#5bb5a2] transition group-hover:gap-2.5"
+          >
+            Plan a Visit
+            <ArrowUpRight className="h-4 w-4" />
+          </button>
+        )}
       </div>
     </AnimatedCard>
   )

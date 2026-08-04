@@ -5,33 +5,57 @@ import BrushHighlightText from '../../ui/BrushHighlightText'
 
 const STATS = [
   {
-    value: '15+',
-    label: 'Years of warm care',
+    value: '16+',
+    label: 'Years of Educational Experience',
+    detail:
+      'Supporting children and families through more than a decade of continuous educational development.',
     accent: '#5bb5a2',
     soft: '#eef8f5',
   },
   {
-    value: '200+',
-    label: 'Families welcomed',
+    value: '17+',
+    label: 'Nurseries Across Europe',
+    detail:
+      'A well-established network delivering high-quality early years education across multiple locations.',
     accent: '#f4a0b0',
     soft: '#fff0f3',
   },
   {
-    value: '1:6',
-    label: 'Thoughtful care ratio',
+    value: '3+',
+    label: 'Inclusive Primary Schools',
+    detail:
+      'Extending our educational journey beyond the early years with specialist experience in inclusive education.',
     accent: '#f5b942',
     soft: '#fff8e8',
   },
   {
-    value: '100%',
-    label: 'Play-led learning days',
+    value: '1000s',
+    label: 'Children & Families Supported',
+    detail:
+      'Years of practical experience working in partnership with families and helping children thrive.',
     accent: '#a682b8',
     soft: '#f5eef8',
+  },
+  {
+    value: 'EYFS',
+    label: 'British International Curriculum',
+    detail:
+      'Delivering a globally recognised framework for early childhood education, fully aligned with KHDA requirements.',
+    accent: '#7eb8d4',
+    soft: '#eef6fb',
+  },
+  {
+    value: 'UAE',
+    label: 'A Growing International Network',
+    detail:
+      'Bringing trusted European educational expertise to families in Dubai, with a long-term vision for international growth.',
+    accent: '#6db89a',
+    soft: '#e8f6f0',
   },
 ]
 
 /**
- * Stats & trust — white section softened with home leaf + icon décor.
+ * Stats & trust — network experience and educational credentials.
  */
 function StatsTrustSection() {
   const sectionRef = useRef(null)
@@ -61,30 +85,31 @@ function StatsTrustSection() {
       />
 
       <div className="relative z-10 mx-auto max-w-page page-gutter">
-        <div className="mb-10 grid items-end gap-6 lg:mb-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
-          <div>
-            <p className="section-eyebrow !mb-3">Stats & trust</p>
-            <h2
-              id="stats-trust-heading"
-              className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
-            >
-              Trust you can{' '}
-              <BrushHighlightText triggerRef={sectionRef}>
-                feel
-              </BrushHighlightText>
-            </h2>
-          </div>
-          <p className="max-w-md text-sm leading-relaxed text-brand-muted sm:text-[15px] lg:justify-self-end lg:text-right">
-            Numbers that reflect our care — and the families who grow with us
-            every day in Al Barsha.
+        <div className="mb-10 max-w-3xl sm:mb-12">
+          <p className="section-eyebrow !mb-3">Stats & trust</p>
+          <h2
+            id="stats-trust-heading"
+            className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
+          >
+            Trusted by Experience.{' '}
+            <BrushHighlightText triggerRef={sectionRef}>
+              Built for the Future
+            </BrushHighlightText>
+            .
+          </h2>
+          <p className="mt-5 text-sm leading-relaxed text-brand-muted sm:text-[15px]">
+            The trust of families is earned through consistency, experience and a
+            long-term commitment to excellence in early childhood education. Every
+            New World Nursery is built on proven educational expertise and
+            internationally recognised standards.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 lg:gap-5">
           {STATS.map((stat) => (
             <div
               key={stat.label}
-              className="relative overflow-hidden rounded-[1.5rem] px-4 py-7 text-center sm:rounded-[1.75rem] sm:px-5 sm:py-9"
+              className="relative overflow-hidden rounded-[1.5rem] px-5 py-7 sm:rounded-[1.75rem] sm:px-6 sm:py-8"
               style={{ backgroundColor: stat.soft }}
             >
               <span
@@ -98,12 +123,22 @@ function StatsTrustSection() {
               >
                 {stat.value}
               </p>
-              <p className="mx-auto max-w-[9rem] text-[11px] font-bold leading-snug tracking-wide text-brand-muted uppercase sm:text-xs">
+              <p className="mb-2 text-sm font-extrabold text-brand-ink">
                 {stat.label}
+              </p>
+              <p className="text-xs leading-relaxed text-brand-muted sm:text-sm">
+                {stat.detail}
               </p>
             </div>
           ))}
         </div>
+
+        <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-brand-muted sm:mt-12 sm:text-[15px]">
+          Every number tells part of our story. Behind each one are children who
+          have grown with confidence, families who have placed their trust in us
+          and educators who share our commitment to exceptional early years
+          education.
+        </p>
       </div>
     </section>
   )

@@ -1,4 +1,4 @@
-import aboutKids from '../../../assets/about-kids.webp'
+import whyChoosePageHero from '../../../assets/why-choose-page-hero.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
 import HeroSection from '../HeroSection'
 
@@ -7,7 +7,6 @@ import HeroSection from '../HeroSection'
  */
 function WhyChoosePageHero() {
   const { settings } = useHomeData()
-  const image = settings?.about?.image || aboutKids
   const tourLabel =
     settings?.hero?.cta_primary?.trim() ||
     settings?.about?.cta?.trim() ||
@@ -23,11 +22,11 @@ function WhyChoosePageHero() {
       }}
       override={{
         eyebrow: 'Why Choose Us',
-        title: 'New World\nWhy Families\nChoose Us Daily',
+        title: 'Choosing the Right Nursery\nChanges Everything',
         titlePyramid: true,
         subtitle:
-          'Warm care, play with purpose, and a close parent partnership — right here in Al Barsha.',
-        image,
+          'Every family wants more than excellent education. They want a place where their child feels safe, understood and inspired to grow. At New World Nursery, that confidence comes from years of experience, internationally recognised educational standards and a philosophy that always puts children first.',
+        image: whyChoosePageHero,
         cta_primary: tourLabel,
         cta_secondary: 'See Why',
       }}

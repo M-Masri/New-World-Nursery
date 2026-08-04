@@ -9,6 +9,9 @@ const Blog = lazy(() => import('./pages/Blog'))
 const BlogPost = lazy(() => import('./pages/BlogPost'))
 const WhyChooseUs = lazy(() => import('./pages/WhyChooseUs'))
 const OurPrograms = lazy(() => import('./pages/OurPrograms'))
+const LearningPhilosophy = lazy(() => import('./pages/LearningPhilosophy'))
+const SignaturePrograms = lazy(() => import('./pages/SignaturePrograms'))
+const AwardsNetwork = lazy(() => import('./pages/AwardsNetwork'))
 const Gallery = lazy(() => import('./pages/Gallery'))
 
 function App() {
@@ -23,6 +26,9 @@ function App() {
           <Route path="blog/:slug" element={<BlogPost />} />
           <Route path="why-us" element={<WhyChooseUs />} />
           <Route path="programs" element={<OurPrograms />} />
+          <Route path="learning-philosophy" element={<LearningPhilosophy />} />
+          <Route path="signature-programs" element={<SignaturePrograms />} />
+          <Route path="awards-network" element={<AwardsNetwork />} />
           <Route path="gallery" element={<Gallery />} />
         </Route>
       </Routes>

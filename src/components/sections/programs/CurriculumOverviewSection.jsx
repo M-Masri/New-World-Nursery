@@ -1,34 +1,52 @@
 import { useRef } from 'react'
-import { BookOpen, Compass, Lightbulb, Puzzle } from 'lucide-react'
+import {
+  BookOpen,
+  Compass,
+  Heart,
+  Lightbulb,
+  Puzzle,
+} from 'lucide-react'
 import BrushHighlightText from '../../ui/BrushHighlightText'
 
 const PHILOSOPHY = [
   {
-    title: 'Play with purpose',
-    text: 'Children learn best when curiosity leads. We design days around discovery, not drills — so joy and growth travel together.',
+    title: 'Child before curriculum',
+    text: 'We observe, understand and build genuine relationships with every child — shaping education around their interests, strengths and stage of development within the British EYFS framework.',
     Icon: Lightbulb,
     accent: '#5bb5a2',
   },
   {
-    title: 'Whole-child growth',
-    text: 'Language, movement, friendship, and confidence are woven through every room — not treated as separate subjects.',
-    Icon: Compass,
+    title: 'EYFS + KHDA aligned',
+    text: 'Our curriculum is built on the British Early Years Foundation Stage and fully aligned with Dubai’s KHDA expectations — globally recognised and locally relevant.',
+    Icon: BookOpen,
     accent: '#f4a0b0',
+  },
+  {
+    title: 'Protecting curiosity',
+    text: 'We do not rush childhood. We nurture each child’s natural desire to discover, understand and grow with confidence, joy and purpose.',
+    Icon: Compass,
+    accent: '#f5b942',
   },
 ]
 
 const SIGNATURE = [
   {
-    title: 'Story-rich days',
-    text: 'Songs, books, and conversation build vocabulary and belonging from the earliest ages.',
-    Icon: BookOpen,
+    title: 'Think — Creator Mindset',
+    text: 'Children learn to think logically, ask meaningful questions and solve problems through construction, open-ended challenges and collaborative projects.',
+    Icon: Puzzle,
+    accent: '#5bb5a2',
+  },
+  {
+    title: 'Explore — Beyond the classroom',
+    text: 'Beach & Desert Explorers take learning into Dubai’s natural environments, building scientific curiosity, observation skills and environmental awareness.',
+    Icon: Compass,
     accent: '#f5b942',
   },
   {
-    title: 'Hands-on discovery',
-    text: 'Blocks, art, outdoor play, and problem-solving invite little minds to invent and try again.',
-    Icon: Puzzle,
-    accent: '#a682b8',
+    title: 'Belong — Naturally inclusive',
+    text: 'Every child feels recognised and valued. Families Together partnerships connect home and nursery so children thrive with consistency and confidence.',
+    Icon: Heart,
+    accent: '#f4a0b0',
   },
 ]
 
@@ -69,14 +87,15 @@ function CurriculumOverviewSection() {
             id="curriculum-heading"
             className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
           >
-            Curriculum{' '}
+            Protecting Curiosity.{' '}
             <BrushHighlightText triggerRef={sectionRef}>
-              overview
+              Inspiring Growth
             </BrushHighlightText>
           </h2>
           <p className="mt-5 text-sm leading-relaxed text-brand-muted sm:text-[15px]">
-            How we teach, and what makes our programmes feel unmistakably New
-            World — warm, playful, and ready for real life.
+            Children are naturally curious. At New World Nursery, we nurture that
+            desire to discover while enriching the British EYFS curriculum through
+            our Signature Programmes: Think. Explore. Belong.
           </p>
         </div>
 

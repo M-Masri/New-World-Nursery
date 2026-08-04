@@ -1,4 +1,4 @@
-import aboutKids from '../../../assets/about-kids.webp'
+import blogPageHero from '../../../assets/blog-page-hero.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
 import HeroSection from '../HeroSection'
 
@@ -7,7 +7,6 @@ import HeroSection from '../HeroSection'
  */
 function BlogPageHero() {
   const { settings } = useHomeData()
-  const image = settings?.about?.image || aboutKids
   const tourLabel =
     settings?.hero?.cta_primary?.trim() ||
     settings?.about?.cta?.trim() ||
@@ -27,7 +26,7 @@ function BlogPageHero() {
         titlePyramid: true,
         subtitle:
           'Classroom moments, settling tips, and warm notes for families growing with us.',
-        image,
+        image: blogPageHero,
         cta_primary: tourLabel,
         cta_secondary: 'Read Posts',
       }}

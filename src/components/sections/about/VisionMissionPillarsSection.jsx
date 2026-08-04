@@ -1,41 +1,62 @@
 import { useRef } from 'react'
-import { Eye, Handshake, Heart, Lightbulb, Sparkles, Target } from 'lucide-react'
+import {
+  Compass,
+  Eye,
+  Heart,
+  Lightbulb,
+  Sparkles,
+  Sprout,
+  Target,
+} from 'lucide-react'
 import aboutLeaf from '../../../assets/about-leaf.webp'
 import aboutGradIcon from '../../../assets/New_World_Icon00050-removebg-preview.webp'
 import BrushHighlightText from '../../ui/BrushHighlightText'
 import LottieScroll from '../../ui/LottieScroll'
 
-const VISION =
-  'To nurture curious, confident children who love learning and treat others with kindness — ready for school and for life.'
+const VISION_TITLE = 'A World Where Every Child Discovers Their Own Path'
 
-const MISSION =
-  'To create a safe, play-rich nursery where caring educators guide every child through joyful discovery, with integrity, warmth, and heart.'
-
-const PILLARS = [
-  { title: 'Play with purpose', Icon: Sparkles },
-  { title: 'Warm care', Icon: Heart },
-  { title: 'Trust & partnership', Icon: Handshake },
-  { title: 'Growing minds', Icon: Lightbulb },
+const VISION = [
+  'We envision a world where every child grows with confidence, curiosity and compassion. A world where differences are celebrated, questions are encouraged and learning becomes a lifelong journey of discovery.',
+  'Inspired by our European educational heritage and shaped by the diversity of Dubai, we are building a community where children develop not only the knowledge they need for school, but also the character, resilience and creativity they need for life.',
 ]
 
-/** Evenly space 4 pillars along a downward semicircle (sides higher, center lower). */
-function pillarArcStyle(index, total) {
-  const start = Math.PI * 0.92
-  const end = Math.PI * 0.08
-  const t = total === 1 ? 0.5 : index / (total - 1)
-  const angle = start + (end - start) * t
-  const x = 50 + Math.cos(angle) * 42
-  const y = 30 + Math.sin(angle) * 48
+const MISSION_TITLE = 'Guiding Every Child on Their Journey'
 
-  return {
-    left: `${x}%`,
-    top: `${y}%`,
-    transform: 'translate(-50%, -50%)',
-  }
-}
+const MISSION = [
+  'Our mission is to create an inspiring early years environment where children feel safe to explore, confident to ask questions and empowered to discover their unique potential.',
+  'By combining the British EYFS curriculum, inclusive education and innovative learning experiences, we help children build strong foundations for a future filled with opportunity.',
+]
+
+const PILLARS = [
+  {
+    title: 'Explore',
+    text: 'We inspire children to stay curious, discover the world around them and develop a lifelong love of learning.',
+    Icon: Compass,
+  },
+  {
+    title: 'Think',
+    text: 'We encourage independent thinking, creativity, problem-solving and the confidence to ask meaningful questions.',
+    Icon: Lightbulb,
+  },
+  {
+    title: 'Belong',
+    text: 'We create a naturally inclusive community where every child feels valued, respected and connected.',
+    Icon: Heart,
+  },
+  {
+    title: 'Grow',
+    text: 'We nurture each child’s individual strengths, supporting their emotional, social, physical and cognitive development.',
+    Icon: Sprout,
+  },
+  {
+    title: 'Thrive',
+    text: 'We prepare children to embrace the future with confidence, resilience and the skills to flourish in a changing world.',
+    Icon: Sparkles,
+  },
+]
 
 /**
- * Pillars on a semicircle arc, overlapping Vision | Mission card.
+ * Vision, mission, and five pillars — Explore, Think, Belong, Grow, Thrive.
  */
 function VisionMissionPillarsSection() {
   const sectionRef = useRef(null)
@@ -80,9 +101,9 @@ function VisionMissionPillarsSection() {
       />
 
       <div className="relative z-10 mx-auto max-w-page page-gutter">
-        <div className="mb-4 text-center sm:mb-5">
+        <div className="mb-10 text-center sm:mb-12">
           <p className="mb-3 text-xs font-extrabold tracking-[0.28em] text-[#5bb5a2] uppercase">
-            About Us
+            Vision, mission & pillars
           </p>
           <h2
             id="vision-mission-heading"
@@ -95,69 +116,85 @@ function VisionMissionPillarsSection() {
           </h2>
         </div>
 
-        <div className="relative mx-auto max-w-5xl pt-3 sm:pt-4">
-          <div
-            className="relative z-20 mx-auto h-[11.5rem] w-[min(100%,38rem)] sm:h-[13rem] sm:w-[92%] lg:w-[88%]"
-            style={{ marginBottom: '-3.25rem' }}
-          >
-            <div className="absolute inset-x-0 bottom-0 top-4 rounded-[1.35rem] bg-[#5bb5a2] shadow-[0_10px_24px_rgba(91,181,162,0.35)] sm:top-5 sm:rounded-[1.5rem]" />
-
-            <ul className="absolute inset-0 m-0 list-none p-0" role="list">
-              {PILLARS.map(({ title, Icon }, index) => (
-                <li
-                  key={title}
-                  role="listitem"
-                  className="absolute flex w-[6.5rem] flex-col items-center gap-1.5 text-center sm:w-[7.75rem]"
-                  style={pillarArcStyle(index, PILLARS.length)}
-                >
-                  <Icon
-                    className="h-8 w-8 text-white sm:h-9 sm:w-9"
-                    strokeWidth={1.55}
-                    aria-hidden="true"
-                  />
-                  <span className="text-xs font-bold leading-snug text-white sm:text-sm">
-                    {title}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="relative z-10 mx-auto w-full max-w-5xl rounded-[1.75rem] bg-white px-7 pb-12 pt-[5.25rem] shadow-[0_14px_40px_rgba(45,58,74,0.1)] sm:rounded-[2rem] sm:px-12 sm:pb-14 sm:pt-[6rem] lg:px-14">
-            <div className="grid min-h-[11rem] gap-8 sm:min-h-[12.5rem] sm:grid-cols-2 sm:gap-0">
-              <div className="sm:pr-10">
-                <div className="mb-4 flex items-center gap-2.5">
-                  <Eye
-                    className="h-6 w-6 shrink-0 text-[#5bb5a2]"
-                    strokeWidth={1.8}
-                    aria-hidden="true"
-                  />
-                  <h3 className="text-xl font-extrabold text-[#5bb5a2] sm:text-2xl">
-                    Vision
-                  </h3>
-                </div>
-                <p className="text-base leading-relaxed text-[#3d4a5c] sm:text-lg">
-                  {VISION}
-                </p>
-              </div>
-
-              <div className="border-t border-[#e5e5e5] pt-8 sm:border-t-0 sm:border-l sm:pt-0 sm:pl-10">
-                <div className="mb-4 flex items-center gap-2.5">
-                  <Target
-                    className="h-6 w-6 shrink-0 text-[#5bb5a2]"
-                    strokeWidth={1.8}
-                    aria-hidden="true"
-                  />
-                  <h3 className="text-xl font-extrabold text-[#5bb5a2] sm:text-2xl">
-                    Mission
-                  </h3>
-                </div>
-                <p className="text-base leading-relaxed text-[#3d4a5c] sm:text-lg">
-                  {MISSION}
-                </p>
-              </div>
+        <div className="mx-auto grid max-w-5xl gap-6 sm:gap-8 lg:grid-cols-2">
+          <article className="rounded-[1.75rem] bg-white p-7 shadow-[0_14px_40px_rgba(45,58,74,0.08)] sm:rounded-[2rem] sm:p-9">
+            <div className="mb-4 flex items-center gap-2.5">
+              <Eye
+                className="h-6 w-6 shrink-0 text-[#5bb5a2]"
+                strokeWidth={1.8}
+                aria-hidden="true"
+              />
+              <h3 className="text-xl font-extrabold text-[#5bb5a2] sm:text-2xl">
+                Our Vision
+              </h3>
             </div>
-          </div>
+            <p className="mb-4 text-base font-bold leading-snug text-[#2d3a4a] sm:text-lg">
+              {VISION_TITLE}
+            </p>
+            <div className="space-y-3">
+              {VISION.map((paragraph) => (
+                <p
+                  key={paragraph.slice(0, 32)}
+                  className="text-[15px] leading-relaxed text-[#3d4a5c] sm:text-base"
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </article>
+
+          <article className="rounded-[1.75rem] bg-white p-7 shadow-[0_14px_40px_rgba(45,58,74,0.08)] sm:rounded-[2rem] sm:p-9">
+            <div className="mb-4 flex items-center gap-2.5">
+              <Target
+                className="h-6 w-6 shrink-0 text-[#5bb5a2]"
+                strokeWidth={1.8}
+                aria-hidden="true"
+              />
+              <h3 className="text-xl font-extrabold text-[#5bb5a2] sm:text-2xl">
+                Our Mission
+              </h3>
+            </div>
+            <p className="mb-4 text-base font-bold leading-snug text-[#2d3a4a] sm:text-lg">
+              {MISSION_TITLE}
+            </p>
+            <div className="space-y-3">
+              {MISSION.map((paragraph) => (
+                <p
+                  key={paragraph.slice(0, 32)}
+                  className="text-[15px] leading-relaxed text-[#3d4a5c] sm:text-base"
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </article>
+        </div>
+
+        <div className="mx-auto mt-12 max-w-5xl sm:mt-14">
+          <h3 className="mb-8 text-center text-2xl font-extrabold text-[#2d3a4a] sm:text-3xl">
+            Our{' '}
+            <span className="text-[#5bb5a2]">Pillars</span>
+          </h3>
+          <ul className="m-0 grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-5 lg:gap-3">
+            {PILLARS.map(({ title, text, Icon }) => (
+              <li
+                key={title}
+                className="rounded-[1.5rem] bg-[#eef8f5] px-5 py-6 text-center sm:px-4 sm:py-7"
+              >
+                <Icon
+                  className="mx-auto mb-3 h-8 w-8 text-[#5bb5a2]"
+                  strokeWidth={1.6}
+                  aria-hidden="true"
+                />
+                <p className="mb-2 text-base font-extrabold text-[#2d3a4a]">
+                  {title}
+                </p>
+                <p className="text-xs leading-relaxed text-brand-muted sm:text-[13px]">
+                  {text}
+                </p>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

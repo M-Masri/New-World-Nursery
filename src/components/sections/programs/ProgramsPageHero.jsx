@@ -1,13 +1,12 @@
-import aboutKids from '../../../assets/about-kids.webp'
+import programsPageHero from '../../../assets/programs-page-hero.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
 import HeroSection from '../HeroSection'
 
 /**
- * Same layout as the homepage hero — Our Programs copy + image.
+ * Same layout as the homepage hero — Programs-specific copy + image.
  */
 function ProgramsPageHero() {
   const { settings } = useHomeData()
-  const image = settings?.about?.image || aboutKids
   const tourLabel =
     settings?.hero?.cta_primary?.trim() ||
     settings?.about?.cta?.trim() ||
@@ -23,11 +22,11 @@ function ProgramsPageHero() {
       }}
       override={{
         eyebrow: 'Our Programs',
-        title: 'New World\nLearning Paths\nFor Every Little Age',
+        title: 'Where Every Day\nBecomes a New Discovery',
         titlePyramid: true,
         subtitle:
-          'From first steps to school readiness — warm, play-based programmes shaped for how young children grow.',
-        image,
+          'Children understand the world by exploring it. At New World Nursery, every experience is thoughtfully designed to spark curiosity, inspire creativity and build the confidence to keep discovering — through the British EYFS curriculum and enriching learning experiences.',
+        image: programsPageHero,
         cta_primary: tourLabel,
         cta_secondary: 'View Ages',
       }}

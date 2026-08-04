@@ -1,14 +1,10 @@
-import aboutKids from '../../../assets/about-kids.webp'
-import { useHomeData } from '../../../context/HomeDataContext'
+import contactPageHero from '../../../assets/contact-page-hero.webp'
 import HeroSection from '../HeroSection'
 
 /**
  * Same layout as the homepage hero — Contact-specific copy + image.
  */
 function ContactPageHero() {
-  const { settings } = useHomeData()
-  const image = settings?.about?.image || aboutKids
-
   return (
     <HeroSection
       imageFetchPriority="high"
@@ -23,7 +19,7 @@ function ContactPageHero() {
         titlePyramid: true,
         subtitle:
           'Ask about enrolment, tours, or our branches — our team will get back to you with a warm reply.',
-        image,
+        image: contactPageHero,
         cta_primary: null,
         cta_secondary: null,
       }}

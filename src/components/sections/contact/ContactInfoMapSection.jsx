@@ -32,7 +32,10 @@ function ContactInfoMapSection() {
       .filter(Boolean)
       .join(', ')
   const embedSrc = mapsEmbedUrl(mapQuery)
-  const openMapsHref = mapsOpenUrl(mapQuery)
+  const openMapsHref =
+    primaryLocation?.map_url ||
+    primaryLocation?.visit_url ||
+    mapsOpenUrl(mapQuery)
 
   return (
     <section

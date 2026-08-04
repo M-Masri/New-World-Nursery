@@ -1,85 +1,87 @@
 import { useRef } from 'react'
-import { Heart, Leaf, Shield, Sparkles, Sun, Users } from 'lucide-react'
+import {
+  Accessibility,
+  BedDouble,
+  Building2,
+  Dumbbell,
+  Leaf,
+  Sparkles,
+  Trees,
+} from 'lucide-react'
 import aboutLeaf from '../../../assets/about-leaf.webp'
-import { useHomeData } from '../../../context/HomeDataContext'
 import BrushHighlightText from '../../ui/BrushHighlightText'
 
-const FALLBACKS = [
+const DIFFERENTIATORS = [
   {
-    id: 'f1',
-    title: 'Play with purpose',
+    id: 'd1',
+    title: 'Purposefully Designed Learning Environments',
     description:
-      'Every corner invites curiosity — blocks, stories, outdoor adventures, and joyful discovery woven through the day.',
+      'Every nursery is carefully planned to encourage independence, exploration and meaningful learning. Bright, flexible classrooms are designed to evolve with children’s interests and developmental needs.',
     icon_color: '#5bb5a2',
     soft: '#eef8f5',
+    Icon: Building2,
+  },
+  {
+    id: 'd2',
+    title: 'Indoor & Outdoor Spaces for Every Day',
+    description:
+      'We believe children need the freedom to move, explore and play in every season. Every New World Nursery provides dedicated indoor play areas alongside outdoor environments that encourage active play, discovery and a connection with nature.',
+    icon_color: '#f4a0b0',
+    soft: '#fff0f3',
+    Icon: Trees,
+  },
+  {
+    id: 'd3',
+    title: 'Dedicated Sensory Integration Spaces',
+    description:
+      'Each nursery includes a dedicated sensory environment designed to support sensory development, emotional regulation, focus and wellbeing through carefully planned experiences and specialist resources.',
+    icon_color: '#f5b942',
+    soft: '#fff8e8',
     Icon: Sparkles,
   },
   {
-    id: 'f2',
-    title: 'Warm trusted care',
+    id: 'd4',
+    title: 'Movement & Physical Development',
     description:
-      'Educators who know each child by name, rhythm, and smile — calm routines that feel like a second home.',
-    icon_color: '#f4a0b0',
-    soft: '#fff0f3',
-    Icon: Heart,
-  },
-  {
-    id: 'f3',
-    title: 'Safe spaces to explore',
-    description:
-      'Thoughtful classrooms and outdoor areas designed so little explorers can move freely, boldly, and safely.',
-    icon_color: '#f5b942',
-    soft: '#fff8e8',
-    Icon: Shield,
-  },
-  {
-    id: 'f4',
-    title: 'Parent partnership',
-    description:
-      'Open doors, honest updates, and settling support so home and nursery grow side by side.',
+      'Children need movement to learn. Our nurseries include dedicated spaces that encourage climbing, balancing, coordination and active play, helping children build confidence while supporting healthy physical development.',
     icon_color: '#a682b8',
     soft: '#f5eef8',
-    Icon: Users,
+    Icon: Dumbbell,
   },
   {
-    id: 'f5',
-    title: 'Outdoor joy',
+    id: 'd5',
+    title: 'Peaceful Sleep & Rest Rooms',
     description:
-      'Sunshine, garden play, and fresh air woven into every day so bodies and minds can stretch.',
+      'Younger children benefit from dedicated sleep and rest rooms that provide a calm, comfortable environment, supporting healthy routines and ensuring they have the rest they need to grow and thrive.',
     icon_color: '#7eb8d4',
     soft: '#eef6fb',
-    Icon: Sun,
+    Icon: BedDouble,
   },
   {
-    id: 'f6',
-    title: 'Growing kindness',
+    id: 'd6',
+    title: 'Exclusive Signature Programmes',
     description:
-      'We nurture confidence, curiosity, and kindness — a joyful start that stays with them.',
+      'Every New World Nursery delivers our exclusive Signature Programmes, enriching the British EYFS curriculum through experiences that develop logical thinking, creativity, environmental awareness and real-world problem-solving.',
     icon_color: '#6db89a',
     soft: '#e8f6f0',
     Icon: Leaf,
   },
+  {
+    id: 'd7',
+    title: 'Naturally Inclusive by Design',
+    description:
+      'Our environments are intentionally created so children of different backgrounds, abilities and learning styles learn together every day. Inclusion is not a separate programme; it is part of the culture, the environment and every learning experience we provide.',
+    icon_color: '#e07a8a',
+    soft: '#fdf0f2',
+    Icon: Accessibility,
+  },
 ]
 
 /**
- * Key differentiators — editorial numbered rows (not generic cards).
+ * Key differentiators — editorial numbered rows.
  */
 function KeyDifferentiatorsSection() {
   const sectionRef = useRef(null)
-  const { features } = useHomeData()
-  const items =
-    features.length > 0
-      ? features.map((feature, index) => {
-          const fallback = FALLBACKS[index % FALLBACKS.length]
-          return {
-            ...fallback,
-            id: feature.id ?? fallback.id,
-            title: feature.title || fallback.title,
-            description: feature.description || fallback.description,
-            icon_image: feature.icon_image,
-          }
-        })
-      : FALLBACKS
 
   return (
     <section
@@ -103,35 +105,36 @@ function KeyDifferentiatorsSection() {
 
       <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="mb-12 max-w-2xl sm:mb-14">
-          <p className="section-eyebrow !mb-3">What sets us apart</p>
+          <p className="section-eyebrow !mb-3">Key differentiators</p>
           <h2
             id="differentiators-heading"
             className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
           >
-            Why families{' '}
+            What makes us{' '}
             <BrushHighlightText triggerRef={sectionRef}>
-              stay
+              different
             </BrushHighlightText>
           </h2>
           <p className="mt-5 text-sm leading-relaxed text-brand-muted sm:text-[15px]">
-            Small details that make a big difference for little learners — and
-            for the parents who trust us with their day.
+            Thoughtfully designed spaces, exclusive programmes and a naturally
+            inclusive culture — built so every child can feel safe, understood
+            and inspired to grow.
           </p>
         </div>
 
         <ol className="m-0 list-none space-y-4 p-0 sm:space-y-5">
-          {items.map((item, index) => {
-            const Icon = item.Icon || Sparkles
+          {DIFFERENTIATORS.map((item, index) => {
+            const Icon = item.Icon
             const n = String(index + 1).padStart(2, '0')
             const reverse = index % 2 === 1
 
             return (
               <li
-                key={item.id ?? item.title}
+                key={item.id}
                 className={`grid items-center gap-5 rounded-[1.75rem] px-5 py-6 sm:gap-8 sm:rounded-[2rem] sm:px-8 sm:py-7 lg:grid-cols-[7rem_1fr_auto] ${
                   reverse ? 'lg:grid-cols-[auto_1fr_7rem]' : ''
                 }`}
-                style={{ backgroundColor: item.soft || '#eef8f5' }}
+                style={{ backgroundColor: item.soft }}
               >
                 <div
                   className={`flex items-center gap-4 ${
@@ -148,19 +151,7 @@ function KeyDifferentiatorsSection() {
                     className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm sm:h-14 sm:w-14"
                     style={{ color: item.icon_color }}
                   >
-                    {item.icon_image ? (
-                      <img
-                        src={item.icon_image}
-                        alt=""
-                        width={32}
-                        height={32}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-8 w-8 object-contain"
-                      />
-                    ) : (
-                      <Icon className="h-6 w-6" strokeWidth={1.7} aria-hidden="true" />
-                    )}
+                    <Icon className="h-6 w-6" strokeWidth={1.7} aria-hidden="true" />
                   </span>
                 </div>
 

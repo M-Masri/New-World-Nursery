@@ -1,4 +1,5 @@
 import { Clock, Mail, MapPin, Phone } from 'lucide-react'
+import { useLocation } from 'react-router-dom'
 import { FacebookIcon, InstagramIcon, YoutubeIcon } from '../ui/SocialIcons'
 import Logo from '../ui/Logo'
 import { useHomeData } from '../../context/HomeDataContext'
@@ -8,13 +9,18 @@ const quickLinks = [
   { label: 'About Us', href: '/about' },
   { label: 'Blogs', href: '/blog' },
   { label: 'Our Programs', href: '/programs' },
+  { label: 'Learning Philosophy', href: '/learning-philosophy' },
+  { label: 'Signature Programs', href: '/signature-programs' },
+  { label: 'Awards & Network', href: '/awards-network' },
   { label: 'Gallery', href: '/gallery' },
   { label: 'Why Choose Us', href: '/why-us' },
   { label: 'Contact Us', href: '/contact' },
 ]
 
 function Footer() {
+  const { pathname } = useLocation()
   const { settings } = useHomeData()
+  const isHome = pathname === '/'
   const siteName = settings?.site_name
   const about = settings?.footer_about
   const address = settings?.contact?.address
@@ -29,6 +35,14 @@ function Footer() {
 
   return (
     <footer className="bg-white">
+      {!isHome ? (
+        <div
+          className="mx-auto max-w-page px-4 sm:px-6 lg:px-8"
+          aria-hidden="true"
+        >
+          <div className="h-px bg-gradient-to-r from-transparent via-[#5bb5a2]/50 to-transparent" />
+        </div>
+      ) : null}
       <div className="mx-auto max-w-page px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid items-start gap-10 sm:grid-cols-2 lg:grid-cols-3">
           <div className="-mt-10">
