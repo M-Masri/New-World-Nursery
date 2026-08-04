@@ -1,0 +1,22 @@
+# New World Nursery
+
+> New World Nursery is a Dubai early childhood nursery that combines European educational expertise, the British EYFS framework, and KHDA-aligned practice to help children think, explore, and belong.
+
+New World Nursery provides inclusive, child-centred early years education for families in Dubai, drawing on more than 16 years of European nursery and school experience.
+
+## Pages
+
+- [Home](https://new-world-nursery.vercel.app/): Nursery overview and introduction for families
+- [About Us](https://new-world-nursery.vercel.app/about): Our story, vision, mission, and values
+- [Our Programs](https://new-world-nursery.vercel.app/programs): Age groups and curriculum overview
+- [Learning Philosophy](https://new-world-nursery.vercel.app/learning-philosophy): Educational approach, EYFS, and KHDA alignment
+- [Signature Programs](https://new-world-nursery.vercel.app/signature-programs): Think, Explore, and Belong signature programmes
+- [Awards & Network](https://new-world-nursery.vercel.app/awards-network): Accreditations and European educational network
+- [Why Choose Us](https://new-world-nursery.vercel.app/why-us): Key differentiators and trust signals
+- [Gallery](https://new-world-nursery.vercel.app/gallery): Classroom and nursery moments
+- [Blog](https://new-world-nursery.vercel.app/blog): Stories, tips, and nursery updates for families
+- [Contact](https://new-world-nursery.vercel.app/contact): Enquiry form, locations, and contact details
+
+## Optional
+
+- [GitHub repository](https://github.com/M-Masri/New-World-Nursery): Source code for the New World Nursery website
