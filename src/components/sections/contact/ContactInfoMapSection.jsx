@@ -4,17 +4,12 @@ import aboutLeaf from '../../../assets/about-leaf.webp'
 import locationIcon from '../../../assets/New_World_Icon00032-removebg-preview.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
 import { useLanguage } from '../../../i18n'
+import {
+  MAP_EMBED_URL,
+  MAP_OPEN_URL,
+  NURSERY_ADDRESS,
+} from '../../../data/site'
 import BrushHighlightText from '../../ui/BrushHighlightText'
-
-function mapsEmbedUrl(query) {
-  if (!query) return null
-  return `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=15&output=embed`
-}
-
-function mapsOpenUrl(query) {
-  if (!query) return null
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
-}
 
 /**
  * Contact details + embedded map, with branch cards when locations exist.
@@ -26,18 +21,11 @@ function ContactInfoMapSection() {
   const contact = settings?.contact ?? {}
   const phone = contact.phone || settings?.top_bar_phone
   const email = contact.email || settings?.top_bar_email
-  const address = contact.address
+  const address = contact.address?.trim() || NURSERY_ADDRESS
   const primaryLocation = locations[0]
-  const mapQuery =
-    address ||
-    [primaryLocation?.address, primaryLocation?.city, primaryLocation?.country]
-      .filter(Boolean)
-      .join(', ')
-  const embedSrc = mapsEmbedUrl(mapQuery)
+  const embedSrc = MAP_EMBED_URL
   const openMapsHref =
-    primaryLocation?.map_url ||
-    primaryLocation?.visit_url ||
-    mapsOpenUrl(mapQuery)
+    primaryLocation?.map_url || primaryLocation?.visit_url || MAP_OPEN_URL
 
   return (
     <section
@@ -134,7 +122,7 @@ function ContactInfoMapSection() {
                 src={embedSrc}
                 className="h-full min-h-[280px] w-full border-0 sm:min-h-[360px]"
                 loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
+                referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen
               />
             ) : (

@@ -2,6 +2,7 @@ import { Mail, MapPin, Phone } from 'lucide-react'
 import { FacebookIcon, InstagramIcon, YoutubeIcon } from '../ui/SocialIcons'
 import { useHomeData } from '../../context/HomeDataContext'
 import { useLanguage } from '../../i18n'
+import { INSTAGRAM_URL } from '../../data/site'
 
 /**
  * Always reserve top-bar height on sm+ so settings load doesn't push the navbar (CLS).
@@ -13,7 +14,7 @@ function TopBar() {
   const email = settings?.top_bar_email
   const socials = [
     { href: settings?.facebook_url, label: 'Facebook', Icon: FacebookIcon },
-    { href: settings?.instagram_url, label: 'Instagram', Icon: InstagramIcon },
+    { href: INSTAGRAM_URL, label: 'Instagram', Icon: InstagramIcon },
     { href: settings?.youtube_url, label: 'YouTube', Icon: YoutubeIcon },
   ].filter((item) => item.href)
 

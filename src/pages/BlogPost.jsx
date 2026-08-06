@@ -13,6 +13,7 @@ import BlogPostCard from '../components/sections/blog/BlogPostCard'
 import { FacebookIcon, InstagramIcon } from '../components/ui/SocialIcons'
 import { useHomeData } from '../context/HomeDataContext'
 import { useLanguage } from '../i18n'
+import { INSTAGRAM_URL } from '../data/site'
 import aboutLeaf from '../assets/about-leaf.webp'
 
 /**
@@ -148,10 +149,10 @@ function BlogPost() {
       share: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
     },
     {
-      href: settings?.instagram_url,
+      href: INSTAGRAM_URL,
       label: 'Instagram',
       Icon: InstagramIcon,
-      share: settings?.instagram_url,
+      share: INSTAGRAM_URL,
     },
   ]
 

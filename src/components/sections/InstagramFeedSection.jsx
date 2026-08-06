@@ -3,12 +3,13 @@ import BrushHighlightText from '../ui/BrushHighlightText'
 import AnimatedCard from '../ui/AnimatedCard'
 import { InstagramIcon } from '../ui/SocialIcons'
 import { useHomeData } from '../../context/HomeDataContext'
+import { INSTAGRAM_URL } from '../../data/site'
 
 function InstagramFeedSection() {
   const sectionRef = useRef(null)
   const { settings, instagramFeed } = useHomeData()
   const copy = settings?.gallery ?? {}
-  const instagramUrl = settings?.instagram_url
+  const instagramUrl = INSTAGRAM_URL
   const items = instagramFeed
 
   if (items.length === 0) return null
@@ -35,7 +36,7 @@ function InstagramFeedSection() {
           {copy.subtitle ? <p className="section-lead">{copy.subtitle}</p> : null}
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+        <div className="grid grid-cols-3 gap-3 sm:gap-4">
           {items.map((post, index) => {
             const label =
               (typeof post.alt === 'string' && post.alt.trim()) ||

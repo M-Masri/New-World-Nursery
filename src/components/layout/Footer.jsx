@@ -5,6 +5,7 @@ import { FacebookIcon, InstagramIcon, YoutubeIcon } from '../ui/SocialIcons'
 import Logo from '../ui/Logo'
 import { useHomeData } from '../../context/HomeDataContext'
 import { useLanguage } from '../../i18n'
+import { INSTAGRAM_URL, MAP_OPEN_URL, NURSERY_ADDRESS } from '../../data/site'
 
 function Footer() {
   const { pathname } = useLocation()
@@ -13,7 +14,7 @@ function Footer() {
   const isHome = pathname === '/'
   const siteName = settings?.site_name
   const about = settings?.footer_about
-  const address = settings?.contact?.address
+  const address = settings?.contact?.address?.trim() || NURSERY_ADDRESS
   const phone = settings?.contact?.phone || settings?.top_bar_phone
   const email = settings?.contact?.email || settings?.top_bar_email
 
@@ -35,7 +36,7 @@ function Footer() {
 
   const socials = [
     { href: settings?.facebook_url, label: 'Facebook', Icon: FacebookIcon },
-    { href: settings?.instagram_url, label: 'Instagram', Icon: InstagramIcon },
+    { href: INSTAGRAM_URL, label: 'Instagram', Icon: InstagramIcon },
     { href: settings?.youtube_url, label: 'YouTube', Icon: YoutubeIcon },
   ].filter((item) => item.href)
 
@@ -92,7 +93,14 @@ function Footer() {
               {address ? (
                 <li className="flex items-start gap-2">
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#5bb5a2]" />
-                  {address}
+                  <a
+                    href={MAP_OPEN_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:text-[#5bb5a2]"
+                  >
+                    {address}
+                  </a>
                 </li>
               ) : null}
               {phone ? (

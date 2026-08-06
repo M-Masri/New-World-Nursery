@@ -6,7 +6,7 @@ export const BLOG_FALLBACK_IMAGE = aboutKids
 export const DEFAULT_BLOG_AUTHOR = {
   name: 'New World Nursery',
   role: 'Educators & Care Team',
-  bio: 'A warm, play-based nursery in Al Barsha. We share gentle tips, classroom moments, and guidance for families growing with us.',
+  bio: 'A warm, play-based nursery in Al Manara. We share gentle tips, classroom moments, and guidance for families growing with us.',
   avatar: logo,
 }
 
