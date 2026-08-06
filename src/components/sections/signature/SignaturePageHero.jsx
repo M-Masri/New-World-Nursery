@@ -1,5 +1,6 @@
 import signaturePageHero from '../../../assets/signature-page-hero.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
+import { useLanguage, useTourCtaLabel } from '../../../i18n'
 import HeroSection from '../HeroSection'
 
 /**
@@ -7,10 +8,8 @@ import HeroSection from '../HeroSection'
  */
 function SignaturePageHero() {
   const { settings } = useHomeData()
-  const tourLabel =
-    settings?.hero?.cta_primary?.trim() ||
-    settings?.about?.cta?.trim() ||
-    'Book a Tour'
+  const { t } = useLanguage()
+  const tourLabel = useTourCtaLabel(settings?.hero?.cta_primary, settings?.about?.cta)
 
   return (
     <HeroSection
@@ -21,14 +20,13 @@ function SignaturePageHero() {
           ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }}
       override={{
-        eyebrow: 'Signature programmes',
-        title: 'Nurturing the\nCreator Mindset',
+        eyebrow: t('signature.heroEyebrow'),
+        title: t('signature.heroTitle'),
         titlePyramid: true,
-        subtitle:
-          'Our Signature Programmes go beyond traditional early years education. They encourage children to ask questions, think logically, explore ideas, build with purpose and solve problems through meaningful experiences — nurturing the confidence and creativity that help children become future innovators, leaders and creators.',
+        subtitle: t('signature.heroSubtitle'),
         image: signaturePageHero,
         cta_primary: tourLabel,
-        cta_secondary: 'See Programmes',
+        cta_secondary: t('signature.heroCtaSecondary'),
       }}
     />
   )

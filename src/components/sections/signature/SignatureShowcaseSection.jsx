@@ -1,18 +1,17 @@
 import { useRef } from 'react'
 import aboutLeaf from '../../../assets/about-leaf.webp'
 import signatureShowcase from '../../../assets/signature-showcase.webp'
+import { useLanguage } from '../../../i18n'
 import BrushHighlightText from '../../ui/BrushHighlightText'
-
-const INTRO = [
-  'At New World Nursery, our Signature Programmes are an integral part of our educational philosophy. They enrich everyday learning with experiences that inspire curiosity, strengthen confidence and help children discover their unique potential.',
-  'Each programme has been created with a clear purpose: to develop the way children think, explore and connect with the world around them. These experiences complement the British EYFS curriculum while giving children opportunities to learn in ways that are meaningful, engaging and memorable.',
-]
 
 /**
  * Signature programmes showcase — editorial split with photo.
  */
 function SignatureShowcaseSection() {
   const sectionRef = useRef(null)
+  const { t } = useLanguage()
+  const intro = t('signature.showcaseIntro')
+  const words = t('signature.words')
 
   return (
     <section
@@ -37,19 +36,21 @@ function SignatureShowcaseSection() {
       <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
-            <p className="section-eyebrow !mb-3 !text-left">Programs showcase</p>
+            <p className="section-eyebrow !mb-3 !text-left">
+              {t('signature.showcaseEyebrow')}
+            </p>
             <h2
               id="signature-showcase-heading"
               className="text-3xl font-extrabold leading-tight text-[#2d3a4a] sm:text-4xl"
             >
-              Our Signature Programmes:{' '}
+              {t('signature.showcaseTitleBefore')}{' '}
               <BrushHighlightText triggerRef={sectionRef}>
-                Think. Explore. Belong.
+                {t('signature.showcaseTitleHighlight')}
               </BrushHighlightText>
             </h2>
 
             <div className="mt-8 space-y-4">
-              {INTRO.map((paragraph) => (
+              {intro.map((paragraph) => (
                 <p
                   key={paragraph.slice(0, 40)}
                   className="text-[15px] leading-relaxed text-[#3d4a5c] sm:text-base"
@@ -60,11 +61,7 @@ function SignatureShowcaseSection() {
             </div>
 
             <div className="mt-10 grid grid-cols-3 gap-3 border-t border-[#5bb5a2]/20 pt-8">
-              {[
-                { word: 'Think', accent: '#5bb5a2' },
-                { word: 'Explore', accent: '#f5b942' },
-                { word: 'Belong', accent: '#f4a0b0' },
-              ].map((item) => (
+              {words.map((item) => (
                 <div key={item.word}>
                   <span
                     className="mb-2 block h-1 w-8 rounded-full"
@@ -89,7 +86,7 @@ function SignatureShowcaseSection() {
             />
             <img
               src={signatureShowcase}
-              alt="Children discovering through Signature Programmes"
+              alt=""
               width={720}
               height={860}
               loading="lazy"

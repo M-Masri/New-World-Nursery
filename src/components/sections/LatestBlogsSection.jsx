@@ -4,8 +4,10 @@ import BrushHighlightText from '../ui/BrushHighlightText'
 import LazyImage from '../ui/LazyImage'
 import { fetchLatestBlogs } from '../../lib/api'
 import { formatBlogDateShort, normalizeBlogPosts } from '../../data/blogPosts'
+import { useLanguage } from '../../i18n'
 
 function BlogTeaserCard({ post, index = 0 }) {
+  const { t } = useLanguage()
   const href = `/blog/${post.slug}`
   const dateLabel = formatBlogDateShort(post.publishedAt)
 
@@ -34,7 +36,7 @@ function BlogTeaserCard({ post, index = 0 }) {
 
       <div className="p-5 sm:p-6">
         <p className="mb-2 text-[11px] font-extrabold tracking-[0.18em] uppercase text-[#5bb5a2]">
-          Blog
+          {t('home.latestBadge')}
         </p>
         <h3 className="mb-2 line-clamp-2 text-base font-extrabold text-brand-ink transition group-hover:text-[#5bb5a2]">
           {post.title}
@@ -42,7 +44,7 @@ function BlogTeaserCard({ post, index = 0 }) {
         <p className="mb-3 text-xs font-bold text-brand-ink">
           {dateLabel}
           {dateLabel ? <span className="mx-1.5 text-[#5bb5a2]">·</span> : null}
-          {post.readMinutes} min read
+          {t('home.latestMinRead', { n: post.readMinutes })}
         </p>
         {post.excerpt ? (
           <p className="line-clamp-2 text-xs leading-relaxed text-brand-muted">
@@ -51,7 +53,7 @@ function BlogTeaserCard({ post, index = 0 }) {
         ) : null}
 
         <span className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-[#5bb5a2]">
-          Read more <span aria-hidden="true">→</span>
+          {t('home.latestReadMore')} <span aria-hidden="true">→</span>
         </span>
       </div>
     </Link>
@@ -59,10 +61,11 @@ function BlogTeaserCard({ post, index = 0 }) {
 }
 
 /**
- * Latest Blogs section for Home — displayed above Contact form.
+ * Latest Blogs section for Home — displayed above Contact Form.
  */
 function LatestBlogsSection({ limit = 3 }) {
   const sectionRef = useRef(null)
+  const { t, language } = useLanguage()
   const [posts, setPosts] = useState([])
   const [status, setStatus] = useState('loading') // loading | ready | error
 
@@ -75,7 +78,7 @@ function LatestBlogsSection({ limit = 3 }) {
   useEffect(() => {
     let cancelled = false
     setStatus('loading')
-    fetchLatestBlogs(safeLimit)
+    fetchLatestBlogs(safeLimit, language)
       .then((list) => {
         if (cancelled) return
         const normalized = normalizeBlogPosts(list)
@@ -91,7 +94,7 @@ function LatestBlogsSection({ limit = 3 }) {
     return () => {
       cancelled = true
     }
-  }, [safeLimit])
+  }, [safeLimit, language])
 
   if (status === 'error') return null
   if (status === 'ready' && posts.length === 0) return null
@@ -105,19 +108,18 @@ function LatestBlogsSection({ limit = 3 }) {
     >
       <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="mb-8 text-center">
-          <p className="section-eyebrow">From our nursery</p>
+          <p className="section-eyebrow">{t('home.latestEyebrow')}</p>
           <h2
             id="latest-blogs-heading"
             className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
           >
-            Latest{' '}
+            {t('home.latestTitleBefore')}{' '}
             <BrushHighlightText triggerRef={sectionRef}>
-              blogs
+              {t('home.latestTitleHighlight')}
             </BrushHighlightText>
           </h2>
           <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-brand-muted">
-            Quick stories and ideas — written for families who love learning
-            through play.
+            {t('home.latestLead')}
           </p>
         </div>
 
@@ -155,7 +157,7 @@ function LatestBlogsSection({ limit = 3 }) {
                 to="/blog"
                 className="inline-flex items-center gap-2 rounded-xl bg-[#5bb5a2] px-6 py-3 text-sm font-extrabold text-white uppercase shadow-md transition hover:opacity-90"
               >
-                View All Blogs <span aria-hidden="true">→</span>
+                {t('home.latestViewAll')} <span aria-hidden="true">→</span>
               </Link>
             </div>
           </>
@@ -166,4 +168,3 @@ function LatestBlogsSection({ limit = 3 }) {
 }
 
 export default LatestBlogsSection
-

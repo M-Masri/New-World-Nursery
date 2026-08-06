@@ -5,7 +5,7 @@ function GalleryTestimonialsSection() {
 
   return (
     <section id="gallery" className="hidden bg-white py-16" aria-hidden="true">
-      <div className="mx-auto w-full max-w-page px-4 sm:px-6">
+      <div className="mx-auto w-full max-w-page page-gutter">
         <div className="mb-8 text-center">
           <p className="mb-2 text-sm font-bold tracking-[0.2em] text-nursery-green uppercase">
             Gallery

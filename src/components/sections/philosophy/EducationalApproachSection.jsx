@@ -1,19 +1,16 @@
 import { useRef } from 'react'
 import aboutLeaf from '../../../assets/about-leaf.webp'
 import philosophyApproach from '../../../assets/philosophy-approach.webp'
+import { useLanguage } from '../../../i18n'
 import BrushHighlightText from '../../ui/BrushHighlightText'
-
-const APPROACH_PARAGRAPHS = [
-  'Children are wonderfully different. They learn differently, communicate differently and discover the world in their own unique way. We believe exceptional education begins by recognising those differences, not by expecting every child to follow the same path.',
-  'At New World Nursery, we take time to observe, understand and build genuine relationships with every child. This allows us to create meaningful learning experiences that reflect their interests, strengths and stage of development while remaining rooted in the British EYFS framework.',
-  'Rather than asking children to fit into education, we shape education around the child. Because when children feel understood, they become confident enough to explore, curious enough to ask questions and secure enough to become themselves.',
-]
 
 /**
  * Educational approach — large photo left, stacked statement blocks right.
  */
 function EducationalApproachSection() {
   const sectionRef = useRef(null)
+  const { t } = useLanguage()
+  const paragraphs = t('philosophy.approachParagraphs')
 
   return (
     <section
@@ -38,15 +35,15 @@ function EducationalApproachSection() {
       <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="mb-10 max-w-2xl sm:mb-12">
           <p className="section-eyebrow !mb-3 !text-left">
-            Educational approach
+            {t('philosophy.approachEyebrow')}
           </p>
           <h2
             id="educational-approach-heading"
             className="text-3xl font-extrabold leading-tight text-[#2d3a4a] sm:text-4xl"
           >
-            We See the Child Before We See the{' '}
+            {t('philosophy.approachTitleBefore')}{' '}
             <BrushHighlightText triggerRef={sectionRef}>
-              Curriculum
+              {t('philosophy.approachTitleHighlight')}
             </BrushHighlightText>
           </h2>
         </div>
@@ -55,7 +52,7 @@ function EducationalApproachSection() {
           <div className="relative min-h-[280px] overflow-hidden rounded-[2rem] sm:min-h-[360px] sm:rounded-[2.25rem] lg:min-h-full">
             <img
               src={philosophyApproach}
-              alt="Children learning together at New World Nursery"
+              alt=""
               width={640}
               height={800}
               loading="lazy"
@@ -64,12 +61,12 @@ function EducationalApproachSection() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#2d3a4a]/70 via-[#2d3a4a]/10 to-transparent" />
             <p className="absolute right-5 bottom-5 left-5 text-lg font-extrabold leading-snug text-white sm:right-6 sm:bottom-6 sm:left-6 sm:text-xl">
-              Every child discovers the world in their own unique way.
+              {t('philosophy.approachOverlay')}
             </p>
           </div>
 
           <div className="flex flex-col gap-4">
-            {APPROACH_PARAGRAPHS.map((paragraph, index) => (
+            {paragraphs.map((paragraph, index) => (
               <div
                 key={paragraph.slice(0, 36)}
                 className={`rounded-[1.5rem] px-5 py-5 sm:rounded-[1.75rem] sm:px-6 sm:py-6 ${

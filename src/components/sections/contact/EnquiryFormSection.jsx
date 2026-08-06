@@ -4,6 +4,7 @@ import BrushHighlightText from '../../ui/BrushHighlightText'
 import aboutLeaf from '../../../assets/about-leaf.webp'
 import aboutIcon from '../../../assets/New_World_Icon00050-removebg-preview.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
+import { useLanguage } from '../../../i18n'
 
 /**
  * Enquiry form — white section softened with home leaves, icon, and accents.
@@ -11,11 +12,13 @@ import { useHomeData } from '../../../context/HomeDataContext'
 function EnquiryFormSection() {
   const sectionRef = useRef(null)
   const { settings, programs } = useHomeData()
+  const { t } = useLanguage()
   const contact = settings?.contact ?? {}
+  const selectPlaceholder = t('common.selectPlaceholder')
   const programOptions = [
-    'Select...',
+    selectPlaceholder,
     ...programs.map((program) => program.title).filter(Boolean),
-    'General Enquiry',
+    t('common.generalEnquiry'),
   ]
 
   return (
@@ -61,7 +64,7 @@ function EnquiryFormSection() {
       <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="mx-auto mb-10 max-w-2xl text-center">
           <p className="section-eyebrow">
-            {contact.label || 'Get in touch'}
+            {contact.label || t('contact.enquiryEyebrow')}
           </p>
           <h2 id="enquiry-heading" className="section-title">
             {contact.title_highlight ? (
@@ -73,9 +76,9 @@ function EnquiryFormSection() {
               </>
             ) : (
               <>
-                Send us an{' '}
+                {t('contact.enquiryTitleBefore')}{' '}
                 <BrushHighlightText triggerRef={sectionRef}>
-                  enquiry
+                  {t('contact.enquiryTitleHighlight')}
                 </BrushHighlightText>
               </>
             )}
@@ -84,8 +87,7 @@ function EnquiryFormSection() {
             <p className="section-lead mx-auto max-w-xl">{contact.subtitle}</p>
           ) : (
             <p className="section-lead mx-auto max-w-xl">
-              Tell us a little about your family and we will help you find the
-              right programme and branch.
+              {t('contact.enquiryLead')}
             </p>
           )}
         </div>
@@ -94,6 +96,7 @@ function EnquiryFormSection() {
           <ContactForm
             idPrefix="contact-page"
             programOptions={programOptions}
+            selectPlaceholder={selectPlaceholder}
           />
         </div>
       </div>

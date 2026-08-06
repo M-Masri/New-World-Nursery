@@ -1,5 +1,6 @@
 import whyChoosePageHero from '../../../assets/why-choose-page-hero.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
+import { useLanguage, useTourCtaLabel } from '../../../i18n'
 import HeroSection from '../HeroSection'
 
 /**
@@ -7,10 +8,8 @@ import HeroSection from '../HeroSection'
  */
 function WhyChoosePageHero() {
   const { settings } = useHomeData()
-  const tourLabel =
-    settings?.hero?.cta_primary?.trim() ||
-    settings?.about?.cta?.trim() ||
-    'Book a Tour'
+  const { t } = useLanguage()
+  const tourLabel = useTourCtaLabel(settings?.hero?.cta_primary, settings?.about?.cta)
 
   return (
     <HeroSection
@@ -21,14 +20,13 @@ function WhyChoosePageHero() {
           ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }}
       override={{
-        eyebrow: 'Why Choose Us',
-        title: 'Choosing the Right Nursery\nChanges Everything',
+        eyebrow: t('why.heroEyebrow'),
+        title: t('why.heroTitle'),
         titlePyramid: true,
-        subtitle:
-          'Every family wants more than excellent education. They want a place where their child feels safe, understood and inspired to grow. At New World Nursery, that confidence comes from years of experience, internationally recognised educational standards and a philosophy that always puts children first.',
+        subtitle: t('why.heroSubtitle'),
         image: whyChoosePageHero,
         cta_primary: tourLabel,
-        cta_secondary: 'See Why',
+        cta_secondary: t('why.heroCtaSecondary'),
       }}
     />
   )

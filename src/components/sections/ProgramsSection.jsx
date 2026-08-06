@@ -3,6 +3,7 @@ import programsIcon from '../../assets/New_World_Icon00018-removebg-preview.webp
 import { useContactFormPopup } from '../../context/ContactFormContext'
 import { useHomeData } from '../../context/HomeDataContext'
 import { useSectionRevealGate } from '../../hooks/useSectionRevealGate'
+import { useLanguage } from '../../i18n'
 import AnimatedCard from '../ui/AnimatedCard'
 import BrushHighlightText from '../ui/BrushHighlightText'
 import Button from '../ui/Button'
@@ -14,6 +15,7 @@ function ProgramsSection() {
   const sectionRef = useRef(null)
   const { openContactForm } = useContactFormPopup()
   const { settings, programs } = useHomeData()
+  const { t } = useLanguage()
   const copy = settings?.programs ?? {}
   const hasHighlight = Boolean(copy.title_highlight)
   const { cardsReady, allowImages, onHighlightComplete, skipEntrance } =
@@ -64,7 +66,7 @@ function ProgramsSection() {
 
         <div className="mt-12 flex flex-col items-center gap-6 text-center">
           <Button variant="outlineCoral" onClick={openContactForm}>
-            Enquire About a Place
+            {t('home.programsEnquire')}
           </Button>
           <img
             src={programsIcon}

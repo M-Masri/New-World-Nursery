@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ArrowRight } from 'lucide-react'
 import { ApiError, submitContact } from '../../lib/api'
 import { useHomeData } from '../../context/HomeDataContext'
+import { useLanguage } from '../../i18n'
 import FeedbackDialog from './FeedbackDialog'
 
 const fieldClassName =
@@ -20,18 +21,23 @@ function ContactForm({
   idPrefix = 'contact',
   onSubmitSuccess,
   programOptions,
+  selectPlaceholder,
 }) {
   const { programs } = useHomeData()
+  const { t } = useLanguage()
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle')
   const [dialog, setDialog] = useState(null)
 
+  const placeholder = selectPlaceholder || t('common.selectPlaceholder')
+  const generalEnquiry = t('common.generalEnquiry')
+
   const options =
     programOptions ??
     [
-      'Select...',
+      placeholder,
       ...programs.map((program) => program.title).filter(Boolean),
-      'General Enquiry',
+      generalEnquiry,
     ]
 
   const handleSubmit = async (event) => {
@@ -58,10 +64,8 @@ function ContactForm({
       form.reset()
       setDialog({
         variant: 'success',
-        title: 'Message sent',
-        message:
-          result?.message ||
-          'Thank you! Your message has been sent successfully.',
+        title: t('common.messageSent'),
+        message: result?.message || t('common.thankYouDefault'),
       })
     } catch (err) {
       setStatus('error')
@@ -70,9 +74,8 @@ function ContactForm({
       }
       setDialog({
         variant: 'error',
-        title: 'Send failed',
-        message:
-          err?.message || 'Something went wrong. Please try again later.',
+        title: t('common.sendFailed'),
+        message: err?.message || t('common.errorDefault'),
       })
     }
   }
@@ -97,14 +100,14 @@ function ContactForm({
             htmlFor={`${idPrefix}-name`}
             className="mb-2 block text-xs font-bold text-brand-muted"
           >
-            Name
+            {t('form.name')}
           </label>
           <input
             id={`${idPrefix}-name`}
             name="name"
             type="text"
             required
-            placeholder="Jane Smith"
+            placeholder={t('form.namePlaceholder')}
             className={fieldErrorClass(Boolean(firstError('name')))}
             aria-invalid={Boolean(firstError('name'))}
           />
@@ -118,14 +121,14 @@ function ContactForm({
             htmlFor={`${idPrefix}-email`}
             className="mb-2 block text-xs font-bold text-brand-muted"
           >
-            Email
+            {t('form.email')}
           </label>
           <input
             id={`${idPrefix}-email`}
             name="email"
             type="email"
             required
-            placeholder="jane@example.com"
+            placeholder={t('form.emailPlaceholder')}
             className={fieldErrorClass(Boolean(firstError('email')))}
             aria-invalid={Boolean(firstError('email'))}
           />
@@ -140,7 +143,7 @@ function ContactForm({
               htmlFor={`${idPrefix}-program`}
               className="mb-2 block text-xs font-bold text-brand-muted"
             >
-              Program
+              {t('form.program')}
             </label>
             <select
               id={`${idPrefix}-program`}
@@ -152,7 +155,7 @@ function ContactForm({
               {options.map((program) => (
                 <option
                   key={program}
-                  value={program === 'Select...' ? '' : program}
+                  value={program === placeholder ? '' : program}
                 >
                   {program}
                 </option>
@@ -170,14 +173,14 @@ function ContactForm({
               htmlFor={`${idPrefix}-child-age`}
               className="mb-2 block text-xs font-bold text-brand-muted"
             >
-              Child&apos;s Age
+              {t('form.childAge')}
             </label>
             <input
               id={`${idPrefix}-child-age`}
               name="child_age"
               type="text"
               inputMode="numeric"
-              placeholder="e.g. 3 years"
+              placeholder={t('form.childAgePlaceholder')}
               className={fieldErrorClass(Boolean(firstError('child_age')))}
               aria-invalid={Boolean(firstError('child_age'))}
             />
@@ -194,14 +197,14 @@ function ContactForm({
             htmlFor={`${idPrefix}-message`}
             className="mb-2 block text-xs font-bold text-brand-muted"
           >
-            Message
+            {t('form.message')}
           </label>
           <textarea
             id={`${idPrefix}-message`}
             name="message"
             rows={4}
             required
-            placeholder="Type your message..."
+            placeholder={t('form.messagePlaceholder')}
             className={`${fieldErrorClass(Boolean(firstError('message')))} resize-none`}
             aria-invalid={Boolean(firstError('message'))}
           />
@@ -218,7 +221,7 @@ function ContactForm({
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white">
             <ArrowRight className="h-4 w-4 text-[#5bb5a2]" />
           </span>
-          {status === 'submitting' ? 'Sending...' : 'Send Message'}
+          {status === 'submitting' ? t('common.sending') : t('common.sendMessage')}
         </button>
       </form>
 

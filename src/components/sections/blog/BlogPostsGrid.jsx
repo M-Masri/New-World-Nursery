@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowUpRight } from 'lucide-react'
 import { fetchBlogs } from '../../../lib/api'
 import { formatBlogDate, normalizeBlogPosts } from '../../../data/blogPosts'
+import { useLanguage } from '../../../i18n'
 import BrushHighlightText from '../../ui/BrushHighlightText'
 import LazyImage from '../../ui/LazyImage'
 import BlogPostCard from './BlogPostCard'
@@ -12,13 +13,14 @@ import BlogPostCard from './BlogPostCard'
  */
 function BlogPostsGrid() {
   const sectionRef = useRef(null)
+  const { t, language } = useLanguage()
   const [posts, setPosts] = useState([])
   const [status, setStatus] = useState('loading')
 
   useEffect(() => {
     let cancelled = false
 
-    fetchBlogs()
+    fetchBlogs(language)
       .then((list) => {
         if (cancelled) return
         setPosts(normalizeBlogPosts(list))
@@ -33,7 +35,7 @@ function BlogPostsGrid() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [language])
 
   const [featured, ...rest] = posts
 
@@ -46,19 +48,18 @@ function BlogPostsGrid() {
     >
       <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="mb-12 text-center sm:mb-14">
-          <p className="section-eyebrow">From our nursery</p>
+          <p className="section-eyebrow">{t('blog.gridEyebrow')}</p>
           <h2
             id="blog-posts-heading"
             className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
           >
-            Latest{' '}
+            {t('blog.gridTitleBefore')}{' '}
             <BrushHighlightText triggerRef={sectionRef}>
-              posts
+              {t('blog.gridTitleHighlight')}
             </BrushHighlightText>
           </h2>
           <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-brand-muted">
-            Stories and ideas from our educators — written for the families we
-            welcome every day.
+            {t('blog.gridLead')}
           </p>
         </div>
 
@@ -84,11 +85,11 @@ function BlogPostsGrid() {
           </div>
         ) : status === 'error' ? (
           <p className="py-16 text-center text-sm text-brand-muted">
-            We could not load posts right now. Please try again shortly.
+            {t('blog.loadError')}
           </p>
         ) : posts.length === 0 ? (
           <p className="py-16 text-center text-sm text-brand-muted">
-            No published posts yet — check back soon.
+            {t('blog.empty')}
           </p>
         ) : (
           <>
@@ -115,7 +116,7 @@ function BlogPostsGrid() {
 
                 <div className="flex flex-col justify-center px-6 py-8 sm:px-8 sm:py-10 lg:px-10">
                   <p className="mb-3 text-[11px] font-extrabold tracking-[0.22em] text-[#5bb5a2] uppercase">
-                    Featured
+                    {t('blog.featured')}
                   </p>
                   <h3 className="mb-4 text-2xl font-extrabold leading-snug text-brand-ink transition group-hover:text-[#5bb5a2] sm:text-3xl">
                     {featured.title}
@@ -130,10 +131,10 @@ function BlogPostsGrid() {
                     {featured.publishedAt ? (
                       <span className="mx-1.5 text-[#5bb5a2]">·</span>
                     ) : null}
-                    {featured.readMinutes} min read
+                    {t('blog.minRead', { n: featured.readMinutes })}
                   </p>
                   <span className="inline-flex items-center gap-1.5 text-sm font-extrabold text-[#5bb5a2] transition group-hover:gap-2.5">
-                    Read story
+                    {t('blog.readStory')}
                     <ArrowUpRight className="h-4 w-4" />
                   </span>
                 </div>

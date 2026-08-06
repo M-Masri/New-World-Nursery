@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   fetchFeatures,
   fetchInstagram,
@@ -8,6 +15,7 @@ import {
 } from '../lib/api'
 import { normalizeInstagramPosts } from '../data/gallery'
 import { hintHeroImagePreload } from '../lib/preloadHomeImages'
+import { useLanguage } from '../i18n'
 
 const HomeDataContext = createContext(null)
 
@@ -21,33 +29,38 @@ const EMPTY = {
 }
 
 export function HomeDataProvider({ children }) {
+  const { language } = useLanguage()
   const [data, setData] = useState(EMPTY)
   const [status, setStatus] = useState('loading') // loading | ready | error
   const [error, setError] = useState(null)
+  const hasLoadedOnce = useRef(false)
 
   useEffect(() => {
     let cancelled = false
     let removePreload = () => {}
 
     async function load() {
-      setStatus('loading')
+      // Full-screen loader only on first visit; language switches keep UI visible.
+      if (!hasLoadedOnce.current) {
+        setStatus('loading')
+      }
       setError(null)
 
       try {
-        // Unlock UI as soon as settings arrive — don't wait for image decode (PSI LCP).
-        const settings = await fetchSettings()
+        const settings = await fetchSettings(language)
         if (cancelled) return
 
         removePreload = hintHeroImagePreload({ settings })
         setData((prev) => ({ ...prev, settings: settings ?? null }))
         setStatus('ready')
+        hasLoadedOnce.current = true
 
         const [features, locations, programs, instagramFeed] =
           await Promise.all([
-            fetchFeatures(),
-            fetchLocations(),
-            fetchPrograms(),
-            fetchInstagram(),
+            fetchFeatures(language),
+            fetchLocations(language),
+            fetchPrograms(language),
+            fetchInstagram(language),
           ])
         if (cancelled) return
 
@@ -71,7 +84,7 @@ export function HomeDataProvider({ children }) {
       cancelled = true
       removePreload()
     }
-  }, [])
+  }, [language])
 
   const value = useMemo(
     () => ({

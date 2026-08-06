@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { useSectionRevealGate } from '../../../hooks/useSectionRevealGate'
+import { useLanguage } from '../../../i18n'
 import AnimatedCard from '../../ui/AnimatedCard'
 import BrushHighlightText from '../../ui/BrushHighlightText'
 import LazyImage from '../../ui/LazyImage'
@@ -8,21 +9,9 @@ import heroKids from '../../../assets/hero-kids.webp'
 
 const IMAGE_STAGGER_MS = 280
 
-const AGE_PROGRAMS = [
+const AGE_META = [
   {
     id: 'little-explorers',
-    title: 'Little Explorers',
-    age_range: '45 Days – 12 Months',
-    tagline: 'Where every journey begins with love, security and connection.',
-    description:
-      'Our youngest children are cared for in a calm and nurturing environment where strong relationships provide the foundation for healthy development. Through responsive care, sensory experiences and gentle exploration, babies begin discovering the world around them while developing trust, confidence and emotional security.',
-    gains: [
-      'Secure relationships and emotional wellbeing',
-      'Sensory exploration and early discovery',
-      'Physical development through movement',
-      'Early communication skills',
-      'Confidence to explore their environment',
-    ],
     icon_color: '#5bb5a2',
     color: '#eef8f5',
     icon: '🌱',
@@ -30,18 +19,6 @@ const AGE_PROGRAMS = [
   },
   {
     id: 'growing-explorers',
-    title: 'Growing Explorers',
-    age_range: '1 – 2 Years',
-    tagline: 'Growing independence through curiosity and discovery.',
-    description:
-      'As toddlers become more confident, every day becomes an opportunity to explore, communicate and learn through experience. Carefully planned activities encourage movement, language, creativity and self-expression while helping children develop confidence in themselves and the world around them.',
-    gains: [
-      'Independence and self-confidence',
-      'Language and communication skills',
-      'Physical coordination',
-      'Social awareness',
-      'Curiosity and creativity',
-    ],
     icon_color: '#f4a0b0',
     color: '#fff0f3',
     icon: '🎈',
@@ -49,18 +26,6 @@ const AGE_PROGRAMS = [
   },
   {
     id: 'young-explorers',
-    title: 'Young Explorers',
-    age_range: '2 – 3 Years',
-    tagline: 'Curiosity becomes confidence.',
-    description:
-      'This is a remarkable stage of discovery as children begin asking questions, building friendships and making sense of the world around them. Through purposeful play, creative projects and collaborative learning, they develop imagination, communication and early problem-solving skills.',
-    gains: [
-      'Communication and language development',
-      'Creativity and imagination',
-      'Early reasoning and problem-solving',
-      'Social confidence and friendships',
-      'A growing love of learning',
-    ],
     icon_color: '#f5b942',
     color: '#fff8e8',
     icon: '🎨',
@@ -68,18 +33,6 @@ const AGE_PROGRAMS = [
   },
   {
     id: 'future-explorers',
-    title: 'Future Explorers',
-    age_range: '3 – 4 Years',
-    tagline: 'Building strong foundations for lifelong learning.',
-    description:
-      'Children become increasingly confident learners as they investigate ideas, express themselves creatively and take on new challenges. Guided by the British EYFS curriculum, they develop independence, resilience and the confidence to think critically while strengthening the foundations for future academic success.',
-    gains: [
-      'Early literacy and numeracy foundations',
-      'Critical and creative thinking',
-      'Collaboration and teamwork',
-      'Independence and resilience',
-      'Confidence in expressing ideas',
-    ],
     icon_color: '#a682b8',
     color: '#f5eef8',
     icon: '📚',
@@ -87,19 +40,6 @@ const AGE_PROGRAMS = [
   },
   {
     id: 'school-ready',
-    title: 'School Ready Explorers',
-    age_range: '4 – 5 Years',
-    tagline: 'Confident learners. Ready for the next adventure.',
-    description:
-      'Our oldest children prepare for a successful transition to primary school through engaging projects, inquiry-based learning and meaningful real-world experiences. Alongside strong academic foundations, they develop leadership, emotional intelligence and the confidence to embrace new opportunities with curiosity and enthusiasm.',
-    gains: [
-      'School readiness',
-      'Leadership and independence',
-      'Communication and collaboration',
-      'Critical thinking and problem-solving',
-      'Emotional resilience',
-      'Confidence for the transition to primary school',
-    ],
     icon_color: '#7eb8d4',
     color: '#eef6fa',
     icon: '🚀',
@@ -112,8 +52,14 @@ const AGE_PROGRAMS = [
  */
 function AgeGroupsProgramsSection() {
   const sectionRef = useRef(null)
+  const { t } = useLanguage()
   const { cardsReady, allowImages, onHighlightComplete } =
     useSectionRevealGate(true)
+
+  const agePrograms = t('programs.ageItems').map((item, i) => ({
+    ...AGE_META[i],
+    ...item,
+  }))
 
   return (
     <section
@@ -126,49 +72,43 @@ function AgeGroupsProgramsSection() {
 
       <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="mb-10 text-center sm:mb-12">
-          <p className="section-eyebrow">Age Groups & Programmes</p>
+          <p className="section-eyebrow">{t('programs.agesEyebrow')}</p>
           <h2
             id="age-groups-heading"
             className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
           >
-            Every Stage Has a{' '}
+            {t('programs.agesTitleBefore')}{' '}
             <BrushHighlightText
               triggerRef={sectionRef}
               onComplete={onHighlightComplete}
             >
-              Purpose
+              {t('programs.agesTitleHighlight')}
             </BrushHighlightText>
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-brand-muted sm:text-[15px]">
-            Every child grows in their own unique way. Our programmes are
-            thoughtfully designed to support each stage of early childhood,
-            combining the British EYFS curriculum with inspiring experiences that
-            nurture confidence, curiosity and a lifelong love of learning.
+            {t('programs.agesLead')}
           </p>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {AGE_PROGRAMS.map((program, index) => (
+          {agePrograms.map((program, index) => (
             <ProgramCard
               key={program.id}
               program={program}
               index={index}
               cardsReady={cardsReady}
               allowImages={allowImages}
+              gainHeading={t('programs.gainHeading')}
             />
           ))}
         </div>
 
         <div className="mx-auto mt-12 max-w-2xl rounded-[1.75rem] bg-[#eef8f5] px-6 py-8 text-center sm:mt-14 sm:rounded-[2rem] sm:px-10 sm:py-10">
           <h3 className="mb-3 text-xl font-extrabold text-[#2d3a4a] sm:text-2xl">
-            Every Child’s Journey Is Unique
+            {t('programs.closingTitle')}
           </h3>
           <p className="text-sm leading-relaxed text-brand-muted sm:text-[15px]">
-            Age helps guide our programmes, but it never defines a child’s
-            potential. At New World Nursery, we celebrate individuality and adapt
-            learning experiences to support each child at their own pace. Because
-            every journey is different, and every child deserves the opportunity
-            to flourish.
+            {t('programs.closingBody')}
           </p>
         </div>
       </div>
@@ -176,7 +116,7 @@ function AgeGroupsProgramsSection() {
   )
 }
 
-function ProgramCard({ program, index, cardsReady, allowImages }) {
+function ProgramCard({ program, index, cardsReady, allowImages, gainHeading }) {
   const accent = program.icon_color || '#5bb5a2'
   const lightBg = program.color || '#eef8f5'
 
@@ -257,7 +197,7 @@ function ProgramCard({ program, index, cardsReady, allowImages }) {
           {program.gains?.length ? (
             <div>
               <p className="mb-2 text-[11px] font-extrabold tracking-wide text-[#2d3a4a] uppercase">
-                What Your Child Will Gain
+                {gainHeading}
               </p>
               <ul className="m-0 list-disc space-y-1 pl-4 text-xs leading-relaxed text-brand-muted">
                 {program.gains.map((gain) => (

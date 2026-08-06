@@ -1,5 +1,6 @@
 import philosophyPageHero from '../../../assets/philosophy-page-hero.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
+import { useLanguage, useTourCtaLabel } from '../../../i18n'
 import HeroSection from '../HeroSection'
 
 /**
@@ -7,10 +8,8 @@ import HeroSection from '../HeroSection'
  */
 function PhilosophyPageHero() {
   const { settings } = useHomeData()
-  const tourLabel =
-    settings?.hero?.cta_primary?.trim() ||
-    settings?.about?.cta?.trim() ||
-    'Book a Tour'
+  const { t } = useLanguage()
+  const tourLabel = useTourCtaLabel(settings?.hero?.cta_primary, settings?.about?.cta)
 
   return (
     <HeroSection
@@ -21,14 +20,13 @@ function PhilosophyPageHero() {
           ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }}
       override={{
-        eyebrow: 'Learning philosophy',
-        title: 'Protecting Curiosity.\nInspiring Growth.',
+        eyebrow: t('philosophy.heroEyebrow'),
+        title: t('philosophy.heroTitle'),
         titlePyramid: true,
-        subtitle:
-          'Children are naturally curious. They learn by asking questions, exploring, experimenting and making sense of the world around them. At New World Nursery, our role is not to rush childhood, but to nurture each child’s natural desire to discover, understand and grow with confidence, joy and purpose.',
+        subtitle: t('philosophy.heroSubtitle'),
         image: philosophyPageHero,
         cta_primary: tourLabel,
-        cta_secondary: 'Our Approach',
+        cta_secondary: t('philosophy.heroCtaSecondary'),
       }}
     />
   )

@@ -87,21 +87,21 @@ function FeaturesSection() {
   return (
     <section id="why-us" ref={sectionRef} className="bg-[#f3ebe0] py-8 sm:py-10">
       <div
-        className={`mx-auto grid max-w-page grid-cols-1 gap-7 page-gutter sm:grid-cols-2 ${
+        className={`mx-auto grid max-w-page grid-cols-2 gap-5 page-gutter sm:grid-cols-2 sm:gap-7 ${
           features.length >= 5 ? 'lg:grid-cols-5' : 'lg:grid-cols-4'
         } lg:gap-0`}
       >
         {features.map((feature, index) => (
           <div
             key={feature.id ?? feature.title}
-            className={`flex flex-col items-center px-4 text-center ${
+            className={`flex flex-col items-center px-2 text-center sm:px-4 ${
               index < features.length - 1
                 ? 'lg:border-r lg:border-[#e8e2d8]'
                 : ''
             }`}
           >
             <div
-              className={`feature-icon-shell mb-3 flex h-16 w-16 items-center justify-center rounded-full ${
+              className={`feature-icon-shell mb-3 flex h-14 w-14 items-center justify-center rounded-full sm:h-16 sm:w-16 ${
                 isWiggling ? 'feature-icon-wiggle' : ''
               }`}
               style={{
@@ -117,16 +117,16 @@ function FeaturesSection() {
                   height={40}
                   loading="lazy"
                   decoding="async"
-                  className="h-10 w-10 object-contain"
+                  className="h-8 w-8 object-contain sm:h-10 sm:w-10"
                 />
               ) : (
                 <Sparkles className="h-7 w-7 text-[#2d3a4a]" strokeWidth={1.6} />
               )}
             </div>
-            <h3 className="mb-1.5 text-[15px] font-bold text-brand-ink">
+            <h3 className="mb-1.5 text-[13px] font-bold text-brand-ink sm:text-[15px]">
               {feature.title}
             </h3>
-            <p className="max-w-[200px] text-[13px] leading-snug text-brand-muted">
+            <p className="max-w-[200px] text-[12px] leading-snug text-brand-muted sm:text-[13px]">
               {feature.description}
             </p>
           </div>

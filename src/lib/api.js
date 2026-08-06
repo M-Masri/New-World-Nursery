@@ -15,16 +15,43 @@ export class ApiError extends Error {
   }
 }
 
-async function request(endpoint, options = {}) {
-  const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`
-  const url = `${API_BASE_URL}${path}`
+/** Normalize UI language to API locale (`en` | `ar`). */
+export function normalizeLocale(locale) {
+  return locale === 'ar' ? 'ar' : 'en'
+}
 
-  const { headers: optionHeaders, body, ...rest } = options
+function buildUrl(endpoint, { locale, skipLocale } = {}) {
+  const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`
+  const qIndex = path.indexOf('?')
+  const pathname = qIndex >= 0 ? path.slice(0, qIndex) : path
+  const existingQuery = qIndex >= 0 ? path.slice(qIndex + 1) : ''
+  const params = new URLSearchParams(existingQuery)
+
+  if (!skipLocale) {
+    params.set('locale', normalizeLocale(locale))
+  }
+
+  const qs = params.toString()
+  return `${API_BASE_URL}${pathname}${qs ? `?${qs}` : ''}`
+}
+
+async function request(endpoint, options = {}) {
+  const {
+    headers: optionHeaders,
+    body,
+    locale,
+    skipLocale = false,
+    ...rest
+  } = options
+
+  const url = buildUrl(endpoint, { locale, skipLocale })
+  const resolvedLocale = normalizeLocale(locale)
 
   const config = {
     ...rest,
     headers: {
       Accept: 'application/json',
+      ...(skipLocale ? {} : { 'X-Locale': resolvedLocale }),
       ...(body ? { 'Content-Type': 'application/json' } : {}),
       ...optionHeaders,
     },
@@ -77,84 +104,89 @@ export const api = {
     request(endpoint, { ...options, method: 'DELETE' }),
 }
 
-export function fetchSettings() {
-  return api.get('/settings').then(unwrapObject)
+export function fetchSettings(locale = 'en') {
+  return api.get('/settings', { locale }).then(unwrapObject)
 }
 
-export function fetchFeatures() {
-  return api.get('/features').then(unwrapList)
+export function fetchFeatures(locale = 'en') {
+  return api.get('/features', { locale }).then(unwrapList)
 }
 
-export function fetchLocations() {
-  return api.get('/locations').then(unwrapList)
+export function fetchLocations(locale = 'en') {
+  return api.get('/locations', { locale }).then(unwrapList)
 }
 
-export function fetchPrograms() {
-  return api.get('/programs').then(unwrapList)
+export function fetchPrograms(locale = 'en') {
+  return api.get('/programs', { locale }).then(unwrapList)
 }
 
 /** All gallery images (optional category slug or id). */
-export function fetchGallery(category) {
+export function fetchGallery(category, locale = 'en') {
   const query =
     category && category !== 'all'
       ? `?category=${encodeURIComponent(category)}`
       : ''
-  return api.get(`/gallery${query}`).then(unwrapList)
+  return api.get(`/gallery${query}`, { locale }).then(unwrapList)
 }
 
 /** Categories with nested gallery images — best for tabs/filters UI. */
-export function fetchGalleryCategories() {
-  return api.get('/gallery/categories').then(unwrapList)
+export function fetchGalleryCategories(locale = 'en') {
+  return api.get('/gallery/categories', { locale }).then(unwrapList)
 }
 
 /** Single category and its images by slug. */
-export function fetchGalleryCategoryBySlug(slug) {
+export function fetchGalleryCategoryBySlug(slug, locale = 'en') {
   return api
-    .get(`/gallery/categories/${encodeURIComponent(slug)}`)
+    .get(`/gallery/categories/${encodeURIComponent(slug)}`, { locale })
     .then(unwrapObject)
 }
 
 /** Synced Instagram posts (separate from gallery images). */
-export function fetchInstagram() {
-  return api.get('/instagram').then(unwrapList)
+export function fetchInstagram(locale = 'en') {
+  return api.get('/instagram', { locale }).then(unwrapList)
 }
 
 /** @deprecated Use fetchInstagram */
-export function fetchInstagramGallery() {
-  return fetchInstagram()
+export function fetchInstagramGallery(locale = 'en') {
+  return fetchInstagram(locale)
 }
 
 /** All published blogs (newest first). */
-export function fetchBlogs() {
-  return api.get('/blogs').then(unwrapList)
+export function fetchBlogs(locale = 'en') {
+  return api.get('/blogs', { locale }).then(unwrapList)
 }
 
 /** Latest blogs. `limit` is 1–20 (API default 5). */
-export function fetchLatestBlogs(limit = 5) {
+export function fetchLatestBlogs(limit = 5, locale = 'en') {
   const safe = Math.min(20, Math.max(1, Number(limit) || 5))
-  return api.get(`/blogs/latest?limit=${safe}`).then(unwrapList)
+  return api.get(`/blogs/latest?limit=${safe}`, { locale }).then(unwrapList)
 }
 
 /** Single published blog by slug. */
-export function fetchBlogBySlug(slug) {
-  return api.get(`/blogs/${encodeURIComponent(slug)}`).then(unwrapObject)
+export function fetchBlogBySlug(slug, locale = 'en') {
+  return api
+    .get(`/blogs/${encodeURIComponent(slug)}`, { locale })
+    .then(unwrapObject)
 }
 
 /**
  * Load all public homepage data in parallel (no /home).
  * Dedupes in-flight requests so React Strict Mode remounts reuse the same Promise.
  */
-let siteContentPromise = null
+const siteContentPromises = new Map()
 
-export function fetchSiteContent() {
-  if (!siteContentPromise) {
+export function fetchSiteContent(locale = 'en') {
+  const key = normalizeLocale(locale)
+  let pending = siteContentPromises.get(key)
+
+  if (!pending) {
     // Gallery section is hidden on Home — skip that request on the critical path.
-    siteContentPromise = Promise.all([
-      fetchSettings(),
-      fetchFeatures(),
-      fetchLocations(),
-      fetchPrograms(),
-      fetchInstagram(),
+    pending = Promise.all([
+      fetchSettings(key),
+      fetchFeatures(key),
+      fetchLocations(key),
+      fetchPrograms(key),
+      fetchInstagram(key),
     ])
       .then(([settings, features, locations, programs, instagramFeed]) => ({
         settings,
@@ -165,17 +197,19 @@ export function fetchSiteContent() {
         instagramFeed,
       }))
       .catch((error) => {
-        siteContentPromise = null
+        siteContentPromises.delete(key)
         throw error
       })
+
+    siteContentPromises.set(key, pending)
   }
 
-  return siteContentPromise
+  return pending
 }
 
 /** Submit contact form. Throws ApiError on 422 with field errors. */
 export function submitContact(payload) {
-  return api.post('/contact', payload)
+  return api.post('/contact', payload, { skipLocale: true })
 }
 
 export { API_BASE_URL }

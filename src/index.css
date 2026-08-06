@@ -2,6 +2,7 @@
 
 @theme {
   --font-nunito: "Nunito", sans-serif;
+  --font-cairo: "Cairo", "Nunito", sans-serif;
   --color-nursery-coral: #f4a0b0;
   --color-nursery-coral-dark: #e8899a;
   --color-nursery-teal: #5bb5a2;
@@ -30,6 +31,14 @@ body {
   color: var(--color-brand-ink);
   scrollbar-width: auto;
   scrollbar-color: #5bb5a2 #eef8f5;
+}
+
+html.lang-ar body {
+  font-family: var(--font-cairo);
+}
+
+html.lang-ar .section-eyebrow {
+  letter-spacing: 0.12em;
 }
 
 .section-eyebrow {
@@ -89,12 +98,43 @@ body {
 }
 
 .page-gutter {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 @media (min-width: 640px) {
   .page-gutter {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-gutter {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Shared content shell — same width line as header / footer */
+.page-shell {
+  width: 100%;
+  max-width: var(--max-width-page);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .page-shell {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-shell {
     padding-left: 2rem;
     padding-right: 2rem;
   }

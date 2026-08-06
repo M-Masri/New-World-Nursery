@@ -5,7 +5,7 @@ import { isMobilePerf } from '../../lib/mobilePerf'
 /**
  * Lottie مرتبط بالسكرول. يدعم animationData جاهز أو animationImport للـ lazy-load.
  * الـ JSON لا يُحمَّل إلا عند ظهور العنصر في الـ viewport.
- * On mobile, Lottie is skipped entirely (placeholder only).
+ * On mobile, Lottie is skipped by default (placeholder only) unless allowMobile.
  */
 function LottieScroll({
   animationData,
@@ -19,9 +19,10 @@ function LottieScroll({
   speed = 1,
   repeatCount = 1,
   rendererSettings,
+  allowMobile = false,
 }) {
   const hostRef = useRef(null)
-  const skipHeavy = isMobilePerf()
+  const skipHeavy = !allowMobile && isMobilePerf()
   const [resolvedData, setResolvedData] = useState(
     skipHeavy ? null : (animationData ?? null),
   )
@@ -51,7 +52,7 @@ function LottieScroll({
 
     observer.observe(node)
     return () => observer.disconnect()
-  }, [animationImport, animationData, shouldLoad])
+  }, [animationImport, animationData, shouldLoad, skipHeavy])
 
   useEffect(() => {
     if (skipHeavy || !shouldLoad || resolvedData || !animationImport) {

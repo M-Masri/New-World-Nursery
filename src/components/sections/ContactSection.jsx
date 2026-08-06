@@ -4,6 +4,7 @@ import BrushHighlightText from '../ui/BrushHighlightText'
 import ContactForm from '../ui/ContactForm'
 import LottieScroll from '../ui/LottieScroll'
 import { useHomeData } from '../../context/HomeDataContext'
+import { useLanguage } from '../../i18n'
 import { isMobilePerf } from '../../lib/mobilePerf'
 
 const CloudScroll3D = lazy(() => import('../ui/CloudScroll3D'))
@@ -11,12 +12,13 @@ const CloudScroll3D = lazy(() => import('../ui/CloudScroll3D'))
 function ContactSection() {
   const sectionRef = useRef(null)
   const { settings, programs } = useHomeData()
+  const { t, isRtl } = useLanguage()
   const contact = settings?.contact ?? null
   const [showCloud, setShowCloud] = useState(false)
   const programOptions = [
-    'Select...',
+    t('common.selectPlaceholder'),
     ...programs.map((program) => program.title).filter(Boolean),
-    'General Enquiry',
+    t('common.generalEnquiry'),
   ]
 
   useEffect(() => {
@@ -50,25 +52,32 @@ function ContactSection() {
       className="relative overflow-hidden bg-white py-10 sm:py-12"
     >
       <div className="relative z-10 mx-auto grid max-w-page items-center gap-12 page-gutter lg:grid-cols-2 lg:gap-16">
-        <div>
-          <div className="relative -ml-10 mb-3 h-28 w-52 sm:mb-4 sm:h-32 sm:w-60">
-            {showCloud ? (
-              <Suspense fallback={null}>
-                <CloudScroll3D
-                  horizontalPosition={0}
-                  verticalPosition={0.7}
-                  cloudScale={1.25}
-                  driftAmplitude={0}
-                  bobAmplitude={9}
-                  bobSpeed={1.25}
-                />
-              </Suspense>
+        <div className={isRtl ? 'text-right' : 'text-left'}>
+          <div className="mb-3 flex flex-col items-start sm:mb-4">
+            <div
+              className={`relative h-28 w-52 -mr-10 sm:h-32 sm:w-60 ${
+                isRtl ? '-me-20 sm:-me-30 lg:-me-38' : '-ms-10'
+              }`}
+            >
+              {showCloud ? (
+                <Suspense fallback={null}>
+                  <CloudScroll3D
+                    key={isRtl ? 'cloud-ar' : 'cloud-en'}
+                    horizontalPosition={isRtl ? 0.92 : 0}
+                    verticalPosition={0.7}
+                    cloudScale={1.25}
+                    driftAmplitude={0}
+                    bobAmplitude={9}
+                    bobSpeed={1.25}
+                  />
+                </Suspense>
+              ) : null}
+            </div>
+
+            {contact.label ? (
+              <p className="section-eyebrow mt-1">{contact.label}</p>
             ) : null}
           </div>
-
-          {contact.label ? (
-            <p className="section-eyebrow mb-4">{contact.label}</p>
-          ) : null}
 
           {contact.title || contact.title_highlight ? (
             <h2 className="section-title mb-5 lg:text-[2.75rem]">
@@ -88,7 +97,11 @@ function ContactSection() {
                     triggerRef={sectionRef}
                     mode="playWhileInView"
                     speed={0.7}
-                    className="pointer-events-none absolute top-1/2 left-full -ml-3 h-28 w-32 -translate-y-1/2 shrink-0 sm:-ml-4 sm:h-32 sm:w-36 lg:-ml-13 lg:h-46 lg:w-45"
+                    className={`pointer-events-none absolute top-1/2 h-28 w-32 -translate-y-1/2 shrink-0 sm:h-32 sm:w-36 lg:h-46 lg:w-45 ${
+                      isRtl
+                        ? 'right-full translate-x-8 scale-x-[-1] sm:translate-x-10 lg:translate-x-14'
+                        : 'left-full -ms-3 sm:-ms-4 lg:-ms-13'
+                    }`}
                   />
                 </span>
               ) : null}
@@ -96,22 +109,29 @@ function ContactSection() {
           ) : null}
 
           {contact.subtitle ? (
-            <p className="mb-10 max-w-md text-sm leading-relaxed text-brand-muted">
+            <p
+              className={`mb-10 max-w-md text-sm leading-relaxed text-brand-muted ${
+                isRtl ? 'mr-0 ml-auto' : ''
+              }`}
+            >
               {contact.subtitle}
             </p>
           ) : null}
 
-          <div className="space-y-6">
+          <div className="space-y-6" dir={isRtl ? 'rtl' : 'ltr'}>
             {contact.email ? (
               <div className="flex items-center gap-4">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#5bb5a2]">
                   <Mail className="h-5 w-5 text-white" />
                 </div>
-                <div>
-                  <p className="text-xs font-bold text-brand-muted">E-mail</p>
+                <div className={isRtl ? 'text-right' : 'text-left'}>
+                  <p className="text-xs font-bold text-brand-muted">
+                    {t('home.contactEmail')}
+                  </p>
                   <a
                     href={`mailto:${contact.email}`}
                     className="text-sm font-semibold text-brand-ink hover:text-[#5bb5a2]"
+                    dir="ltr"
                   >
                     {contact.email}
                   </a>
@@ -124,13 +144,14 @@ function ContactSection() {
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#5bb5a2]">
                   <Phone className="h-5 w-5 text-white" />
                 </div>
-                <div>
+                <div className={isRtl ? 'text-right' : 'text-left'}>
                   <p className="text-xs font-bold text-brand-muted">
-                    Phone number
+                    {t('home.contactPhone')}
                   </p>
                   <a
                     href={`tel:${contact.phone.replace(/\s+/g, '')}`}
                     className="text-sm font-semibold text-brand-ink hover:text-[#5bb5a2]"
+                    dir="ltr"
                   >
                     {contact.phone}
                   </a>

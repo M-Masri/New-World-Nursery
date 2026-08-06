@@ -1,5 +1,6 @@
 import aboutPageHero from '../../../assets/about-page-hero.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
+import { useLanguage, useTourCtaLabel } from '../../../i18n'
 import HeroSection from '../HeroSection'
 
 /**
@@ -7,10 +8,8 @@ import HeroSection from '../HeroSection'
  */
 function AboutPageHero() {
   const { settings } = useHomeData()
-  const tourLabel =
-    settings?.hero?.cta_primary?.trim() ||
-    settings?.about?.cta?.trim() ||
-    'Book a Tour'
+  const { t } = useLanguage()
+  const tourLabel = useTourCtaLabel(settings?.hero?.cta_primary, settings?.about?.cta)
 
   return (
     <HeroSection
@@ -21,14 +20,13 @@ function AboutPageHero() {
           ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }}
       override={{
-        eyebrow: 'About Us',
-        title: 'Every Great Journey\nHas a Beginning',
+        eyebrow: t('about.heroEyebrow'),
+        title: t('about.heroTitle'),
         titlePyramid: true,
-        subtitle:
-          'New World Nursery was created with one purpose: to give children the strongest possible start in life. Drawing on over 16 years of educational experience and a well-established European network of nurseries and schools, we have brought our philosophy of child-centred, inclusive education to Dubai. Here, children are encouraged to explore, think, create and grow in an environment where they feel safe, respected and inspired every day.',
+        subtitle: t('about.heroSubtitle'),
         image: aboutPageHero,
         cta_primary: tourLabel,
-        cta_secondary: 'Our Story',
+        cta_secondary: t('about.heroCtaSecondary'),
       }}
     />
   )

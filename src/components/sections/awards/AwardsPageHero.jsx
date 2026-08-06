@@ -1,5 +1,6 @@
 import awardsHero from '../../../assets/awards-network-hero.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
+import { useLanguage, useTourCtaLabel } from '../../../i18n'
 import HeroSection from '../HeroSection'
 
 /**
@@ -7,10 +8,8 @@ import HeroSection from '../HeroSection'
  */
 function AwardsPageHero() {
   const { settings } = useHomeData()
-  const tourLabel =
-    settings?.hero?.cta_primary?.trim() ||
-    settings?.about?.cta?.trim() ||
-    'Book a Tour'
+  const { t } = useLanguage()
+  const tourLabel = useTourCtaLabel(settings?.hero?.cta_primary, settings?.about?.cta)
 
   return (
     <HeroSection
@@ -21,14 +20,13 @@ function AwardsPageHero() {
           ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }}
       override={{
-        eyebrow: 'Awards & Network',
-        title: 'Built on Trust.\nGrowing Together.',
+        eyebrow: t('awards.heroEyebrow'),
+        title: t('awards.heroTitle'),
         titlePyramid: true,
-        subtitle:
-          'For more than 16 years, our educational journey has been shaped by experience, innovation and a commitment to excellence in early childhood education. Today, we are proud to bring this European heritage to Dubai, where it meets the values, culture and aspirations of the United Arab Emirates.',
+        subtitle: t('awards.heroSubtitle'),
         image: awardsHero,
         cta_primary: tourLabel,
-        cta_secondary: 'Explore Awards',
+        cta_secondary: t('awards.heroCtaSecondary'),
       }}
     />
   )

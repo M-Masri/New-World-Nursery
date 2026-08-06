@@ -1,5 +1,6 @@
 import galleryPageHero from '../../../assets/gallery-page-hero.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
+import { useLanguage, useTourCtaLabel } from '../../../i18n'
 import HeroSection from '../HeroSection'
 
 /**
@@ -7,10 +8,8 @@ import HeroSection from '../HeroSection'
  */
 function GalleryPageHero() {
   const { settings } = useHomeData()
-  const tourLabel =
-    settings?.hero?.cta_primary?.trim() ||
-    settings?.about?.cta?.trim() ||
-    'Book a Tour'
+  const { t } = useLanguage()
+  const tourLabel = useTourCtaLabel(settings?.hero?.cta_primary, settings?.about?.cta)
 
   return (
     <HeroSection
@@ -21,14 +20,13 @@ function GalleryPageHero() {
           ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }}
       override={{
-        eyebrow: 'Gallery',
-        title: 'New World\nLittle Moments\nWorth Remembering',
+        eyebrow: t('gallery.heroEyebrow'),
+        title: t('gallery.heroTitle'),
         titlePyramid: true,
-        subtitle:
-          'A peek into our classrooms, outdoor play, and the everyday joy that fills New World Nursery.',
+        subtitle: t('gallery.heroSubtitle'),
         image: galleryPageHero,
         cta_primary: tourLabel,
-        cta_secondary: 'Browse Photos',
+        cta_secondary: t('gallery.heroCtaSecondary'),
       }}
     />
   )

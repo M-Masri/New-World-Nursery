@@ -6,48 +6,19 @@ import {
   Lightbulb,
   Puzzle,
 } from 'lucide-react'
+import { useLanguage } from '../../../i18n'
 import BrushHighlightText from '../../ui/BrushHighlightText'
 
-const PHILOSOPHY = [
-  {
-    title: 'Child before curriculum',
-    text: 'We observe, understand and build genuine relationships with every child — shaping education around their interests, strengths and stage of development within the British EYFS framework.',
-    Icon: Lightbulb,
-    accent: '#5bb5a2',
-  },
-  {
-    title: 'EYFS + KHDA aligned',
-    text: 'Our curriculum is built on the British Early Years Foundation Stage and fully aligned with Dubai’s KHDA expectations — globally recognised and locally relevant.',
-    Icon: BookOpen,
-    accent: '#f4a0b0',
-  },
-  {
-    title: 'Protecting curiosity',
-    text: 'We do not rush childhood. We nurture each child’s natural desire to discover, understand and grow with confidence, joy and purpose.',
-    Icon: Compass,
-    accent: '#f5b942',
-  },
+const PHILOSOPHY_META = [
+  { Icon: Lightbulb, accent: '#5bb5a2' },
+  { Icon: BookOpen, accent: '#f4a0b0' },
+  { Icon: Compass, accent: '#f5b942' },
 ]
 
-const SIGNATURE = [
-  {
-    title: 'Think — Creator Mindset',
-    text: 'Children learn to think logically, ask meaningful questions and solve problems through construction, open-ended challenges and collaborative projects.',
-    Icon: Puzzle,
-    accent: '#5bb5a2',
-  },
-  {
-    title: 'Explore — Beyond the classroom',
-    text: 'Beach & Desert Explorers take learning into Dubai’s natural environments, building scientific curiosity, observation skills and environmental awareness.',
-    Icon: Compass,
-    accent: '#f5b942',
-  },
-  {
-    title: 'Belong — Naturally inclusive',
-    text: 'Every child feels recognised and valued. Families Together partnerships connect home and nursery so children thrive with consistency and confidence.',
-    Icon: Heart,
-    accent: '#f4a0b0',
-  },
+const SIGNATURE_META = [
+  { Icon: Puzzle, accent: '#5bb5a2' },
+  { Icon: Compass, accent: '#f5b942' },
+  { Icon: Heart, accent: '#f4a0b0' },
 ]
 
 /**
@@ -55,6 +26,15 @@ const SIGNATURE = [
  */
 function CurriculumOverviewSection() {
   const sectionRef = useRef(null)
+  const { t } = useLanguage()
+  const philosophy = t('programs.philosophyItems').map((item, i) => ({
+    ...PHILOSOPHY_META[i],
+    ...item,
+  }))
+  const signature = t('programs.signatureItems').map((item, i) => ({
+    ...SIGNATURE_META[i],
+    ...item,
+  }))
 
   return (
     <section
@@ -82,30 +62,28 @@ function CurriculumOverviewSection() {
 
       <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="mb-12 max-w-2xl sm:mb-14">
-          <p className="section-eyebrow !mb-3">Learning philosophy</p>
+          <p className="section-eyebrow !mb-3">{t('programs.curriculumEyebrow')}</p>
           <h2
             id="curriculum-heading"
             className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
           >
-            Protecting Curiosity.{' '}
+            {t('programs.curriculumTitleBefore')}{' '}
             <BrushHighlightText triggerRef={sectionRef}>
-              Inspiring Growth
+              {t('programs.curriculumTitleHighlight')}
             </BrushHighlightText>
           </h2>
           <p className="mt-5 text-sm leading-relaxed text-brand-muted sm:text-[15px]">
-            Children are naturally curious. At New World Nursery, we nurture that
-            desire to discover while enriching the British EYFS curriculum through
-            our Signature Programmes: Think. Explore. Belong.
+            {t('programs.curriculumLead')}
           </p>
         </div>
 
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
           <div>
             <p className="mb-5 text-xs font-extrabold tracking-[0.2em] text-[#5bb5a2] uppercase">
-              Learning philosophy
+              {t('programs.philosophyLabel')}
             </p>
             <ul className="m-0 list-none space-y-4 p-0">
-              {PHILOSOPHY.map(({ title, text, Icon, accent }) => (
+              {philosophy.map(({ title, text, Icon, accent }) => (
                 <li
                   key={title}
                   className="flex gap-4 rounded-[1.25rem] bg-[#faf7f2] p-5 sm:p-6"
@@ -131,10 +109,10 @@ function CurriculumOverviewSection() {
 
           <div>
             <p className="mb-5 text-xs font-extrabold tracking-[0.2em] text-[#5bb5a2] uppercase">
-              Signature programmes
+              {t('programs.signatureLabel')}
             </p>
             <ul className="m-0 list-none space-y-4 p-0">
-              {SIGNATURE.map(({ title, text, Icon, accent }) => (
+              {signature.map(({ title, text, Icon, accent }) => (
                 <li
                   key={title}
                   className="flex gap-4 rounded-[1.25rem] bg-[#eef8f5] p-5 sm:p-6"

@@ -1,12 +1,14 @@
 import { Mail, MapPin, Phone } from 'lucide-react'
 import { FacebookIcon, InstagramIcon, YoutubeIcon } from '../ui/SocialIcons'
 import { useHomeData } from '../../context/HomeDataContext'
+import { useLanguage } from '../../i18n'
 
 /**
  * Always reserve top-bar height on sm+ so settings load doesn't push the navbar (CLS).
  */
 function TopBar() {
   const { settings } = useHomeData()
+  const { t } = useLanguage()
   const phone = settings?.top_bar_phone
   const email = settings?.top_bar_email
   const socials = [
@@ -23,7 +25,7 @@ function TopBar() {
       aria-hidden={!hasContent}
     >
       {hasContent ? (
-        <div className="mx-auto flex max-w-page flex-wrap items-center justify-between gap-x-3 gap-y-1 px-4 py-1.5 text-[11px] text-gray-600 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-page flex-wrap items-center justify-between gap-x-3 gap-y-1 page-gutter py-1.5 text-[11px] text-gray-600">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
             {phone ? (
               <a
@@ -51,10 +53,10 @@ function TopBar() {
               className="flex items-center gap-1.5 hover:text-nursery-teal"
             >
               <MapPin className="h-3 w-3 shrink-0 text-nursery-teal" />
-              Find Us
+              {t('topBar.findUs')}
             </a>
             {socials.length > 0 ? (
-              <div className="flex items-center gap-0.5 border-l border-gray-200 pl-3">
+              <div className="flex items-center gap-0.5 border-s border-gray-200 ps-3">
                 {socials.map(({ href, label, Icon }) => (
                   <a
                     key={label}

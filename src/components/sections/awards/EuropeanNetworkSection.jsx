@@ -7,45 +7,14 @@ import {
 } from 'lucide-react'
 import aboutLeaf from '../../../assets/about-leaf.webp'
 import featuresIcon from '../../../assets/New_World_Icon00010-removebg-preview.webp'
+import { useLanguage } from '../../../i18n'
 import BrushHighlightText from '../../ui/BrushHighlightText'
 
-const NETWORK_STATS = [
-  {
-    value: '17+',
-    label: 'Nurseries',
-    detail:
-      'Providing high-quality early years education across a well-established European network.',
-    Icon: School,
-    accent: '#5bb5a2',
-    soft: '#eef8f5',
-  },
-  {
-    value: '3+',
-    label: 'Inclusive Primary Schools',
-    detail:
-      'Supporting children’s educational journey beyond the early years through inclusive, child-centred learning.',
-    Icon: GraduationCap,
-    accent: '#f4a0b0',
-    soft: '#fff0f3',
-  },
-  {
-    value: 'Leaders',
-    label: 'Experienced Educational Leaders',
-    detail:
-      'A multidisciplinary team of educators, specialists and school leaders with many years of practical experience in early childhood and inclusive education.',
-    Icon: Users,
-    accent: '#f5b942',
-    soft: '#fff8e8',
-  },
-  {
-    value: 'One',
-    label: 'Shared Educational Philosophy',
-    detail:
-      'Every nursery within our network is guided by the same commitment to quality, inclusion, child wellbeing and continuous educational development.',
-    Icon: HeartHandshake,
-    accent: '#a682b8',
-    soft: '#f5eef8',
-  },
+const NETWORK_STATS_META = [
+  { Icon: School, accent: '#5bb5a2', soft: '#eef8f5' },
+  { Icon: GraduationCap, accent: '#f4a0b0', soft: '#fff0f3' },
+  { Icon: Users, accent: '#f5b942', soft: '#fff8e8' },
+  { Icon: HeartHandshake, accent: '#a682b8', soft: '#f5eef8' },
 ]
 
 /**
@@ -53,6 +22,13 @@ const NETWORK_STATS = [
  */
 function EuropeanNetworkSection() {
   const sectionRef = useRef(null)
+  const { t } = useLanguage()
+  const networkLead = t('awards.networkLead')
+  const bordersParagraphs = t('awards.bordersParagraphs')
+  const networkStats = t('awards.networkStats').map((item, i) => ({
+    ...NETWORK_STATS_META[i],
+    ...item,
+  }))
 
   return (
     <section
@@ -80,42 +56,35 @@ function EuropeanNetworkSection() {
 
       <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="mx-auto mb-12 max-w-3xl text-center sm:mb-14">
-          <p className="section-eyebrow !mb-3">European Network</p>
+          <p className="section-eyebrow !mb-3">{t('awards.networkEyebrow')}</p>
           <h2
             id="european-network-heading"
             className="text-3xl font-extrabold leading-tight text-[#2d3a4a] sm:text-4xl"
           >
-            A Strong Foundation.{' '}
+            {t('awards.networkTitleBefore')}{' '}
             <BrushHighlightText triggerRef={sectionRef}>
-              A Shared Vision
+              {t('awards.networkTitleHighlight')}
             </BrushHighlightText>
             .
           </h2>
           <div className="mx-auto mt-6 max-w-2xl space-y-3">
-            <p className="text-sm leading-relaxed text-[#3d4a5c] sm:text-[15px]">
-              New World Nursery is part of a well-established European
-              educational organisation that has been creating inspiring learning
-              environments for children and families for more than 16 years.
-            </p>
-            <p className="text-sm leading-relaxed text-[#3d4a5c] sm:text-[15px]">
-              Over the years, this network has grown into a community of
-              nurseries, schools and educational specialists united by one shared
-              belief: every child deserves an exceptional start in life.
-            </p>
-            <p className="text-sm leading-relaxed text-[#3d4a5c] sm:text-[15px]">
-              Today, the same educational values, experience and commitment to
-              quality continue to shape every New World Nursery, bringing trusted
-              European expertise to families in Dubai.
-            </p>
+            {networkLead.map((paragraph) => (
+              <p
+                key={paragraph.slice(0, 48)}
+                className="text-sm leading-relaxed text-[#3d4a5c] sm:text-[15px]"
+              >
+                {paragraph}
+              </p>
+            ))}
           </div>
         </div>
 
         <p className="mb-6 text-center text-[11px] font-extrabold tracking-[0.22em] text-[#5bb5a2] uppercase">
-          Our Educational Network
+          {t('awards.networkLabel')}
         </p>
 
         <div className="mb-12 grid grid-cols-1 gap-3 sm:mb-14 sm:grid-cols-2 sm:gap-4 lg:gap-5">
-          {NETWORK_STATS.map(({ value, label, detail, Icon, accent, soft }) => (
+          {networkStats.map(({ value, label, detail, Icon, accent, soft }) => (
             <div
               key={label}
               className="relative overflow-hidden rounded-[1.5rem] px-5 py-7 sm:rounded-[1.75rem] sm:px-6 sm:py-8"
@@ -159,26 +128,27 @@ function EuropeanNetworkSection() {
           <div className="mx-auto mb-6 flex max-w-xs items-center justify-center gap-3">
             <span className="h-px flex-1 bg-[#5bb5a2]/35" aria-hidden="true" />
             <span className="rounded-full bg-[#5bb5a2] px-4 py-1.5 text-[10px] font-extrabold tracking-[0.18em] text-white uppercase">
-              From Europe to Dubai
+              {t('awards.bordersBadge')}
             </span>
             <span className="h-px flex-1 bg-[#5bb5a2]/35" aria-hidden="true" />
           </div>
 
           <h3 className="text-2xl font-extrabold text-[#2d3a4a] sm:text-3xl">
-            Growing Beyond Borders
+            {t('awards.bordersTitle')}
           </h3>
 
-          <p className="mx-auto mt-5 max-w-2xl text-[15px] leading-relaxed text-[#3d4a5c] sm:text-base">
-            Our journey began in Europe. Today, we are proud to bring this
-            experience to Dubai, creating a bridge between European educational
-            heritage and the dynamic, multicultural spirit of the United Arab
-            Emirates.
-          </p>
-          <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-[#3d4a5c] sm:text-base">
-            As our network continues to grow internationally, one thing remains
-            unchanged: our commitment to placing children, families and
-            exceptional education at the heart of everything we do.
-          </p>
+          {bordersParagraphs.map((paragraph, index) => (
+            <p
+              key={paragraph.slice(0, 48)}
+              className={
+                index === 0
+                  ? 'mx-auto mt-5 max-w-2xl text-[15px] leading-relaxed text-[#3d4a5c] sm:text-base'
+                  : 'mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed text-[#3d4a5c] sm:text-base'
+              }
+            >
+              {paragraph}
+            </p>
+          ))}
         </div>
       </div>
     </section>

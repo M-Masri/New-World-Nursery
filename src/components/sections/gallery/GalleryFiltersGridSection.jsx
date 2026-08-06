@@ -7,6 +7,7 @@ import {
   normalizeGalleryCategories,
 } from '../../../data/gallery'
 import { fetchGalleryCategories } from '../../../lib/api'
+import { useLanguage } from '../../../i18n'
 import BrushHighlightText from '../../ui/BrushHighlightText'
 import LazyImage from '../../ui/LazyImage'
 
@@ -15,6 +16,7 @@ import LazyImage from '../../ui/LazyImage'
  */
 function GalleryFiltersGridSection() {
   const sectionRef = useRef(null)
+  const { t, language } = useLanguage()
   const [categories, setCategories] = useState([])
   const [status, setStatus] = useState('loading')
   const [active, setActive] = useState('all')
@@ -23,7 +25,7 @@ function GalleryFiltersGridSection() {
   useEffect(() => {
     let cancelled = false
 
-    fetchGalleryCategories()
+    fetchGalleryCategories(language)
       .then((list) => {
         if (cancelled) return
         const next = normalizeGalleryCategories(list)
@@ -39,12 +41,16 @@ function GalleryFiltersGridSection() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [language])
+
+  useEffect(() => {
+    setActive('all')
+  }, [language])
 
   const tabs = useMemo(() => {
     const withItems = categories.filter((cat) => cat.items.length > 0)
-    return [{ slug: 'all', name: 'All' }, ...withItems]
-  }, [categories])
+    return [{ slug: 'all', name: t('gallery.all') }, ...withItems]
+  }, [categories, t])
 
   const filtered = useMemo(() => {
     if (active === 'all') return flattenGalleryCategories(categories)
@@ -93,19 +99,18 @@ function GalleryFiltersGridSection() {
 
       <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="mb-8 text-center sm:mb-10">
-          <p className="section-eyebrow">Moments of joy</p>
+          <p className="section-eyebrow">{t('gallery.gridEyebrow')}</p>
           <h2
             id="gallery-grid-heading"
             className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
           >
-            Our{' '}
+            {t('gallery.gridTitleBefore')}{' '}
             <BrushHighlightText triggerRef={sectionRef}>
-              gallery
+              {t('gallery.gridTitleHighlight')}
             </BrushHighlightText>
           </h2>
           <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-brand-muted">
-            Filter by category and open any photo for a closer look at life at
-            New World.
+            {t('gallery.gridLead')}
           </p>
         </div>
 
@@ -113,7 +118,7 @@ function GalleryFiltersGridSection() {
           <div
             className="mb-10 flex flex-wrap items-center justify-center gap-2 sm:gap-3"
             role="tablist"
-            aria-label="Gallery categories"
+            aria-label={t('gallery.categoriesAria')}
           >
             {tabs.map((cat) => {
               const isActive = active === cat.slug
@@ -148,7 +153,7 @@ function GalleryFiltersGridSection() {
           </div>
         ) : filtered.length === 0 ? (
           <p className="py-16 text-center text-sm text-brand-muted">
-            No photos in this category yet.
+            {t('gallery.empty')}
           </p>
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">

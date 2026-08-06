@@ -9,72 +9,17 @@ import {
   Trees,
 } from 'lucide-react'
 import aboutLeaf from '../../../assets/about-leaf.webp'
+import { useLanguage } from '../../../i18n'
 import BrushHighlightText from '../../ui/BrushHighlightText'
 
-const DIFFERENTIATORS = [
-  {
-    id: 'd1',
-    title: 'Purposefully Designed Learning Environments',
-    description:
-      'Every nursery is carefully planned to encourage independence, exploration and meaningful learning. Bright, flexible classrooms are designed to evolve with children’s interests and developmental needs.',
-    icon_color: '#5bb5a2',
-    soft: '#eef8f5',
-    Icon: Building2,
-  },
-  {
-    id: 'd2',
-    title: 'Indoor & Outdoor Spaces for Every Day',
-    description:
-      'We believe children need the freedom to move, explore and play in every season. Every New World Nursery provides dedicated indoor play areas alongside outdoor environments that encourage active play, discovery and a connection with nature.',
-    icon_color: '#f4a0b0',
-    soft: '#fff0f3',
-    Icon: Trees,
-  },
-  {
-    id: 'd3',
-    title: 'Dedicated Sensory Integration Spaces',
-    description:
-      'Each nursery includes a dedicated sensory environment designed to support sensory development, emotional regulation, focus and wellbeing through carefully planned experiences and specialist resources.',
-    icon_color: '#f5b942',
-    soft: '#fff8e8',
-    Icon: Sparkles,
-  },
-  {
-    id: 'd4',
-    title: 'Movement & Physical Development',
-    description:
-      'Children need movement to learn. Our nurseries include dedicated spaces that encourage climbing, balancing, coordination and active play, helping children build confidence while supporting healthy physical development.',
-    icon_color: '#a682b8',
-    soft: '#f5eef8',
-    Icon: Dumbbell,
-  },
-  {
-    id: 'd5',
-    title: 'Peaceful Sleep & Rest Rooms',
-    description:
-      'Younger children benefit from dedicated sleep and rest rooms that provide a calm, comfortable environment, supporting healthy routines and ensuring they have the rest they need to grow and thrive.',
-    icon_color: '#7eb8d4',
-    soft: '#eef6fb',
-    Icon: BedDouble,
-  },
-  {
-    id: 'd6',
-    title: 'Exclusive Signature Programmes',
-    description:
-      'Every New World Nursery delivers our exclusive Signature Programmes, enriching the British EYFS curriculum through experiences that develop logical thinking, creativity, environmental awareness and real-world problem-solving.',
-    icon_color: '#6db89a',
-    soft: '#e8f6f0',
-    Icon: Leaf,
-  },
-  {
-    id: 'd7',
-    title: 'Naturally Inclusive by Design',
-    description:
-      'Our environments are intentionally created so children of different backgrounds, abilities and learning styles learn together every day. Inclusion is not a separate programme; it is part of the culture, the environment and every learning experience we provide.',
-    icon_color: '#e07a8a',
-    soft: '#fdf0f2',
-    Icon: Accessibility,
-  },
+const DIFF_META = [
+  { id: 'd1', icon_color: '#5bb5a2', soft: '#eef8f5', Icon: Building2 },
+  { id: 'd2', icon_color: '#f4a0b0', soft: '#fff0f3', Icon: Trees },
+  { id: 'd3', icon_color: '#f5b942', soft: '#fff8e8', Icon: Sparkles },
+  { id: 'd4', icon_color: '#a682b8', soft: '#f5eef8', Icon: Dumbbell },
+  { id: 'd5', icon_color: '#7eb8d4', soft: '#eef6fb', Icon: BedDouble },
+  { id: 'd6', icon_color: '#6db89a', soft: '#e8f6f0', Icon: Leaf },
+  { id: 'd7', icon_color: '#e07a8a', soft: '#fdf0f2', Icon: Accessibility },
 ]
 
 /**
@@ -82,6 +27,11 @@ const DIFFERENTIATORS = [
  */
 function KeyDifferentiatorsSection() {
   const sectionRef = useRef(null)
+  const { t } = useLanguage()
+  const differentiators = t('why.diffItems').map((item, i) => ({
+    ...DIFF_META[i],
+    ...item,
+  }))
 
   return (
     <section
@@ -105,25 +55,23 @@ function KeyDifferentiatorsSection() {
 
       <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="mb-12 max-w-2xl sm:mb-14">
-          <p className="section-eyebrow !mb-3">Key differentiators</p>
+          <p className="section-eyebrow !mb-3">{t('why.diffEyebrow')}</p>
           <h2
             id="differentiators-heading"
             className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
           >
-            What makes us{' '}
+            {t('why.diffTitleBefore')}{' '}
             <BrushHighlightText triggerRef={sectionRef}>
-              different
+              {t('why.diffTitleHighlight')}
             </BrushHighlightText>
           </h2>
           <p className="mt-5 text-sm leading-relaxed text-brand-muted sm:text-[15px]">
-            Thoughtfully designed spaces, exclusive programmes and a naturally
-            inclusive culture — built so every child can feel safe, understood
-            and inspired to grow.
+            {t('why.diffLead')}
           </p>
         </div>
 
         <ol className="m-0 list-none space-y-4 p-0 sm:space-y-5">
-          {DIFFERENTIATORS.map((item, index) => {
+          {differentiators.map((item, index) => {
             const Icon = item.Icon
             const n = String(index + 1).padStart(2, '0')
             const reverse = index % 2 === 1

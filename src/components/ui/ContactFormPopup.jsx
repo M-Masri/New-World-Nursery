@@ -4,9 +4,11 @@ import { X } from 'lucide-react'
 import { lockBodyScroll } from '../../lib/bodyScrollLock'
 import ContactForm from './ContactForm'
 import { useContactFormPopup } from '../../context/ContactFormContext'
+import { useLanguage } from '../../i18n'
 
 function ContactFormPopup() {
   const { isOpen, closeContactForm } = useContactFormPopup()
+  const { t } = useLanguage()
 
   useEffect(() => {
     if (!isOpen) return undefined
@@ -37,19 +39,19 @@ function ContactFormPopup() {
       <button
         type="button"
         className="absolute inset-0 bg-[#2d3a4a]/50 backdrop-blur-[2px]"
-        aria-label="Close enquiry form"
+        aria-label={t('common.close')}
         onClick={closeContactForm}
       />
 
       <div className="relative z-10 max-h-[min(90dvh,720px)] w-full max-w-lg overflow-y-auto card-surface p-6 sm:p-8">
         <div className="mb-6 flex items-start justify-between gap-4">
           <div>
-            <p className="section-eyebrow mb-1">Get in Touch</p>
+            <p className="section-eyebrow mb-1">{t('contact.enquiryEyebrow')}</p>
             <h2
               id="contact-popup-title"
               className="text-2xl font-extrabold text-brand-ink"
             >
-              Enquire Now
+              {t('common.enquireNow')}
             </h2>
           </div>
 
@@ -57,7 +59,7 @@ function ContactFormPopup() {
             type="button"
             onClick={closeContactForm}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand-ink transition hover:bg-[#ebebef]"
-            aria-label="Close"
+            aria-label={t('common.close')}
           >
             <X className="h-5 w-5" />
           </button>

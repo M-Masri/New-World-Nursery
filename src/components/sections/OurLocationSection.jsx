@@ -4,6 +4,7 @@ import locationIcon from '../../assets/New_World_Icon00032-removebg-preview.webp
 import { useContactFormPopup } from '../../context/ContactFormContext'
 import { useHomeData } from '../../context/HomeDataContext'
 import { useSectionRevealGate } from '../../hooks/useSectionRevealGate'
+import { useLanguage } from '../../i18n'
 import AnimatedCard from '../ui/AnimatedCard'
 import BrushHighlightText from '../ui/BrushHighlightText'
 import LazyImage from '../ui/LazyImage'
@@ -44,7 +45,7 @@ function OurLocationSection() {
         loading="lazy"
         decoding="async"
         aria-hidden="true"
-        className="pointer-events-none absolute right-0 bottom-0 z-20 w-28 opacity-95 sm:w-32 lg:w-40"
+        className="pointer-events-none absolute right-0 -bottom-4 z-20 w-28 opacity-95 sm:-bottom-6 sm:w-32 lg:-bottom-8 lg:w-40"
       />
 
       <div className="relative z-10 mx-auto max-w-page page-gutter">
@@ -88,8 +89,11 @@ function OurLocationSection() {
 
 function LocationCard({ location, index, cardsReady, allowImages, skipEntrance }) {
   const { openContactForm } = useContactFormPopup()
+  const { t } = useLanguage()
   const accent = location.badge_color || '#5bb5a2'
   const isComingSoon = isComingSoonLocation(location)
+  const comingSoonLabel = t('home.locationsComingSoon')
+  const planVisitLabel = t('home.locationsPlanAVisit')
 
   const handleVisit = () => {
     if (isComingSoon) return
@@ -140,7 +144,7 @@ function LocationCard({ location, index, cardsReady, allowImages, skipEntrance }
           className="absolute top-3 left-3 rounded-full px-3 py-1 text-[10px] font-extrabold tracking-wide text-white uppercase shadow-sm"
           style={{ backgroundColor: accent }}
         >
-          {isComingSoon ? 'Coming Soon' : location.city}
+          {isComingSoon ? comingSoonLabel : location.city}
         </span>
 
         <div className="absolute right-3 bottom-3 left-3">
@@ -169,7 +173,7 @@ function LocationCard({ location, index, cardsReady, allowImages, skipEntrance }
 
         {isComingSoon ? (
           <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-brand-muted">
-            Coming Soon
+            {comingSoonLabel}
           </span>
         ) : (
           <button
@@ -177,7 +181,7 @@ function LocationCard({ location, index, cardsReady, allowImages, skipEntrance }
             onClick={handleVisit}
             className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#5bb5a2] transition group-hover:gap-2.5"
           >
-            Plan a Visit
+            {planVisitLabel}
             <ArrowUpRight className="h-4 w-4" />
           </button>
         )}

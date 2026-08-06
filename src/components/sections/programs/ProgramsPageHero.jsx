@@ -1,5 +1,6 @@
 import programsPageHero from '../../../assets/programs-page-hero.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
+import { useLanguage, useTourCtaLabel } from '../../../i18n'
 import HeroSection from '../HeroSection'
 
 /**
@@ -7,10 +8,8 @@ import HeroSection from '../HeroSection'
  */
 function ProgramsPageHero() {
   const { settings } = useHomeData()
-  const tourLabel =
-    settings?.hero?.cta_primary?.trim() ||
-    settings?.about?.cta?.trim() ||
-    'Book a Tour'
+  const { t } = useLanguage()
+  const tourLabel = useTourCtaLabel(settings?.hero?.cta_primary, settings?.about?.cta)
 
   return (
     <HeroSection
@@ -21,14 +20,13 @@ function ProgramsPageHero() {
           ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }}
       override={{
-        eyebrow: 'Our Programs',
-        title: 'Where Every Day\nBecomes a New Discovery',
+        eyebrow: t('programs.heroEyebrow'),
+        title: t('programs.heroTitle'),
         titlePyramid: true,
-        subtitle:
-          'Children understand the world by exploring it. At New World Nursery, every experience is thoughtfully designed to spark curiosity, inspire creativity and build the confidence to keep discovering — through the British EYFS curriculum and enriching learning experiences.',
+        subtitle: t('programs.heroSubtitle'),
         image: programsPageHero,
         cta_primary: tourLabel,
-        cta_secondary: 'View Ages',
+        cta_secondary: t('programs.heroCtaSecondary'),
       }}
     />
   )

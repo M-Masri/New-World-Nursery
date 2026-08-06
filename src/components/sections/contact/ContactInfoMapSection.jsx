@@ -3,6 +3,7 @@ import { Clock, Mail, MapPin, Phone } from 'lucide-react'
 import aboutLeaf from '../../../assets/about-leaf.webp'
 import locationIcon from '../../../assets/New_World_Icon00032-removebg-preview.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
+import { useLanguage } from '../../../i18n'
 import BrushHighlightText from '../../ui/BrushHighlightText'
 
 function mapsEmbedUrl(query) {
@@ -21,6 +22,7 @@ function mapsOpenUrl(query) {
 function ContactInfoMapSection() {
   const sectionRef = useRef(null)
   const { settings, locations } = useHomeData()
+  const { t } = useLanguage()
   const contact = settings?.contact ?? {}
   const phone = contact.phone || settings?.top_bar_phone
   const email = contact.email || settings?.top_bar_email
@@ -61,7 +63,6 @@ function ContactInfoMapSection() {
         className="pointer-events-none absolute -bottom-3 right-0 z-20 w-28 opacity-90 sm:-bottom-4 sm:w-32 lg:w-40"
       />
 
-      {/* soft floating accents like Programs on Home */}
       <svg
         className="pointer-events-none absolute top-16 right-10 z-0 h-7 w-7 text-[#f5c842] opacity-40"
         viewBox="0 0 24 24"
@@ -81,16 +82,14 @@ function ContactInfoMapSection() {
 
       <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="mb-10 max-w-2xl">
-          <p className="section-eyebrow">Find us</p>
+          <p className="section-eyebrow">{t('contact.findEyebrow')}</p>
           <h2 id="find-us-heading" className="section-title">
-            Contact info &amp;{' '}
+            {t('contact.findTitleBefore')}{' '}
             <BrushHighlightText triggerRef={sectionRef}>
-              map
+              {t('contact.findTitleHighlight')}
             </BrushHighlightText>
           </h2>
-          <p className="section-lead">
-            Visit us, call, or write — we are here to welcome your family.
-          </p>
+          <p className="section-lead">{t('contact.findLead')}</p>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-stretch lg:gap-10">
@@ -98,7 +97,7 @@ function ContactInfoMapSection() {
             {address ? (
               <InfoRow
                 icon={MapPin}
-                label="Address"
+                label={t('contact.address')}
                 value={address}
                 href={openMapsHref}
               />
@@ -106,7 +105,7 @@ function ContactInfoMapSection() {
             {phone ? (
               <InfoRow
                 icon={Phone}
-                label="Phone"
+                label={t('contact.phone')}
                 value={phone}
                 href={`tel:${phone.replace(/\s+/g, '')}`}
               />
@@ -114,17 +113,16 @@ function ContactInfoMapSection() {
             {email ? (
               <InfoRow
                 icon={Mail}
-                label="Email"
+                label={t('contact.email')}
                 value={email}
                 href={`mailto:${email}`}
               />
             ) : null}
             <InfoRow
               icon={Clock}
-              label="Hours"
+              label={t('contact.hours')}
               value={
-                primaryLocation?.working_hours ||
-                'Sun – Thu: 7:00 AM – 6:00 PM · Fri – Sat: Closed'
+                primaryLocation?.working_hours || t('contact.hoursFallback')
               }
             />
           </div>
@@ -132,7 +130,7 @@ function ContactInfoMapSection() {
           <div className="min-h-[280px] overflow-hidden rounded-[1.75rem] border border-[#5bb5a2]/15 bg-[#eef8f5] shadow-[0_14px_36px_rgba(45,58,74,0.08)] sm:min-h-[360px] sm:rounded-[2rem]">
             {embedSrc ? (
               <iframe
-                title="Nursery location map"
+                title={t('contact.mapTitle')}
                 src={embedSrc}
                 className="h-full min-h-[280px] w-full border-0 sm:min-h-[360px]"
                 loading="lazy"
@@ -141,7 +139,7 @@ function ContactInfoMapSection() {
               />
             ) : (
               <div className="flex h-full min-h-[280px] items-center justify-center px-6 text-center text-sm text-brand-muted sm:min-h-[360px]">
-                Map will appear once an address is available.
+                {t('contact.mapMissing')}
               </div>
             )}
           </div>

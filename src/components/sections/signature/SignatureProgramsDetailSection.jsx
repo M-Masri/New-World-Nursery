@@ -10,99 +10,45 @@ import aboutLeaf from '../../../assets/about-leaf.webp'
 import signatureThink from '../../../assets/signature-think.webp'
 import signatureExplore from '../../../assets/signature-explore.webp'
 import signatureBelong from '../../../assets/signature-belong.webp'
+import { useLanguage } from '../../../i18n'
 
-const GROUPS = [
+const GROUP_META = [
   {
     id: 'think',
-    label: 'Think',
-    title: 'Creating Curious Minds and Confident Problem Solvers',
     accent: '#5bb5a2',
     soft: '#eef8f5',
     Icon: Lightbulb,
     image: signatureThink,
     imageAlt: 'Children building and problem-solving with blocks',
-    programmes: [
-      {
-        title: 'The Creator Mindset',
-        paragraphs: [
-          'The world needs people who can imagine new possibilities, solve meaningful problems and create innovative solutions. We believe these qualities begin to develop long before children learn to code or use technology.',
-          'Our Creator Mindset programme encourages children to think logically, ask meaningful questions, test ideas and learn through experimentation. Construction, open-ended challenges and collaborative projects help children understand how things work while developing creativity, resilience and confidence in their own ideas.',
-          'Whether they become engineers, architects, scientists, entrepreneurs or artists, our goal is the same: to help every child become someone who creates, not simply someone who follows.',
-        ],
-      },
-      {
-        title: 'Creative Builders Studio',
-        Icon: Blocks,
-        paragraphs: [
-          'Inspired by the internationally recognised principles of Block Play, children explore engineering concepts, mathematical thinking and spatial awareness through purposeful construction. Every structure they build becomes an opportunity to plan, test, adapt and improve while working together with others.',
-        ],
-        gains: [
-          'Logical thinking',
-          'Creativity',
-          'Engineering foundations',
-          'Spatial awareness',
-          'Problem-solving',
-          'Collaboration',
-        ],
-      },
-    ],
+    programmeIcons: [null, Blocks],
+    labelKey: 'signature.thinkLabel',
+    titleKey: 'signature.thinkTitle',
+    programmesKey: 'signature.thinkProgrammes',
   },
   {
     id: 'explore',
-    label: 'Explore',
-    title: 'Learning Beyond the Classroom',
     accent: '#f5b942',
     soft: '#fff8e8',
     Icon: Compass,
     image: signatureExplore,
     imageAlt: 'Children exploring nature and outdoor landscapes',
     reverse: true,
-    programmes: [
-      {
-        title: 'Beach & Desert Explorers',
-        Icon: Mountain,
-        paragraphs: [
-          'Some of the most valuable learning happens beyond four walls.',
-          'Inspired by the unique landscapes of the UAE, children experience Dubai’s beaches, deserts and natural environments as places of exploration, discovery and wonder. These experiences encourage scientific thinking, environmental awareness and a deeper appreciation of the world they call home.',
-          'By observing nature, asking questions and making real-life connections, children develop curiosity that extends far beyond the classroom.',
-        ],
-        gains: [
-          'Scientific curiosity',
-          'Observation skills',
-          'Environmental awareness',
-          'Cultural understanding',
-          'Confidence through exploration',
-        ],
-      },
-    ],
+    programmeIcons: [Mountain],
+    labelKey: 'signature.exploreLabel',
+    titleKey: 'signature.exploreTitle',
+    programmesKey: 'signature.exploreProgrammes',
   },
   {
     id: 'belong',
-    label: 'Belong',
-    title: 'Growing Together Through Connection',
     accent: '#f4a0b0',
     soft: '#fff0f3',
     Icon: Heart,
     image: signatureBelong,
     imageAlt: 'Children connecting and belonging together',
-    programmes: [
-      {
-        title: 'Naturally Inclusive',
-        Icon: Heart,
-        paragraphs: [
-          'Belonging is one of the strongest foundations for learning.',
-          'Our naturally inclusive approach creates an environment where every child feels recognised, respected and valued for who they are. Children learn alongside one another, building empathy, kindness and meaningful relationships while discovering that every individual brings something valuable to the community.',
-        ],
-      },
-      {
-        title: 'Families Together',
-        Icon: Users,
-        paragraphs: [
-          'A child’s learning journey is strongest when families and educators work as partners.',
-          'Through workshops, shared experiences, specialist guidance and regular communication, we create meaningful connections between home and nursery. These partnerships give children consistency, security and the confidence to thrive in every part of their lives.',
-        ],
-      },
-    ],
+    programmeIcons: [Heart, Users],
+    labelKey: 'signature.belongLabel',
+    titleKey: 'signature.belongTitle',
+    programmesKey: 'signature.belongProgrammes',
   },
 ]
 
@@ -110,9 +56,22 @@ const GROUPS = [
  * Signature programme details — premium alternating chapters.
  */
 function SignatureProgramsDetailSection() {
+  const { t } = useLanguage()
+  const childrenDevelop = t('signature.childrenDevelop')
+
+  const groups = GROUP_META.map((meta) => ({
+    ...meta,
+    label: t(meta.labelKey),
+    title: t(meta.titleKey),
+    programmes: t(meta.programmesKey).map((programme, i) => ({
+      ...programme,
+      Icon: meta.programmeIcons[i] || null,
+    })),
+  }))
+
   return (
     <div aria-label="Signature programme details">
-      {GROUPS.map((group, groupIndex) => {
+      {groups.map((group, groupIndex) => {
         const onSoft = groupIndex % 2 === 0
 
         return (
@@ -250,7 +209,7 @@ function SignatureProgramsDetailSection() {
                           style={{ backgroundColor: group.soft }}
                         >
                           <p className="mb-3 text-[11px] font-extrabold tracking-[0.18em] text-[#2d3a4a] uppercase">
-                            Children develop
+                            {childrenDevelop}
                           </p>
                           <ul className="m-0 grid list-none gap-2.5 p-0 sm:grid-cols-2">
                             {programme.gains.map((gain) => (

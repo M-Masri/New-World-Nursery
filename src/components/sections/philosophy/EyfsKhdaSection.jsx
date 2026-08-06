@@ -8,67 +8,20 @@ import {
   Scale,
 } from 'lucide-react'
 import aboutLeaf from '../../../assets/about-leaf.webp'
+import { useLanguage } from '../../../i18n'
 import BrushHighlightText from '../../ui/BrushHighlightText'
 
-const ALIGNMENT_LEAD =
-  'Exceptional education begins with a strong foundation. At New World Nursery, our curriculum is built upon the British Early Years Foundation Stage (EYFS) and fully aligned with the expectations of Dubai’s Knowledge and Human Development Authority (KHDA).'
-
-const ALIGNMENT_POINTS = [
-  {
-    label: 'Balanced growth',
-    title: 'More than academics',
-    text: 'The EYFS framework is internationally recognised for supporting children’s development during the most important years of life. Rather than focusing only on academic achievement, it provides a balanced approach that nurtures communication, wellbeing, physical development, creativity, early literacy, mathematics and children’s understanding of the world.',
-    Icon: Scale,
-    accent: '#f5b942',
-    soft: '#fff8e8',
-  },
-  {
-    label: 'Proven practice',
-    title: '16+ years of experience',
-    text: 'Our educational practice combines this internationally respected framework with more than 16 years of European educational experience and a deep understanding of inclusive education. This enables us to deliver learning that is evidence-informed, developmentally appropriate and centred around the individual child.',
-    Icon: Compass,
-    accent: '#f4a0b0',
-    soft: '#fff0f3',
-  },
-  {
-    label: 'Locally relevant',
-    title: 'Global & Dubai aligned',
-    text: 'By aligning international best practice with the educational expectations of Dubai, we provide families with the confidence that their children are learning within a curriculum that is both globally recognised and locally relevant.',
-    Icon: Globe2,
-    accent: '#5bb5a2',
-    soft: '#eef8f5',
-  },
+const POINT_META = [
+  { Icon: Scale, accent: '#f5b942', soft: '#fff8e8' },
+  { Icon: Compass, accent: '#f4a0b0', soft: '#fff0f3' },
+  { Icon: Globe2, accent: '#5bb5a2', soft: '#eef8f5' },
 ]
 
-const FOUNDATIONS = [
-  {
-    short: 'EYFS',
-    title: 'British Early Years Foundation Stage (EYFS)',
-    text: 'An internationally recognised framework supporting children’s learning and development from birth through the early years.',
-    Icon: BookOpen,
-    accent: '#5bb5a2',
-  },
-  {
-    short: 'KHDA',
-    title: 'KHDA Early Childhood Framework',
-    text: 'Ensuring our educational practice reflects the quality standards and expectations established for early childhood education in Dubai.',
-    Icon: Landmark,
-    accent: '#f4a0b0',
-  },
-  {
-    short: 'Europe',
-    title: 'European Educational Experience',
-    text: 'Built on more than 16 years of practical experience across a well-established network of nurseries and schools.',
-    Icon: Globe2,
-    accent: '#f5b942',
-  },
-  {
-    short: 'Inclusion',
-    title: 'Inclusive Educational Practice',
-    text: 'Drawing on extensive experience in inclusive education, we create learning environments where every child is supported to reach their full potential.',
-    Icon: HeartHandshake,
-    accent: '#a682b8',
-  },
+const FOUNDATION_META = [
+  { Icon: BookOpen, accent: '#5bb5a2' },
+  { Icon: Landmark, accent: '#f4a0b0' },
+  { Icon: Globe2, accent: '#f5b942' },
+  { Icon: HeartHandshake, accent: '#a682b8' },
 ]
 
 /**
@@ -76,6 +29,15 @@ const FOUNDATIONS = [
  */
 function EyfsKhdaSection() {
   const sectionRef = useRef(null)
+  const { t } = useLanguage()
+  const points = t('philosophy.eyfsPoints').map((item, i) => ({
+    ...POINT_META[i],
+    ...item,
+  }))
+  const foundations = t('philosophy.foundations').map((item, i) => ({
+    ...FOUNDATION_META[i],
+    ...item,
+  }))
 
   return (
     <section
@@ -101,25 +63,25 @@ function EyfsKhdaSection() {
         <div className="mb-12 grid gap-8 lg:mb-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end lg:gap-12">
           <div>
             <p className="section-eyebrow !mb-3 !text-left">
-              EYFS + KHDA alignment
+              {t('philosophy.eyfsEyebrow')}
             </p>
             <h2
               id="eyfs-khda-heading"
               className="text-3xl font-extrabold leading-tight text-[#2d3a4a] sm:text-4xl"
             >
-              A foundation families can{' '}
+              {t('philosophy.eyfsTitleBefore')}{' '}
               <BrushHighlightText triggerRef={sectionRef}>
-                trust
+                {t('philosophy.eyfsTitleHighlight')}
               </BrushHighlightText>
             </h2>
           </div>
           <p className="text-[15px] leading-relaxed text-[#3d4a5c] sm:text-base lg:pb-1">
-            {ALIGNMENT_LEAD}
+            {t('philosophy.eyfsLead')}
           </p>
         </div>
 
         <div className="mb-12 grid gap-5 sm:mb-14 lg:grid-cols-3 lg:gap-6">
-          {ALIGNMENT_POINTS.map(({ label, title, text, Icon, accent, soft }) => (
+          {points.map(({ label, title, text, Icon, accent, soft }) => (
             <article
               key={title}
               className="flex h-full flex-col overflow-hidden rounded-[1.75rem] sm:rounded-[2rem]"
@@ -163,7 +125,7 @@ function EyfsKhdaSection() {
         </div>
 
         <div className="grid gap-px overflow-hidden rounded-[2rem] bg-[#5bb5a2]/15 sm:grid-cols-2">
-          {FOUNDATIONS.map(({ short, title, text, Icon, accent }) => (
+          {foundations.map(({ short, title, text, Icon, accent }) => (
             <article
               key={title}
               className="bg-white p-6 transition hover:bg-[#faf7f2] sm:p-8"

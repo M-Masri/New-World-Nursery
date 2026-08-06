@@ -1,5 +1,6 @@
 import blogPageHero from '../../../assets/blog-page-hero.webp'
 import { useHomeData } from '../../../context/HomeDataContext'
+import { useLanguage, useTourCtaLabel } from '../../../i18n'
 import HeroSection from '../HeroSection'
 
 /**
@@ -7,10 +8,8 @@ import HeroSection from '../HeroSection'
  */
 function BlogPageHero() {
   const { settings } = useHomeData()
-  const tourLabel =
-    settings?.hero?.cta_primary?.trim() ||
-    settings?.about?.cta?.trim() ||
-    'Book a Tour'
+  const { t } = useLanguage()
+  const tourLabel = useTourCtaLabel(settings?.hero?.cta_primary, settings?.about?.cta)
 
   return (
     <HeroSection
@@ -21,14 +20,13 @@ function BlogPageHero() {
           ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }}
       override={{
-        eyebrow: 'Blog',
-        title: 'New World\nNursery Stories\n& Little Moments',
+        eyebrow: t('blog.heroEyebrow'),
+        title: t('blog.heroTitle'),
         titlePyramid: true,
-        subtitle:
-          'Classroom moments, settling tips, and warm notes for families growing with us.',
+        subtitle: t('blog.heroSubtitle'),
         image: blogPageHero,
         cta_primary: tourLabel,
-        cta_secondary: 'Read Posts',
+        cta_secondary: t('blog.heroCtaSecondary'),
       }}
     />
   )

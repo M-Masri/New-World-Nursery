@@ -12,6 +12,7 @@ import BrushHighlightText from '../components/ui/BrushHighlightText'
 import BlogPostCard from '../components/sections/blog/BlogPostCard'
 import { FacebookIcon, InstagramIcon } from '../components/ui/SocialIcons'
 import { useHomeData } from '../context/HomeDataContext'
+import { useLanguage } from '../i18n'
 import aboutLeaf from '../assets/about-leaf.webp'
 
 /**
@@ -20,6 +21,7 @@ import aboutLeaf from '../assets/about-leaf.webp'
 function BlogPost() {
   const { slug } = useParams()
   const { settings } = useHomeData()
+  const { t, language } = useLanguage()
   const relatedSectionRef = useRef(null)
   const [post, setPost] = useState(null)
   const [related, setRelated] = useState([])
@@ -41,7 +43,7 @@ function BlogPost() {
     setPost(null)
     setRelated([])
 
-    fetchBlogBySlug(slug)
+    fetchBlogBySlug(slug, language)
       .then((raw) => {
         if (cancelled) return
         const next = normalizeBlogPost(raw)
@@ -61,7 +63,7 @@ function BlogPost() {
         setStatus('error')
       })
 
-    fetchLatestBlogs(4)
+    fetchLatestBlogs(4, language)
       .then((list) => {
         if (cancelled) return
         const items = normalizeBlogPosts(list)
@@ -77,7 +79,7 @@ function BlogPost() {
     return () => {
       cancelled = true
     }
-  }, [slug])
+  }, [slug, language])
 
   const shareUrl = useMemo(() => {
     if (typeof window === 'undefined') return ''
@@ -101,17 +103,15 @@ function BlogPost() {
     return (
       <section className="bg-white py-20">
         <div className="mx-auto max-w-page page-gutter text-center">
-          <p className="section-eyebrow">Blogs</p>
-          <h1 className="section-title mb-4">Could not load this post</h1>
-          <p className="section-lead mb-8">
-            Please try again in a moment, or browse our latest posts.
-          </p>
+          <p className="section-eyebrow">{t('blog.postCrumb')}</p>
+          <h1 className="section-title mb-4">{t('blog.postLoadErrorTitle')}</h1>
+          <p className="section-lead mb-8">{t('blog.postLoadErrorBody')}</p>
           <Link
             to="/blog"
             className="inline-flex items-center gap-2 rounded-xl bg-[#5bb5a2] px-6 py-3 text-sm font-extrabold text-white uppercase"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to blogs
+            {t('blog.postBack')}
           </Link>
         </div>
       </section>
@@ -122,17 +122,15 @@ function BlogPost() {
     return (
       <section className="bg-white py-20">
         <div className="mx-auto max-w-page page-gutter text-center">
-          <p className="section-eyebrow">Blogs</p>
-          <h1 className="section-title mb-4">Post not found</h1>
-          <p className="section-lead mb-8">
-            This story may have moved. Browse our latest posts instead.
-          </p>
+          <p className="section-eyebrow">{t('blog.postCrumb')}</p>
+          <h1 className="section-title mb-4">{t('blog.postNotFoundTitle')}</h1>
+          <p className="section-lead mb-8">{t('blog.postNotFoundBody')}</p>
           <Link
             to="/blog"
             className="inline-flex items-center gap-2 rounded-xl bg-[#5bb5a2] px-6 py-3 text-sm font-extrabold text-white uppercase"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to blogs
+            {t('blog.postBack')}
           </Link>
         </div>
       </section>
@@ -174,7 +172,7 @@ function BlogPost() {
           </div>
 
           <span className="mb-4 inline-flex rounded-md bg-[#5bb5a2] px-3 py-1 text-[11px] font-extrabold tracking-wide text-white uppercase">
-            Blog
+            {t('blog.heroEyebrow')}
           </span>
 
           <h1 className="mb-4 text-3xl font-extrabold leading-[1.15] text-brand-ink sm:text-4xl lg:text-[2.65rem]">
@@ -202,7 +200,7 @@ function BlogPost() {
                 {dateLabel ? (
                   <span className="mx-1.5 text-[#5bb5a2]">·</span>
                 ) : null}
-                {post.readMinutes} min read
+                {t('blog.minRead', { n: post.readMinutes })}
               </p>
             </div>
           </div>
@@ -217,7 +215,7 @@ function BlogPost() {
                   href={url}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label={`Share on ${label}`}
+                  aria-label={t('blog.shareOn', { label })}
                   className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#5bb5a2]/30 text-[#5bb5a2] transition hover:border-[#5bb5a2] hover:bg-[#eef8f5]"
                 >
                   <Icon className="h-3.5 w-3.5" />
@@ -282,9 +280,9 @@ function BlogPost() {
                 id="related-blog-heading"
                 className="text-xl font-extrabold text-brand-ink sm:text-2xl"
               >
-                Related{' '}
+                {t('blog.relatedBefore')}{' '}
                 <BrushHighlightText triggerRef={relatedSectionRef}>
-                  Blog
+                  {t('blog.relatedHighlight')}
                 </BrushHighlightText>
               </h2>
             </div>
@@ -306,6 +304,8 @@ function BlogPost() {
 }
 
 function ShareLinkButton({ url, title }) {
+  const { t } = useLanguage()
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard?.writeText(url)
@@ -318,7 +318,7 @@ function ShareLinkButton({ url, title }) {
     <button
       type="button"
       onClick={handleCopy}
-      aria-label={`Copy link to ${title}`}
+      aria-label={t('blog.copyLink', { title })}
       className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#5bb5a2]/30 text-[#5bb5a2] transition hover:border-[#5bb5a2] hover:bg-[#eef8f5]"
     >
       <svg

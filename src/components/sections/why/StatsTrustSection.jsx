@@ -1,57 +1,16 @@
 import { useRef } from 'react'
 import aboutLeaf from '../../../assets/about-leaf.webp'
 import featuresIcon from '../../../assets/New_World_Icon00010-removebg-preview.webp'
+import { useLanguage } from '../../../i18n'
 import BrushHighlightText from '../../ui/BrushHighlightText'
 
-const STATS = [
-  {
-    value: '16+',
-    label: 'Years of Educational Experience',
-    detail:
-      'Supporting children and families through more than a decade of continuous educational development.',
-    accent: '#5bb5a2',
-    soft: '#eef8f5',
-  },
-  {
-    value: '17+',
-    label: 'Nurseries Across Europe',
-    detail:
-      'A well-established network delivering high-quality early years education across multiple locations.',
-    accent: '#f4a0b0',
-    soft: '#fff0f3',
-  },
-  {
-    value: '3+',
-    label: 'Inclusive Primary Schools',
-    detail:
-      'Extending our educational journey beyond the early years with specialist experience in inclusive education.',
-    accent: '#f5b942',
-    soft: '#fff8e8',
-  },
-  {
-    value: '1000s',
-    label: 'Children & Families Supported',
-    detail:
-      'Years of practical experience working in partnership with families and helping children thrive.',
-    accent: '#a682b8',
-    soft: '#f5eef8',
-  },
-  {
-    value: 'EYFS',
-    label: 'British International Curriculum',
-    detail:
-      'Delivering a globally recognised framework for early childhood education, fully aligned with KHDA requirements.',
-    accent: '#7eb8d4',
-    soft: '#eef6fb',
-  },
-  {
-    value: 'UAE',
-    label: 'A Growing International Network',
-    detail:
-      'Bringing trusted European educational expertise to families in Dubai, with a long-term vision for international growth.',
-    accent: '#6db89a',
-    soft: '#e8f6f0',
-  },
+const STATS_META = [
+  { accent: '#5bb5a2', soft: '#eef8f5' },
+  { accent: '#f4a0b0', soft: '#fff0f3' },
+  { accent: '#f5b942', soft: '#fff8e8' },
+  { accent: '#a682b8', soft: '#f5eef8' },
+  { accent: '#7eb8d4', soft: '#eef6fb' },
+  { accent: '#6db89a', soft: '#e8f6f0' },
 ]
 
 /**
@@ -59,12 +18,17 @@ const STATS = [
  */
 function StatsTrustSection() {
   const sectionRef = useRef(null)
+  const { t } = useLanguage()
+  const stats = t('why.statsItems').map((item, i) => ({
+    ...STATS_META[i],
+    ...item,
+  }))
 
   return (
     <section
       id="stats-trust"
       ref={sectionRef}
-      className="relative overflow-hidden bg-white py-14 sm:py-16"
+      className="relative overflow-hidden bg-white py-14 pb-28 sm:py-16 sm:pb-16"
       aria-labelledby="stats-trust-heading"
     >
       <img
@@ -81,32 +45,29 @@ function StatsTrustSection() {
         loading="lazy"
         decoding="async"
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-2 left-2 z-20 w-24 opacity-90 sm:bottom-4 sm:left-4 sm:w-28 lg:w-32"
+        className="pointer-events-none absolute bottom-3 left-2 z-20 w-24 opacity-90 sm:bottom-4 sm:left-4 sm:w-28 lg:w-32"
       />
 
       <div className="relative z-10 mx-auto max-w-page page-gutter">
         <div className="mb-10 max-w-3xl sm:mb-12">
-          <p className="section-eyebrow !mb-3">Stats & trust</p>
+          <p className="section-eyebrow !mb-3">{t('why.statsEyebrow')}</p>
           <h2
             id="stats-trust-heading"
             className="text-3xl font-extrabold text-[#2d3a4a] sm:text-4xl"
           >
-            Trusted by Experience.{' '}
+            {t('why.statsTitleBefore')}{' '}
             <BrushHighlightText triggerRef={sectionRef}>
-              Built for the Future
+              {t('why.statsTitleHighlight')}
             </BrushHighlightText>
             .
           </h2>
           <p className="mt-5 text-sm leading-relaxed text-brand-muted sm:text-[15px]">
-            The trust of families is earned through consistency, experience and a
-            long-term commitment to excellence in early childhood education. Every
-            New World Nursery is built on proven educational expertise and
-            internationally recognised standards.
+            {t('why.statsLead')}
           </p>
         </div>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 lg:gap-5">
-          {STATS.map((stat) => (
+          {stats.map((stat) => (
             <div
               key={stat.label}
               className="relative overflow-hidden rounded-[1.5rem] px-5 py-7 sm:rounded-[1.75rem] sm:px-6 sm:py-8"
@@ -134,10 +95,7 @@ function StatsTrustSection() {
         </div>
 
         <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-brand-muted sm:mt-12 sm:text-[15px]">
-          Every number tells part of our story. Behind each one are children who
-          have grown with confidence, families who have placed their trust in us
-          and educators who share our commitment to exceptional early years
-          education.
+          {t('why.statsClosing')}
         </p>
       </div>
     </section>
