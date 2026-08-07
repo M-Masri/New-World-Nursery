@@ -1,11 +1,17 @@
 import { Clock, Mail, MapPin, Phone } from 'lucide-react'
 import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
-import { FacebookIcon, InstagramIcon, YoutubeIcon } from '../ui/SocialIcons'
+import { FacebookIcon, InstagramIcon, WhatsAppIcon } from '../ui/SocialIcons'
 import Logo from '../ui/Logo'
 import { useHomeData } from '../../context/HomeDataContext'
 import { useLanguage } from '../../i18n'
-import { INSTAGRAM_URL, MAP_OPEN_URL, NURSERY_ADDRESS } from '../../data/site'
+import {
+  FACEBOOK_URL,
+  INSTAGRAM_URL,
+  MAP_OPEN_URL,
+  NURSERY_ADDRESS,
+  WHATSAPP_URL,
+} from '../../data/site'
 
 function Footer() {
   const { pathname } = useLocation()
@@ -35,11 +41,10 @@ function Footer() {
   )
 
   const socials = [
-    { href: settings?.facebook_url, label: 'Facebook', Icon: FacebookIcon },
+    { href: FACEBOOK_URL, label: 'Facebook', Icon: FacebookIcon },
     { href: INSTAGRAM_URL, label: 'Instagram', Icon: InstagramIcon },
-    { href: settings?.youtube_url, label: 'YouTube', Icon: YoutubeIcon },
-  ].filter((item) => item.href)
-
+    { href: WHATSAPP_URL, label: 'WhatsApp', Icon: WhatsAppIcon },
+  ]
   const year = new Date().getFullYear()
   const rights = t('footer.rightsReserved', {
     year: String(year),

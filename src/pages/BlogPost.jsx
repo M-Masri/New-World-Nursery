@@ -13,7 +13,7 @@ import BlogPostCard from '../components/sections/blog/BlogPostCard'
 import { FacebookIcon, InstagramIcon } from '../components/ui/SocialIcons'
 import { useHomeData } from '../context/HomeDataContext'
 import { useLanguage } from '../i18n'
-import { INSTAGRAM_URL } from '../data/site'
+import { FACEBOOK_URL, INSTAGRAM_URL } from '../data/site'
 import aboutLeaf from '../assets/about-leaf.webp'
 
 /**
@@ -143,7 +143,7 @@ function BlogPost() {
 
   const socials = [
     {
-      href: settings?.facebook_url,
+      href: FACEBOOK_URL,
       label: 'Facebook',
       Icon: FacebookIcon,
       share: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,

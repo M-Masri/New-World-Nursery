@@ -1,6 +1,6 @@
 export { default as Button } from './Button'
 export { default as Logo } from './Logo'
-export { FacebookIcon, InstagramIcon, YoutubeIcon } from './SocialIcons'
+export { FacebookIcon, InstagramIcon, WhatsAppIcon } from './SocialIcons'
 export { default as AnimatedCard } from './AnimatedCard'
 export { default as BrushHighlightText } from './BrushHighlightText'
 export { default as LottieScroll } from './LottieScroll'

@@ -1,8 +1,8 @@
 import { Mail, MapPin, Phone } from 'lucide-react'
-import { FacebookIcon, InstagramIcon, YoutubeIcon } from '../ui/SocialIcons'
+import { FacebookIcon, InstagramIcon, WhatsAppIcon } from '../ui/SocialIcons'
 import { useHomeData } from '../../context/HomeDataContext'
 import { useLanguage } from '../../i18n'
-import { INSTAGRAM_URL } from '../../data/site'
+import { FACEBOOK_URL, INSTAGRAM_URL, WHATSAPP_URL } from '../../data/site'
 
 /**
  * Always reserve top-bar height on sm+ so settings load doesn't push the navbar (CLS).
@@ -13,11 +13,10 @@ function TopBar() {
   const phone = settings?.top_bar_phone
   const email = settings?.top_bar_email
   const socials = [
-    { href: settings?.facebook_url, label: 'Facebook', Icon: FacebookIcon },
+    { href: FACEBOOK_URL, label: 'Facebook', Icon: FacebookIcon },
     { href: INSTAGRAM_URL, label: 'Instagram', Icon: InstagramIcon },
-    { href: settings?.youtube_url, label: 'YouTube', Icon: YoutubeIcon },
-  ].filter((item) => item.href)
-
+    { href: WHATSAPP_URL, label: 'WhatsApp', Icon: WhatsAppIcon },
+  ]
   const hasContent = Boolean(phone || email || socials.length > 0)
 
   return (
